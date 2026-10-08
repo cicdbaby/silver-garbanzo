@@ -34,6 +34,7 @@ async function main() {
     selectionIndicator: false, requestRenderMode: false,
   });
   const scene = viewer.scene;
+  window.__viewer = viewer;                       // debug handle
   scene.globe.show = false;                       // the photorealistic tiles carry their own terrain and imagery
   scene.skyAtmosphere.show = true;
   scene.screenSpaceCameraController.minimumZoomDistance = 30;
@@ -42,6 +43,8 @@ async function main() {
   try {
     const tiles = await createGooglePhotorealistic3DTileset({ onlyUsingWithGoogleGeocoder: true });
     scene.primitives.add(tiles);
+    window.__tiles = tiles;
+    tiles.tileFailed.addEventListener((e) => console.error("tile failed", e.url, e.message));
   } catch (e) {
     fail('Google 3D görüntüleri yüklenemedi: ' + (e && e.message ? e.message : e) + '\nAnahtarın Map Tiles API için açık ve bu alan adına izinli olduğundan emin ol.');
     return;

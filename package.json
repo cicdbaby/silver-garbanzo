@@ -14,5 +14,9 @@
   "devDependencies": {
     "vite": "7.3.6",
     "vite-plugin-static-copy": "4.1.1"
+  },
+  "overrides": {
+    "@cesium/engine": "26.3.0",
+    "@cesium/widgets": "16.2.0"
   }
 }
