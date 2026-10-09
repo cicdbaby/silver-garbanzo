@@ -356,11 +356,11 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ================================================================ world
 // 1 world unit = 50 m · 1 km = 20 u · map 360 × 240 km · game time compressed
-let MW=7200,MH=4800;const KMU=20,TSC=0.4,GAME_T=15*60,PREP_T=120;
+let MW=7200,MH=4800;const KMU=20,TSC=0.25,GAME_T=15*60,PREP_T=120;
 // two theatres: the strait (two sides) and the cross-shaped sea (four sides, everyone against everyone)
 const MAPS={duo:{k:'duo',w:7200,h:4800,img:'m0',sm:'m0s',mat:'mat',km:'360 × 240 km',where:'Boğaz hattı'},quad:{k:'quad',w:6000,h:6000,img:'m4',sm:'m4s',mat:'mat4',km:'300 × 300 km',where:'Dört kıyı'}};
 let MAP=MAPS.duo;
-function setMap(k){if(MAP===MAPS[k])return;MAP=MAPS[k];MW=MAP.w;MH=MAP.h;LINE.x=MW/2;LINE.y=MH/2;WMASK=null;OCEAN=null;TMINI=null;for(const q in VISR);}
+function setMap(k){if(MAP===MAPS[k])return;MAP=MAPS[k];MW=MAP.w;MH=MAP.h;LINE.x=MW/2;LINE.y=MH/2;const C=WCACHE[k];if(C){WMASK=C.m;OCEAN=C.o;WMW=C.w;WMH=C.h}else{WMASK=null;OCEAN=null}TMINI=null;}
 const QUAD=()=>MAP===MAPS.quad;
 const other=s=>s==='W'?'E':'W';
 const HQPOS={W:{x:1040,y:3880},E:{x:6160,y:920}};
@@ -529,11 +529,11 @@ function genMap(seed){
   HGW=MW/10;HGH=MH/10;const r=mulberry(seed);
   HGT=noiseField(r,[[5,3,1],[10,7,.5],[22,15,.22],[46,31,.1]]);
   FOR=noiseField(r,[[9,6,1],[20,13,.5],[44,30,.25]]);const HGT0=HGT.slice();
-  for(let y=0;y<HGH;y++)for(let x=0;x<HGW;x++){const wx=x*10,wy=y*10,i=y*HGW+x;
-    for(const b of Object.values(HQPOS)){const d=hyp(wx-b.x,wy-b.y);if(d<420){const k=1-d/420;HGT[i]=HGT[i]*(1-k*.7)+.35*k*.7;FOR[i]*=1-k}}
-    for(const t of TOWNS){const d=hyp(wx-t.x,wy-t.y);if(d<t.r*1.6)FOR[i]*=d/(t.r*1.6);if(d<t.r*2.2){const k=1-d/(t.r*2.2);HGT[i]=HGT[i]*(1-k*.8)+.38*k*.8}}
-    for(const p of PTS){const d=hyp(wx-p.x,wy-p.y);if(d<90)FOR[i]*=d/90;if(d<200){const k=1-d/200;HGT[i]=HGT[i]*(1-k*.8)+.38*k*.8}}
-  }
+  // flatten and clear ground around bases, towns and assets (only the cells each one touches)
+  const area=(cx,cy,R,fn)=>{const x0=Math.max(0,((cx-R)/10)|0),x1=Math.min(HGW-1,((cx+R)/10)|0),y0=Math.max(0,((cy-R)/10)|0),y1=Math.min(HGH-1,((cy+R)/10)|0);for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const d=hyp(x*10-cx,y*10-cy);if(d<R)fn(y*HGW+x,d)}};
+  for(const b of Object.values(HQPOS))area(b.x,b.y,420,(i,d)=>{const k=1-d/420;HGT[i]=HGT[i]*(1-k*.7)+.35*k*.7;FOR[i]*=1-k});
+  for(const t of TOWNS){area(t.x,t.y,t.r*1.6,(i,d)=>{FOR[i]*=d/(t.r*1.6)});area(t.x,t.y,t.r*2.2,(i,d)=>{const k=1-d/(t.r*2.2);HGT[i]=HGT[i]*(1-k*.8)+.38*k*.8})}
+  for(const p of PTS){area(p.x,p.y,90,(i,d)=>{FOR[i]*=d/90});area(p.x,p.y,200,(i,d)=>{const k=1-d/200;HGT[i]=HGT[i]*(1-k*.8)+.38*k*.8})}
   // terrain overlay: relief shading, broad tone, water. The photographic ground is drawn underneath at render time.
   const TW=Math.round(MW*TSC),TH=Math.round(MH*TSC),N=TW*TH;
   terrain=document.createElement('canvas');terrain.width=TW;terrain.height=TH;tctx=terrain.getContext('2d');
@@ -1037,12 +1037,12 @@ const scrK=b=>Math.max(.02,b/cam.z);
 
 // ================================================================ water & sides from the map photograph
 const LINE={x:MW/2,y:MH/2,ux:.8409,uy:.5412}; // axis of the sound that separates the two sides
-let WMASK=null,WMW=0,WMH=0;
-function buildMask(){if(WMASK||!ready(MAP.mat))return;try{const c=document.createElement('canvas');WMW=c.width=768;WMH=c.height=Math.round(768*MH/MW);const x=c.getContext('2d');x.drawImage(IMG[MAP.mat],0,0,WMW,WMH);const d=x.getImageData(0,0,WMW,WMH).data;const m=new Float32Array(WMW*WMH);for(let i=0;i<m.length;i++)m[i]=d[i*4]/255;WMASK=m;
+let WMASK=null,WMW=0,WMH=0;const WCACHE={};
+function buildMask(){if(WMASK||!ready(MAP.mat))return;try{const c=document.createElement('canvas');WMW=c.width=768;WMH=c.height=Math.round(768*MH/MW);const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(IMG[MAP.mat],0,0,WMW,WMH);const d=x.getImageData(0,0,WMW,WMH).data;const m=new Float32Array(WMW*WMH);for(let i=0;i<m.length;i++)m[i]=d[i*4]/255;WMASK=m;
   // open sea = the largest connected body of water (the sound); every other water body is a lake
   const N=m.length,lab=new Int32Array(N).fill(-1),st=new Int32Array(N);let best=-1,bestN=0,id=0;
   for(let i=0;i<N;i++){if(m[i]<.5||lab[i]>=0)continue;let sp=0,n=0;st[sp++]=i;lab[i]=id;while(sp){const j=st[--sp];n++;const x=j%WMW,y=(j/WMW)|0;for(const q of [x>0?j-1:-1,x<WMW-1?j+1:-1,y>0?j-WMW:-1,y<WMH-1?j+WMW:-1])if(q>=0&&lab[q]<0&&m[q]>=.5){lab[q]=id;st[sp++]=q}}if(n>bestN){bestN=n;best=id}id++}
-  OCEAN=new Uint8Array(N);for(let i=0;i<N;i++)OCEAN[i]=lab[i]===best?1:0}catch(e){}}
+  OCEAN=new Uint8Array(N);for(let i=0;i<N;i++)OCEAN[i]=lab[i]===best?1:0;WCACHE[MAP.k]={m:WMASK,o:OCEAN,w:WMW,h:WMH}}catch(e){}}
 let OCEAN=null;function oceanAt(x,y){if(!OCEAN)return 0;const ix=clamp((x/MW*WMW)|0,0,WMW-1),iy=clamp((y/MH*WMH)|0,0,WMH-1);return OCEAN[iy*WMW+ix]}
 // photographs with water in them: direction of the water inside the frame, and what it must touch on the map
 const WATERSIDE={b2:[.7,.7,'sea'],k1:[-.9,.42,'sea'],b3:[.7,.7,'any'],k2:[.8,.6,'any']};
@@ -1057,6 +1057,8 @@ function landSpot(x,y,r,s,taken,ws){if(!WMASK)buildMask();if(!WMASK)return{x,y};
   if(ok(x,y))return{x,y};for(let d=30;d<2600;d+=30){const n=Math.max(8,Math.round(d/25));for(let i=0;i<n;i++){const a=i/n*6.283,px=x+Math.cos(a)*d,py=y+Math.sin(a)*d;if(ok(px,py))return{x:px,y:py}}}return{x,y}}
 
 // ================================================================ ground (WebGL): map photograph far away, photographed textures up close
+// ground resolution: starts at min(DPR,1.5) and adapts to keep frames smooth on weaker GPUs
+const GLQ={s:Math.min(window.devicePixelRatio||1,1.5),ema:16,t:0};
 const GL=(()=>{const c=document.getElementById('gl');let g=null;try{g=c.getContext('webgl2',{antialias:false,alpha:false,premultipliedAlpha:false,preserveDrawingBuffer:false})}catch(e){}if(!g)return null;
   const VS=`#version 300 es
 in vec2 p;out vec2 v;void main(){v=p;gl_Position=vec4(p,0.,1.);}`;
@@ -1091,49 +1093,53 @@ void main(){
     vec3 col=mix(landC,vec3(.024,.04,.058),wl);float edge=1.-smoothstep(0.,aa*1.6,abs(w-.5));col=mix(col,vec3(.28,.44,.5),edge*.85);
     o=vec4(col,1.);return;}
   vec3 mac=texture(tM,muv).rgb;
+  float fm=smoothstep(14.,50.,uMpp);           // 0 = close (photographed textures), 1 = far (map photograph only)
+  float e=clamp(uMpp/80.,.03,.4);
+  vec3 col;
+  if(fm>.999){
+    // far: the map photograph alone, sharpened with its own detail at finer scales
+    vec3 mt=texture(tMat,muv).rgb;float ww=smoothstep(.5-e,.5+e,mt.r);
+    vec2 u8=muv*vec2(9.,6.)+vec2(.37,.11),u40=muv*vec2(45.,30.)+vec2(.71,.53);vec2 g8x=dFdx(u8),g8y=dFdy(u8),g40x=dFdx(u40),g40y=dFdy(u40);
+    float h8=lum(textureGrad(tM,u8,g8x,g8y).rgb)/max(.03,lum(textureGrad(tM,u8,g8x*10.,g8y*10.).rgb));
+    float h40=lum(textureGrad(tM,u40,g40x,g40y).rgb)/max(.03,lum(textureGrad(tM,u40,g40x*10.,g40y*10.).rgb));
+    float a8=1.-smoothstep(50.,170.,uMpp),a40=smoothstep(3.,9.,uMpp)*(1.-smoothstep(15.,60.,uMpp));
+    float hp=mix(1.,clamp(h8,.7,1.4),a8*.5)*mix(1.,clamp(h40,.7,1.4),a40*.45);
+    col=mix(mac*hp,mac,ww);
+  }else{
   vec2 wp=vec2(fbm(wm/700.),fbm(wm/700.+31.7))-.5;vec2 wq=vec2(fbm(wm/90.+5.),fbm(wm/90.+11.))-.5;
   vec3 mt=texture(tMat,(wm+wp*420.+wq*35.)/WORLD).rgb;
   float nb=fbm(wm/60.+3.),nc=fbm(wm/14.+9.);
-  float e=clamp(uMpp/80.,.03,.4);
   float ww=smoothstep(.5-e,.5+e,mt.r+(nc-.5)*.25);
   float land=max(.001,1.-mt.r);
   float wf=smoothstep(.5-e,.5+e,mt.g/land+(nb-.5)*.7);
   float wr=smoothstep(.5-e,.5+e,mt.b/land*1.7+(nc-.5)*.6)*(1.-wf);
   float rest=max(0.,1.-wf-wr);float sg=smoothstep(.4,.6,fbm(wm/120.+40.));
   vec3 det=vec3(0.),mean=vec3(0.);
-  if(wf>.002){det+=M(t4,3,d,wm)*wf;mean+=vec3(.246,.249,.13)*wf;}
-  if(wr>.002){det+=M(t3,2,d,wm)*wr;mean+=vec3(.458,.377,.294)*wr;}
-  if(rest*sg>.002){det+=M(t1,0,d,wm)*rest*sg;mean+=vec3(.502,.382,.271)*rest*sg;}
-  if(rest*(1.-sg)>.002){det+=M(t2,1,d,wm)*rest*(1.-sg);mean+=vec3(.427,.324,.196)*rest*(1.-sg);}
-  vec2 dw=d+vec2(uTime*.6,uTime*.2);vec3 sea=mix(M(t5,4,dw,wm),M(t5,4,d*1.31+vec2(-uTime*.4,uTime*.3),wm),.35);
-  vec3 seaM=vec3(.162,.225,.22);
-  // middle range: photographs taken from higher up (1-2 km frames) take over from the close-up ones
   float wMid=smoothstep(.9,3.,uMpp);
-  if(wMid>0.){vec3 dm=vec3(0.),mm=vec3(0.);
+  // close range: photographs at their true size (never magnified, so trees stay tree-sized next to the vehicles)
+  if(wMid<.999&&ww<.999){
+    if(wf>.002){det+=tx(t4,3,d,wm)*wf;mean+=vec3(.246,.249,.13)*wf;}
+    if(wr>.002){det+=tx(t3,2,d,wm)*wr;mean+=vec3(.458,.377,.294)*wr;}
+    if(rest*sg>.002){det+=tx(t1,0,d,wm)*rest*sg;mean+=vec3(.502,.382,.271)*rest*sg;}
+    if(rest*(1.-sg)>.002){det+=tx(t2,1,d,wm)*rest*(1.-sg);mean+=vec3(.427,.324,.196)*rest*(1.-sg);}
+  }else{mean=vec3(.246,.249,.13)*wf+vec3(.458,.377,.294)*wr+vec3(.502,.382,.271)*rest*sg+vec3(.427,.324,.196)*rest*(1.-sg);det=mean;}
+  // middle range: photographs taken from higher up (1-2 km frames) take over
+  if(wMid>0.&&ww<.999){vec3 dm=vec3(0.),mm=vec3(0.);
     if(wf>.002){dm+=txM(t7,0,d,wm)*wf;mm+=vec3(.286,.279,.151)*wf;}
     if(wr>.002){vec3 rk=txM(t8,1,d+vec2(377.,911.),wm+vec2(523.,217.));float lr=dot(rk,vec3(.299,.587,.114));dm+=mix(rk,vec3(lr),.55)*wr;mm+=mix(vec3(.496,.373,.212),vec3(.4),.55)*wr;}
     if(rest>.002){dm+=txM(t8,1,d,wm)*rest;mm+=vec3(.496,.373,.212)*rest;}
-    det=mix(det,dm*(mean/max(mm,vec3(.03))),wMid);
-}
-  // close range: photographed textures, tinted toward the map colours
+    det=mix(det,dm*(mean/max(mm,vec3(.03))),wMid);}
   vec3 tint=clamp(mac/max(mean,vec3(.04)),vec3(.65),vec3(1.45));
   vec3 closeL=det*mix(vec3(1.),tint,.35);
   float w0=1.-smoothstep(.02,.09,uMpp);
   if(w0>0.){vec2 u0=(uOff0+d)/2.6;vec3 mic=texture(t6,u0).rgb;closeL*=mix(1.,clamp(lum(mic)/.365,.55,1.6),w0*.55*(1.-wf));}
-  float wv=1.-smoothstep(.12,.7,uMpp),wm2=1.-smoothstep(.7,7.,uMpp);float sl=lum(sea)/lum(seaM);
-  vec3 closeW=mac*mix(1.,clamp(sl,.75,1.35),.55*wv+.22*wm2*(1.-wv))*(1.+.035*(fbm(wm/900.)-.5));
-  // middle and far range: the map photograph, sharpened with its own detail at finer scales
-  vec2 u8=muv*vec2(9.,6.)+vec2(.37,.11),u40=muv*vec2(45.,30.)+vec2(.71,.53);
-  vec2 g8x=dFdx(u8),g8y=dFdy(u8),g40x=dFdx(u40),g40y=dFdy(u40);
-  float h8=lum(textureGrad(tM,u8,g8x,g8y).rgb)/max(.03,lum(textureGrad(tM,u8,g8x*10.,g8y*10.).rgb));
-  float h40=lum(textureGrad(tM,u40,g40x,g40y).rgb)/max(.03,lum(textureGrad(tM,u40,g40x*10.,g40y*10.).rgb));
-  float a8=1.-smoothstep(50.,170.,uMpp),a40=smoothstep(3.,9.,uMpp)*(1.-smoothstep(15.,60.,uMpp));
-  float hp=mix(1.,clamp(h8,.7,1.4),a8*.5)*mix(1.,clamp(h40,.7,1.4),a40*.45);
-  vec3 midL=mac*hp;
-  vec3 midW=mac;
-  float fm=smoothstep(14.,50.,uMpp);
-  vec3 L=mix(closeL,midL,fm),W=mix(closeW,midW,fm);
-  vec3 col=mix(L,W,ww);
+  vec3 closeW=mac;
+  if(ww>.001){float wv=1.-smoothstep(.12,.7,uMpp),wm2=1.-smoothstep(.7,7.,uMpp);
+    if(wv+wm2>.001){vec2 dw=d+vec2(uTime*.6,uTime*.2);vec3 sea=mix(tx(t5,4,dw,wm),tx(t5,4,d*1.31+vec2(-uTime*.4,uTime*.3),wm),.35);float sl=lum(sea)/lum(vec3(.162,.225,.22));
+      closeW=mac*mix(1.,clamp(sl,.75,1.35),.55*wv+.22*wm2*(1.-wv))*(1.+.035*(fbm(wm/900.)-.5));}}
+  vec3 L=mix(closeL,mac,fm),W=mix(closeW,mac,fm);
+  col=mix(L,W,ww);
+  }
   o=vec4(col,1.);
 }`;
   const sh=(t,src)=>{const s=g.createShader(t);g.shaderSource(s,src);g.compileShader(s);if(!g.getShaderParameter(s,g.COMPILE_STATUS))throw new Error(g.getShaderInfoLog(s));return s};
@@ -1142,18 +1148,21 @@ void main(){
   const U=n=>g.getUniformLocation(P,n);const uWorld=U('uWorld');const uOff0=U('uOff0'),uTac=U('uTac'),uOffM=U('uOffM'),uTileM=U('uTileM'),uRes=U('uRes'),uMpp=U('uMpp'),uCam=U('uCam'),uOff=U('uOff'),uTile=U('uTile'),uTime=U('uTime'),uLv=U('uLv');
   const an=g.getExtension('EXT_texture_filter_anisotropic');
   const TEX=[['tM',()=>MAP.img,1],['tMat',()=>MAP.mat,0],['t1','g1',1],['t2','g2',1],['t3','g3',1],['t4','g4',1],['t5','g5',1],['t6','g0',1],['t7','g10',1],['t8','g12',1],['t9','g13',1]];const made={};
-  const bound=[];function up(){let all=true;TEX.forEach(([u,kk,rep],i)=>{const k=typeof kk==='function'?kk():kk;if(made[k]){if(bound[i]!==k){g.activeTexture(g.TEXTURE0+i);g.bindTexture(g.TEXTURE_2D,made[k]);bound[i]=k}return}if(!ready(k)){all=false;return}const t=g.createTexture();g.activeTexture(g.TEXTURE0+i);g.bindTexture(g.TEXTURE_2D,t);bound[i]=k;
+  const bound=[];function up(){let all=true;TEX.forEach(([u,kk,rep],i)=>{const k=typeof kk==='function'?kk():kk;if(made[k]){if(bound[i]!==k){g.activeTexture(g.TEXTURE0+i);g.bindTexture(g.TEXTURE_2D,made[k]);g.uniform1i(U(u),i);bound[i]=k}return}if(!ready(k)){all=false;return}const t=g.createTexture();g.activeTexture(g.TEXTURE0+i);g.bindTexture(g.TEXTURE_2D,t);bound[i]=k;
     g.texImage2D(g.TEXTURE_2D,0,g.RGB,g.RGB,g.UNSIGNED_BYTE,IMG[k]);g.generateMipmap(g.TEXTURE_2D);
     g.texParameteri(g.TEXTURE_2D,g.TEXTURE_MIN_FILTER,g.LINEAR_MIPMAP_LINEAR);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_MAG_FILTER,g.LINEAR);
     const w=rep?g.REPEAT:g.CLAMP_TO_EDGE;g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_S,w);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_T,w);
     if(an)g.texParameterf(g.TEXTURE_2D,an.TEXTURE_MAX_ANISOTROPY_EXT,8);g.uniform1i(U(u),i);made[k]=t});return all}
+  const PRE=['m0','mat','m4','mat4','g1','g2','g3','g4','g5','g0','g10','g12','g13'];function pre(){for(const k of PRE){if(made[k]||!ready(k))continue;const t=g.createTexture();g.activeTexture(g.TEXTURE0+11);g.bindTexture(g.TEXTURE_2D,t);
+    g.texImage2D(g.TEXTURE_2D,0,g.RGB,g.RGB,g.UNSIGNED_BYTE,IMG[k]);g.generateMipmap(g.TEXTURE_2D);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_MIN_FILTER,g.LINEAR_MIPMAP_LINEAR);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_MAG_FILTER,g.LINEAR);
+    const w=k[0]==='g'?g.REPEAT:g.CLAMP_TO_EDGE;g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_S,w);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_T,w);if(an)g.texParameterf(g.TEXTURE_2D,an.TEXTURE_MAX_ANISOTROPY_EXT,8);made[k]=t;return false}return PRE.every(k=>made[k])}
   // tile sizes in metres: gravel clearing, heath, granite, forest, sea. Each is drawn at one of several scale levels
   // (×4 apart) picked so the photograph is never magnified much beyond its own resolution; neighbouring levels crossfade.
   const T0=[75,24,70,60,120];const md=(a,t)=>a-Math.floor(a/t)*t;let okAll=false;
-  return{resize(){c.width=Math.round(CW*DPR);c.height=Math.round(CH*DPR);g.viewport(0,0,c.width,c.height)},
+  return{pre,resize(){const k=GLQ.s;c.width=Math.max(64,Math.round(CW*k));c.height=Math.max(64,Math.round(CH*k));g.viewport(0,0,c.width,c.height)},
     draw(t){okAll=up();{if(!made[MAP.img]||!made[MAP.mat]){g.clearColor(.03,.035,.04,1);g.clear(g.COLOR_BUFFER_BIT);return}}
-      const mpp=M_U/(cam.z*DPR),mx=(cam.x-SHX/cam.z)*M_U,my=(cam.y-SHY/cam.z)*M_U;const tiles=new Float32Array(10),off=new Float32Array(20),lv=new Float32Array(5);
-      for(let m=0;m<5;m++){const q=clamp(Math.log(mpp*1024*.8/T0[m])/Math.log(4),0,1);const k0=Math.floor(q);lv[m]=smooth(.55,1,q-k0);
+      const mpp=M_U/(cam.z*(c.width/CW)),mx=(cam.x-SHX/cam.z)*M_U,my=(cam.y-SHY/cam.z)*M_U;const tiles=new Float32Array(10),off=new Float32Array(20),lv=new Float32Array(5);
+      for(let m=0;m<5;m++){const k0=0;lv[m]=0;
         for(const [j,k] of [[m,k0],[m+5,k0+1]]){const T=T0[m]*Math.pow(4,k);tiles[j]=T;off[j*2]=md(mx,T);off[j*2+1]=md(my,T)}}
       g.useProgram(P);g.uniform2f(uWorld,MW*M_U,MH*M_U);g.uniform2f(uRes,c.width,c.height);g.uniform1f(uMpp,mpp);g.uniform2f(uCam,mx,my);g.uniform2fv(uOff,off);g.uniform1fv(uTile,tiles);g.uniform1fv(uLv,lv);g.uniform2f(uOff0,md(mx,2.6),md(my,2.6));{const TM=[1200,1200,2000];g.uniform1fv(uTileM,new Float32Array(TM));g.uniform2fv(uOffM,new Float32Array(TM.flatMap(T=>[md(mx,T),md(my,T)])))}g.uniform1f(uTime,t%10000);g.uniform1f(uTac,VIEW==='tac'?1:0);g.drawArrays(g.TRIANGLES,0,3)},
     clear(){g.clearColor(.03,.035,.04,1);g.clear(g.COLOR_BUFFER_BIT)}}})();
@@ -2054,7 +2063,8 @@ ov.addEventListener('click',e=>{const h=e.target.closest('[data-h]');if(h){openH
 
 // ================================================================ loop
 let lastT=performance.now(),uiT=0,mmT=0;
-function frame(now){const dt=Math.min(.05,(now-lastT)/1000);lastT=now;
+function frame(now){const rawDt=now-lastT;const dt=Math.min(.05,rawDt/1000);lastT=now;
+  if(GL&&!document.hidden&&rawDt<500){GLQ.ema+=(rawDt-GLQ.ema)*.05;GLQ.t+=rawDt;if(GLQ.t>1500){GLQ.t=0;const mx=Math.min(window.devicePixelRatio||1,1.5);let ns=GLQ.s;if(GLQ.ema>24&&GLQ.s>.5)ns=Math.max(.5,GLQ.s*.8);else if(GLQ.ema<15&&GLQ.s<mx)ns=Math.min(mx,GLQ.s*1.15);if(Math.abs(ns-GLQ.s)>.01){GLQ.s=ns;GL.resize()}}}
   if(G&&!G.over&&!G.paused&&ov.hidden)for(let i=0;i<G.speed;i++)update(dt);
   if(G){const pan=(keys.arrowright?1:0)-(keys.arrowleft?1:0),panY=(keys.arrowdown?1:0)-(keys.arrowup?1:0);let ex=0,ey=0;if(edge&&ov.hidden&&!mDown){if(edge.x<10)ex=-1;if(edge.y<10)ey=-1;else if(edge.y>CH-10&&conEl.hidden)ey=1;if(ex||ey)edgeT+=dt;else edgeT=0;if(edgeT<.35)ex=ey=0}
     if(pan||panY||ex||ey){cam.x+=(pan+ex)*dt*800/cam.z;cam.y+=(panY+ey)*dt*800/cam.z;camClamp()}
@@ -2065,6 +2075,7 @@ function frame(now){const dt=Math.min(.05,(now-lastT)/1000);lastT=now;
   render(now/1000);requestAnimationFrame(frame)}
 addEventListener('resize',resize);try{new ResizeObserver(()=>resize()).observe(stage)}catch(e){}
 EVA.on=false;loadCustom();resize();intro();requestAnimationFrame(frame);
+{let step=0;const warm=setInterval(()=>{if(G&&ov.hidden)return;try{if(GL&&GL.pre&&!GL.pre())return;const want=['duo','quad'].find(k=>!WCACHE[k]&&ready(MAPS[k].mat));if(want){const keep=MAP;MAP=MAPS[want];const mw=MW,mh=MH;MW=MAP.w;MH=MAP.h;WMASK=null;buildMask();MAP=keep;MW=mw;MH=mh;const C=WCACHE[MAP.k];if(C){WMASK=C.m;OCEAN=C.o;WMW=C.w;WMH=C.h}else WMASK=null;return}if(++step>40)clearInterval(warm)}catch(e){clearInterval(warm)}},300)}
 window.__gok={get G(){return G},get TUT(){return TUT},update,render,startGame,cam,build,buy,launch,sortie,openCon,setArm,holdStart,doFire,aiSpot,advSpot,sites,assets,manualEngage,bestBattery};
 
 })();</script>
