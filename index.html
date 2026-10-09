@@ -311,7 +311,7 @@ body{font:13.5px/1.45 var(--sans)}
 .overlay:not(.ttl){background:rgba(4,5,6,.82)}
 
 /* range layers: left rail */
-#rng{position:absolute;left:12px;top:46px;z-index:4;width:148px;background:rgba(9,12,14,.86);border:1px solid var(--line2);border-radius:6px;padding:6px 0 8px;font:600 12.5px var(--cond);color:#cfd6d9;user-select:none}
+#rng{position:absolute;left:12px;top:46px;z-index:4;width:250px;background:rgba(9,12,14,.86);border:1px solid var(--line2);border-radius:6px;padding:6px 0 8px;font:600 12.5px var(--cond);color:#cfd6d9;user-select:none}
 #rng .rh{display:flex;justify-content:space-between;align-items:center;padding:0 10px 5px;font:600 10.5px var(--mono);letter-spacing:.14em;color:var(--mute)}
 #rng .rh button{background:none;border:0;color:var(--mute);font:600 10.5px var(--mono);letter-spacing:.1em;cursor:pointer;padding:0}#rng .rh button:hover{color:#fff}
 #rng .rl{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;color:#8d969c;font:600 13px var(--cond);padding:4px 10px;cursor:pointer;text-align:left}
@@ -323,6 +323,8 @@ body{font:13.5px/1.45 var(--sans)}
 #rng .alt .av{display:flex;justify-content:space-between;font:500 10.5px var(--mono);letter-spacing:.08em;color:var(--mute)}#rng .alt .av b{color:#fff;font-weight:600;letter-spacing:0}
 #rng input[type=range]{width:100%;margin:6px 0 2px;accent-color:#9fd2dc;height:16px}
 #rng .ad{font:500 11px/1.3 var(--sans);color:#8d969c;min-height:28px}
+#rng .rl small{white-space:nowrap}#rng .summary{position:absolute;top:100%;left:-1px;width:max-content;max-width:calc(100vw - 340px);padding:7px 10px;color:#b7c9cd;font:500 10px/1.4 var(--mono);white-space:nowrap;overflow-x:auto;background:rgba(9,12,14,.9);border:1px solid var(--line2);border-radius:0 5px 5px 5px}#rng.min .summary{display:none}
+#selection-label{position:absolute;z-index:5;display:flex;align-items:center;gap:6px;max-width:230px;padding:3px 6px;border:1px solid #8b784e;background:rgba(9,12,14,.92);color:#ffd27a;font:500 11px var(--mono);pointer-events:none;border-radius:4px}#selection-label[hidden]{display:none}#selection-label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#selection-label button{pointer-events:auto;flex:none;border:0;background:transparent;color:#ffd27a;padding:2px 4px;width:22px;height:22px;font-size:0;cursor:pointer}#selection-label button::before{content:"i";display:inline-grid;place-items:center;width:13px;height:13px;border:1px solid currentColor;border-radius:50%;font:italic bold 11px Georgia,serif}
 #rng:empty{display:none}#perf{position:fixed;left:10px;bottom:10px;z-index:30;max-width:min(560px,90vw);background:rgba(20,8,8,.92);border:1px solid #5a2a24;border-left:3px solid #ff5a4a;border-radius:6px;padding:7px 10px;font:500 11.5px/1.45 var(--mono);color:#f1d6d2;white-space:pre-wrap;pointer-events:auto}#perf[hidden]{display:none}#perf b{color:#fff}#perf button{float:right;background:none;border:0;color:#f1d6d2;font:600 13px var(--mono);cursor:pointer;margin:-3px -4px 0 8px}#rng.min .rl,#rng.min .alt{display:none}#rng.min{width:auto;padding:5px 0 5px}
 /* Power barometer */
 #power{display:flex;gap:8px;flex-wrap:wrap;flex-basis:100%;order:3;padding-top:5px;border-top:1px solid var(--line)}
@@ -966,12 +968,12 @@ function startWar(){if(!G||G.phase!=='prep')return;G.phase='war';G.prepT=0;G.ban
 // Power is sampled once per wall-clock second; hostile estimates never read private economy or readiness.
 const POWER_THREATS=[['drone','İHA',.7,.7],['cruise','Seyir',.05,.05],['bm','Balistik',10,150]];
 const POWER_REF=6000,SAT_SIZE=60*KMU,SAT_COST=15,SAT_WAIT=90,SAT_DELAY=8;
-function powerDefense(s,aa,bb){
+function powerDefense(s,aa,bb,height=null){
   const total=aa.reduce((n,a)=>n+(ASSET_DEF[a.t]?.v||0),0);
   const active=e=>e.alive!==false&&!(e.bt>0)&&e.mode!=='off';
   const radar=bb.some(e=>active(e)&&SITE[e.t]?.emit&&SITE[e.t]?.sens&&e.emit!==false);
   const sub=POWER_THREATS.map(([kind,label,lo,hi])=>{let covered=0;
-    for(const a of aa)if(bb.some(e=>{const d=SITE[e.t];return d&&active(e)&&e.mag>0&&(PK[e.t]?.[kind]||0)>0&&d.a0<=hi&&d.a1>=lo&&hyp(e.x-a.x,e.y-a.y)<=rngOf(s,e.t)}))covered+=ASSET_DEF[a.t]?.v||0;
+    for(const a of aa)if(bb.some(e=>{const d=SITE[e.t];return d&&active(e)&&e.mag>0&&(PK[e.t]?.[kind]||0)>0&&d.a0<=(height??hi)&&d.a1>=(height??lo)&&hyp(e.x-a.x,e.y-a.y)<=(height==null?rngOf(s,e.t):reachAt(s,e.t,height))}))covered+=ASSET_DEF[a.t]?.v||0;
     return {label,value:total?100*covered/total*(radar?1:.65):0}});
   return {sub,radar,value:sub.reduce((n,p)=>n+p.value,0)/3};
 }
@@ -1020,7 +1022,7 @@ function satelliteAI(){
     const known=[...G.ghost[s].values()].filter(g=>(g.side||gS(g))===target);const p=known.length?known[(Math.random()*known.length)|0]:HQPOS[target];requestSatellite(s,p.x,p.y);
   }
 }
-function beginSatellite(){if(!G||G.phase!=='war'||G.over||G.out.W)return;mode={k:'sat'};G.powerSide=null;qaClose();hint('60 × 60 km çekim alanının merkezine tıkla · $15M · Esc: iptal');renderPower()}
+function beginSatellite(){if(!G||G.phase!=='war'||G.over||G.out.W)return;mode={k:'sat'};G.powerSide=null;closeInfo();qaClose();hint('60 × 60 km çekim alanının merkezine tıkla · $15M · Esc: iptal');renderPower()}
 function drawSatelliteBand(f,k,tactical=false){const x=f.x-f.size/2,y=f.y-f.size/2,c=tactical?'130,220,170':'95,208,224';ctx.fillStyle=`rgba(${c},${.07*(1-k)})`;ctx.fillRect(x,y,f.size,f.size);ctx.strokeStyle=`rgba(${c},${.7*(1-k)})`;ctx.lineWidth=px(1.5);ctx.strokeRect(x,y,f.size,f.size);ctx.beginPath();ctx.moveTo(x,y+f.size*k);ctx.lineTo(x+f.size,y+f.size*k);ctx.stroke()}
 
 // optional W autopilot for testing
@@ -1395,7 +1397,7 @@ function render(time){
     if(e.hit>0){const r=vr(e)*.7;const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,r);g.addColorStop(0,`rgba(255,140,90,${e.hit*.8})`);g.addColorStop(1,'rgba(255,90,40,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,r,0,7);ctx.fill()}
     if(e.cat==='site'&&pa>.3){const S=vr(e)+px(4);const a0=-Math.PI*.75;ctx.globalAlpha=pa;ctx.strokeStyle=e.side==='W'?'rgba(150,215,228,.85)':'rgba(255,120,104,.9)';ctx.lineWidth=px(1.4);for(const q of [0,1,2,3]){ctx.beginPath();ctx.arc(e.x,e.y,S,a0+q*Math.PI/2-.3,a0+q*Math.PI/2+.3);ctx.stroke()}ctx.globalAlpha=1}
     if(e.hp<e.max||G.sel===e.id)hpBar(e);
-    if(G.sel===e.id){ctx.strokeStyle='rgba(127,224,160,.95)';ctx.lineWidth=px(1.5);ctx.beginPath();ctx.arc(e.x,e.y,vr(e)+px(6),0,7);ctx.stroke();if(e.cat==='site'&&SITE[e.t].rng)rangeRing(e,true)}
+    // Selection is drawn once by drawSelectionHUD at a minimum screen radius.
     if(e.cat==='asset')label(e.nm,e.x,e.y+vr(e)+px(14),e.side==='W'?'#bfeef5':e.side==='E'?'#ffc2bb':SHEX[e.side],12);
     else if(e.side==='W'&&(TAC()?cam.z>.45:Spx>60))mono(nameOf('W',e.t),e.x,e.y+vr(e)+px(14),'#9fc9d2',9.5,'center');
     if(e.jam&&e.side==='W')mono('KARIŞTIRILIYOR',e.x,e.y-vr(e)-px(12),'#ff9d90',9.5,'center')}
@@ -1404,10 +1406,10 @@ function render(time){
     const gc=SCOL[gS(g)];ctx.strokeStyle=`rgba(${gc},${age<10?.95:.6})`;ctx.lineWidth=px(1.3);for(const [sx,sy] of [[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.beginPath();ctx.moveTo(g.x+sx*b,g.y+sy*b-sy*px(7));ctx.lineTo(g.x+sx*b,g.y+sy*b);ctx.lineTo(g.x+sx*b-sx*px(7),g.y+sy*b);ctx.stroke()}
     if(g.src==='ELINT'){ctx.fillStyle=`rgba(${gc},.12)`;ctx.beginPath();ctx.arc(g.x,g.y,b*1.4,0,7);ctx.fill()}
     if(cam.z>.3)label(`${G.quad?natOf(gS(g)).n+' · ':''}${nameOf(gS(g),g.t)} · ${g.src}${age>8?' · '+Math.round(age)+' sn':''}`,g.x,g.y+b+px(12),G.quad?SHEX[gS(g)]:'#ff9d90',11)}
-  if(RG.on.RAD)drawRadars(time);
+  if(RG.on.SWEEP)drawRadars(time);
   drawRangeLayer();
   // coverage layer
-  if(G.cov||(mode&&mode.k==='place'&&SITE[mode.t].rng))drawCoverage();else if(TAC())tacRanges();
+  // G.cov is included in the cached battery layers; no duplicate translucent rings.
   // cloud shadows on ground
   if(!TAC())drawClouds(true);
   // particles low, air low
@@ -1427,6 +1429,7 @@ function render(time){
   ctx.globalCompositeOperation='source-over';
   // overlays: tracks, impact points, interceptor lines
   drawTrackOverlay(air,time);
+  drawSelectionHUD();
   drawCursor(V);drawAdvWorld(time);drawTutWorld(time);
   if(G.phase==='prep'){ctx.strokeStyle='rgba(95,208,224,.5)';ctx.lineWidth=px(2);ctx.setLineDash([px(12),px(8)]);ctx.beginPath();if(G.quad){ctx.moveTo(MW/2,MH/2);ctx.lineTo(MW/2,MH);ctx.moveTo(0,MH/2);ctx.lineTo(MW/2,MH/2)}else{ctx.moveTo(mx-Math.cos(ang)*11000,my-Math.sin(ang)*11000);ctx.lineTo(mx+Math.cos(ang)*11000,my+Math.sin(ang)*11000)}ctx.stroke();ctx.setLineDash([])}
   // screen space: rain, lightning, banner
@@ -1554,7 +1557,7 @@ function drawEdgeArrows(){if(G.phase!=='war')return;let n=0;for(const o of G.air
 function drawRain(){const k=G.wx.rain;ctx.strokeStyle=`rgba(200,214,228,${.22+.3*k})`;ctx.lineWidth=1.2;ctx.beginPath();const n=Math.floor(RAIN.length*k);for(let i=0;i<n;i++){const r=RAIN[i];r.y+=r.v*.028;r.x+=.006;if(r.y>1){r.y=0;r.x=Math.random()}if(r.x>1)r.x-=1;const x=r.x*CW,y=r.y*CH;ctx.moveTo(x,y);ctx.lineTo(x+6,y+20)}ctx.stroke()}
 function drawCursor(V){if(!hover||!mode)return;const x=hover.x,y=hover.y;
   if(mode.k==='sat'){const a=satArea(x,y),h=SAT_SIZE/2;ctx.strokeStyle='#5fd0e0';ctx.lineWidth=px(1.5);ctx.fillStyle='rgba(95,208,224,.08)';ctx.fillRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);ctx.strokeRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);mono('UYDU · 60 × 60 km · $15M',a.x,a.y-h-px(12),'#5fd0e0',11,'center');return}
-  if(mode.k==='place'){const err=canPlace('W',mode.t,x,y);const Rv=visRT('site',mode.t,0);if(Rv*2*cam.z>16)drawPhotos(piecesFor('site',mode.t,0),x,y,.7,false);ctx.strokeStyle=err?'#ff6a5a':'#7fe0a0';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();if(SITE[mode.t].rng)rangeRing({x,y,side:'W',t:mode.t},true);if(err)label(err,x,y-px(28),'#ff9d90',13)}
+  if(mode.k==='place'){const err=canPlace('W',mode.t,x,y);const Rv=visRT('site',mode.t,0);if(Rv*2*cam.z>16)drawPhotos(piecesFor('site',mode.t,0),x,y,.7,false);ctx.strokeStyle=err?'#ff6a5a':'#7fe0a0';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();drawPlacementRange(x,y,mode.t);if(err)label(err,x,y-px(28),'#ff9d90',13)}
   if(mode.k==='target'){ctx.strokeStyle='#ffd27a';ctx.lineWidth=px(1.6);const r=px(14);ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.moveTo(x-r*1.6,y);ctx.lineTo(x-r*.5,y);ctx.moveTo(x+r*.5,y);ctx.lineTo(x+r*1.6,y);ctx.moveTo(x,y-r*1.6);ctx.lineTo(x,y-r*.5);ctx.moveTo(x,y+r*.5);ctx.lineTo(x,y+r*1.6);ctx.stroke()}}
 
 // ================================================================ minimap
@@ -1667,15 +1670,11 @@ function drawWreck(e,a,time){const age=G.time-e.deadAt,hot=clamp(1-age/150,0,1);
     if(hot>.05){ctx.globalCompositeOperation='lighter';ctx.globalAlpha=a*hot*(.35+.25*Math.sin(time*11+i*2));const g=ctx.createRadialGradient(0,0,0,0,0,S*.6);g.addColorStop(0,'rgba(255,150,60,.9)');g.addColorStop(1,'rgba(255,80,20,0)');ctx.fillStyle=g;ctx.fillRect(-S*.6,-S*.6,S*1.2,S*1.2)}ctx.restore()});
   ctx.globalAlpha=1;worldTf()}
 // radar picture: instrumented range for high targets, low-altitude horizon, rotating beam
-function drawRadars(time){for(const e of G.ents){if(!e.alive||e.side!=='W'||e.t!=='RAD'||e.bt>0)continue;const d=SITE.RAD,R=d.sens*(e.jam?.18:1),H50=horizon(d.mast,.05),H1=horizon(d.mast,1),on=e.emit&&e.mode!=='off';
-  const T=TAC(),c=T?'130,220,170':'170,215,225';ctx.lineWidth=px(1);
-  ctx.strokeStyle=`rgba(${c},${T?.5:.32})`;ctx.beginPath();ctx.arc(e.x,e.y,R,0,7);ctx.stroke();
-  ctx.setLineDash([px(6),px(6)]);ctx.strokeStyle=`rgba(${c},${T?.45:.28})`;for(const h of [H50,H1]){ctx.beginPath();ctx.arc(e.x,e.y,h,0,7);ctx.stroke()}ctx.setLineDash([]);
-  if(T)for(let r=1000;r<R;r+=1000){ctx.strokeStyle=`rgba(${c},.10)`;ctx.beginPath();ctx.arc(e.x,e.y,r,0,7);ctx.stroke()}
-  if(cam.z>.12){const lab=(t,r,a)=>mono(t,e.x+Math.cos(a)*r,e.y+Math.sin(a)*r,`rgba(${c},.9)`,9.5,'center');lab(`${Math.round(R/KMU)} km · yüksek hedef`,R,-1.2);lab(`${Math.round(H1/KMU)} km · 1 km irtifa`,H1,-1.35);lab(`${Math.round(H50/KMU)} km · 50 m irtifa`,H50,-1.5)}
-  if(on){const a=(time*1.6+e.id)%6.283;for(let i=0;i<14;i++){const a0=a-i*.045;ctx.fillStyle=`rgba(${c},${(T?.16:.1)*(1-i/14)})`;ctx.beginPath();ctx.moveTo(e.x,e.y);ctx.arc(e.x,e.y,R,a0-.046,a0);ctx.closePath();ctx.fill()}
-    ctx.strokeStyle=`rgba(${c},${T?.8:.5})`;ctx.lineWidth=px(1.4);ctx.beginPath();ctx.moveTo(e.x,e.y);ctx.lineTo(e.x+Math.cos(a)*R,e.y+Math.sin(a)*R);ctx.stroke()}}
- for(const f of G.fx){if(f.k!=='scan')continue;const k=f.t/f.life,r=f.R*Math.pow(k,.55);ctx.strokeStyle=`rgba(170,230,215,${.9*(1-k)})`;ctx.lineWidth=px(2.5);ctx.beginPath();ctx.arc(f.x,f.y,r,0,7);ctx.stroke();ctx.fillStyle=`rgba(170,230,215,${.08*(1-k)})`;ctx.fill()}}
+function drawRadars(time){for(const e of G.ents){if(!e.alive||e.side!=='W'||!RADTYPES.includes(e.t)||e.bt>0||!e.emit||e.mode==='off')continue;
+  const R=radarReach(e,RALT[RG.ai]),T=TAC(),c='170,215,225',a=(time*1.6+e.id)%(Math.PI*2);
+  for(let i=0;i<14;i++){const a0=a-i*.045;ctx.fillStyle=`rgba(${c},${(T?.16:.1)*(1-i/14)})`;ctx.beginPath();ctx.moveTo(e.x,e.y);ctx.arc(e.x,e.y,R,a0-.046,a0);ctx.closePath();ctx.fill()}
+  ctx.strokeStyle=`rgba(${c},${T?.8:.5})`;ctx.lineWidth=px(1.4);ctx.beginPath();ctx.moveTo(e.x,e.y);ctx.lineTo(e.x+Math.cos(a)*R,e.y+Math.sin(a)*R);ctx.stroke()}
+  for(const f of G.fx){if(f.k!=='scan')continue;const k=f.t/f.life,r=f.R*Math.pow(k,.55);ctx.strokeStyle=`rgba(170,230,215,${.9*(1-k)})`;ctx.lineWidth=px(2.5);ctx.beginPath();ctx.arc(f.x,f.y,r,0,Math.PI*2);ctx.stroke()}}
 // ---- search radar antenna: a flat phased-array panel on the turntable, turning with the radar sweep (front face r2 / back face r3)
 const ANT={px:.32,py:.27,W:11,H:5,mast:1.3,k:.62};
 function drawAntenna(e,pa,time){const P=piecesOf(e).find(q=>q[0]==='c1n');if(!P||!ready('c1n')||!ready('ra')||!ready('rb'))return;const im=IMG.c1n,Wm=PADW.c1n,Hm=Wm*im.naturalHeight/im.naturalWidth;
@@ -1708,41 +1707,67 @@ function drawExhaust(e,pa,time){const P=piecesOf(e);const wl=Math.hypot(G.wx.win
       const m=1/M_U,x=bx+(wx*ph*6+Math.sin(time*1.3+i*2.1)*.4*ph)*m,y=by+(wy*ph*6-ph*5.5)*m,r=(.45+ph*2.4)*m;
       const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${ph<.12?'52,50,48':'78,80,82'},${a})`);g.addColorStop(1,'rgba(78,80,82,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()}}}
 // ================================================================ range layers (left rail): per-band rings at a chosen altitude
-const RGROUP=[['RAD','Radar',['RAD'],'170,215,225'],['NEAR','Yakın savunma',['CIWS','LASER','IDR','SHORAD'],'127,224,160'],['MID','Orta menzil',['MRAD'],'95,208,224'],['LONG','Uzun menzil',['LRAD'],'159,140,255'],['UP','Üst katman',['UPPER'],'255,170,240'],['EW','Elektronik harp',['EW'],'230,195,90'],['ENEMY','Bilinen düşman',[],'255,96,80']];
+const RADTYPES=Object.keys(SITE).filter(t=>SITE[t].emit&&SITE[t].sens);
+const RGROUP=[['RAD','Radar görüşü',RADTYPES,'170,215,225'],['SWEEP','Tarama',RADTYPES,'170,215,225'],['NEAR','Yakın savunma',['CIWS','LASER','IDR','SHORAD'],'127,224,160'],['MID','Orta menzil',['MRAD'],'95,208,224'],['LONG','Uzun menzil',['LRAD'],'159,140,255'],['UP','Üst katman',['UPPER'],'255,170,240'],['EW','Elektronik harp',['EW'],'230,195,90'],['ENEMY','Bilinen düşman',[],'255,96,80']];
 const RALT=[0.05,0.3,1,3,5,10,15,20,32,40,60,100,150];
-const RG={on:{RAD:1,NEAR:0,MID:0,LONG:0,UP:0,EW:0,ENEMY:0},ai:2,min:0};
-try{const v=JSON.parse(localStorage.getItem('menzil.rng')||'null');if(v&&v.on){Object.assign(RG.on,v.on);RG.ai=clamp(v.ai|0,0,RALT.length-1);RG.min=!!v.min}}catch(e){}
+const RG={on:{RAD:1,SWEEP:1,NEAR:0,MID:0,LONG:0,UP:0,EW:0,ENEMY:0},ai:2,min:0};
+try{const v=JSON.parse(localStorage.getItem('menzil.rng')||'null');if(v&&v.on){for(const k in RG.on)if(k in v.on)RG.on[k]=+!!v.on[k];RG.ai=clamp(v.ai|0,0,RALT.length-1);RG.min=!!v.min}}catch(e){}
 const rgSave=()=>lsSet('menzil.rng',JSON.stringify(RG));
 const altTxt=h=>h<1?Math.round(h*1000)+' m':f1(h)+' km';
-const groupOf=t=>RGROUP.find(g=>g[2].includes(t));
-// ground radius a site covers against a target flying at h km (0 = cannot engage at that height)
+const groupOf=t=>RGROUP.find(g=>!['RAD','SWEEP'].includes(g[0])&&g[2].includes(t));
+// Horizontal coverage at the chosen altitude; radar uses its own horizon, not the weapon envelope.
 function reachAt(side,t,h){const d=SITE[t];if(t==='RAD')return Math.min(d.sens,horizon(d.mast,h));if(d.ew)return rngOf(side,t);
   if(!d.rng||h<d.a0||h>d.a1)return 0;const R=rngOf(side,t),hu=h*KMU;return hu>=R?0:Math.sqrt(R*R-hu*hu)}
-function altNote(h){const L=[];for(const g of RGROUP){if(!g[2].length||g[0]==='RAD'||g[0]==='EW')continue;const ok=g[2].filter(t=>reachAt('W',t,h)>0).map(t=>nameOf('W',t));if(ok.length)L.push(...ok)}
-  return L.length?'Bu irtifada vurabilen: '+L.join(', '):'Bu irtifada hiçbir bataryan vuramaz.'}
-function buildRng(){const el=$('#rng');if(!el)return;const h=RALT[RG.ai];
-  el.className=RG.min?'min':'';
+function radarReach(e,h){const d=SITE[e.t];return Math.min(d.sens,horizon(d.mast||8,h))*(e.jam?.18:1)}
+function altNote(h){const L=[...new Set(sites('W').filter(e=>e.bt<=0&&SITE[e.t].rng&&!SITE[e.t].ew&&reachAt('W',e.t,h)>0).map(e=>nameOf('W',e.t)))];return L.length?'Bu irtifada vurabilen: '+L.join(', '):'Bu irtifada vurabilen kurulu bataryan yok.'}
+const rangeOn=k=>!!RG.on[k]||!!G.cov&&!['RAD','SWEEP'].includes(k);
+function rangeCount(k,ts){return k==='ENEMY'?[...G.ghost.W.values()].filter(g=>SITE[g.t]?.rng&&(g.side||gS(g))!=='W').length:sites('W').filter(e=>ts.includes(e.t)).length}
+function buildRng(){const el=$('#rng');if(!el||!G)return;const h=RALT[RG.ai];el.className=RG.min?'min':'';
   el.innerHTML=`<div class="rh"><span>MENZİL</span><button data-rg="min" aria-label="Paneli daralt">${RG.min?'AÇ':'—'}</button></div>`+
-   RGROUP.map(([k,n,ts,c])=>{const cnt=k==='ENEMY'?[...G.ghost.W.values()].filter(g=>SITE[g.t]&&SITE[g.t].rng).length:G.ents.filter(e=>e.alive&&e.side==='W'&&ts.includes(e.t)).length;
-     return `<button class="rl${RG.on[k]?' on':''}" data-rg="${k}" style="--c:${c}"><i></i>${n}<small>${cnt||''}</small></button>`}).join('')+
-   `<div class="alt"><div class="av"><span>HEDEF İRTİFA</span><b>${altTxt(h)}</b></div><input type="range" min="0" max="${RALT.length-1}" step="1" value="${RG.ai}" aria-label="Hedef irtifası"><div class="ad">${altNote(h)}</div></div>`}
-let rngSig='';function updRng(){if(!G)return;const sig=G.ents.filter(e=>e.alive&&e.side==='W'&&e.cat==='site').length+'/'+G.ghost.W.size;if(sig!==rngSig){rngSig=sig;buildRng()}}
-document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('#rng [data-rg]');if(!b||!G)return;const k=b.dataset.rg;if(k==='min')RG.min=!RG.min;else RG.on[k]=RG.on[k]?0:1;rgSave();buildRng()});
-document.addEventListener('input',ev=>{if(!ev.target.closest||!ev.target.closest('#rng'))return;RG.ai=+ev.target.value;rgSave();const h=RALT[RG.ai];const el=$('#rng');el.querySelector('.av b').textContent=altTxt(h);el.querySelector('.ad').textContent=altNote(h)});
-function drawRangeLayer(){if(!G)return;updRng();const h=RALT[RG.ai],T=TAC(),lbl=cam.z>.16;
-  const ring=(x,y,R,c,name,dead,dash)=>{if(dead){ctx.strokeStyle=`rgba(${c},.28)`;ctx.setLineDash([px(3),px(7)]);ctx.lineWidth=px(1);ctx.beginPath();ctx.arc(x,y,dead,0,7);ctx.stroke();ctx.setLineDash([]);
-      if(lbl)mono(`${name} · ${altTxt(h)}'de kör`,x,y-dead-px(5),`rgba(${c},.6)`,9.5,'center');return}
-    ctx.fillStyle=`rgba(${c},${T?.05:.08})`;ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.fill();
-    if(dash)ctx.setLineDash([px(7),px(5)]);ctx.strokeStyle=`rgba(${c},.85)`;ctx.lineWidth=px(1.4);ctx.stroke();ctx.setLineDash([]);
-    if(lbl)mono(`${name} · ${f1(R/KMU)} km`,x,y-R-px(5),`rgba(${c},.95)`,9.5,'center')};
-  for(const [k,,ts,c] of RGROUP){if(!RG.on[k]||k==='ENEMY'||k==='RAD')continue;
-    for(const e of G.ents){if(!e.alive||e.side!=='W'||e.cat!=='site'||!ts.includes(e.t)||e.bt>0)continue;const R=reachAt('W',e.t,h);ring(e.x,e.y,R,c,nameOf('W',e.t),R?0:rngOf('W',e.t))}}
-  if(RG.on.RAD)for(const e of G.ents){if(!e.alive||e.side!=='W'||e.t!=='RAD'||e.bt>0)continue;const R=reachAt('W','RAD',h)*(e.jam?.18:1);ring(e.x,e.y,R,'170,215,225',`Radar · ${altTxt(h)} hedefi görür`,0)}
-  if(RG.on.ENEMY)for(const g of G.ghost.W.values()){const e=ent(g.id);if(!e||!e.alive||!SITE[g.t]||!SITE[g.t].rng)continue;const R=reachAt(gS(g),g.t,h);if(R)ring(g.x,g.y,R,SCOL[gS(g)],nameOf(gS(g),g.t),0,true)}}
+    RGROUP.map(([k,n,ts,c])=>{const cnt=rangeCount(k,ts);return `<button class="rl${cnt&&rangeOn(k)?' on':''}" data-rg="${k}" aria-pressed="${!!cnt&&rangeOn(k)}" style="--c:${c}"><i></i>${n}<small>${cnt||(k==='ENEMY'?'bilgi yok':'kurulu değil')}</small></button>`}).join('')+
+    `<div class="alt"><div class="av"><span>HEDEF İRTİFA</span><b>${altTxt(h)}</b></div><input type="range" min="0" max="${RALT.length-1}" step="1" value="${RG.ai}" aria-label="Hedef irtifası"><div class="ad">${altNote(h)}</div></div><div class="summary"></div>`;updateRangeSummary()}
+let rngSig='';function updRng(){if(!G)return;const sig=!!G.cov+'|'+G.sides.join(',')+'|'+RGROUP.map(([k,,ts])=>rangeCount(k,ts)).join(',');if(sig!==rngSig){rngSig=sig;buildRng()}}
+document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('#rng [data-rg]');if(!b||!G)return;const k=b.dataset.rg;
+  if(k==='min')RG.min=!RG.min;else{const row=RGROUP.find(g=>g[0]===k);if(!rangeCount(k,row[2])){hint(k==='ENEMY'?'Önce keşif ya da uydu ile düşman bataryalarını tespit et.':`Önce sağ panelden ${nameOf('W',k==='SWEEP'||k==='RAD'?'RAD':row[2][0])} kur.`,1);return}if(G.cov&&!['RAD','SWEEP'].includes(k)){for(const [key] of RGROUP)if(!['RAD','SWEEP'].includes(key))RG.on[key]=1;G.cov=false;renderTop()}RG.on[k]=RG.on[k]?0:1}rgSave();buildRng()});
+document.addEventListener('input',ev=>{if(!ev.target.matches('#rng input[type="range"]'))return;RG.ai=+ev.target.value;rgSave();const h=RALT[RG.ai],el=$('#rng');el.querySelector('.av b').textContent=altTxt(h);el.querySelector('.ad').textContent=altNote(h);rangeSummary.key='';updateRangeSummary()});
+const rangeCache={canvas:document.createElement('canvas'),mask:document.createElement('canvas'),key:'',game:null,builds:0};
+const rangeSummary={key:'',game:null,area:0,value:0};
+function rangeSiteSignature(){return G.ents.filter(e=>e.alive&&e.side==='W').map(e=>[e.id,e.cat,e.t,e.x,e.y,e.bt>0,e.mode,e.emit,!!e.jam,e.mag>0].join(',')).join(';')+'|'+[...G.ghost.W.values()].filter(g=>SITE[g.t]?.rng).map(g=>[g.id,(g.side||gS(g)),g.t,g.x,g.y].join(',')).join(';')+'|'+G.sides.map(s=>G.nat?.[s]||natOf(s).n).join(',')}
+function radarCircles(h){return sites('W').filter(e=>RADTYPES.includes(e.t)&&e.bt<=0&&e.emit&&e.mode!=='off').map(e=>({x:e.x,y:e.y,r:radarReach(e,h)}))}
+// Midpoint integration of merged horizontal spans; clipped to the playable map, independent of camera.
+function unionArea(circles){if(!circles.length)return 0;const y0=Math.max(0,Math.min(...circles.map(c=>c.y-c.r))),y1=Math.min(MH,Math.max(...circles.map(c=>c.y+c.r)));if(y1<=y0)return 0;const dy=(y1-y0)/512;let area=0;
+  for(let i=0;i<512;i++){const y=y0+(i+.5)*dy,spans=[];for(const c of circles){const v=c.r*c.r-(y-c.y)**2;if(v<=0)continue;const d=Math.sqrt(v),lo=Math.max(0,c.x-d),hi=Math.min(MW,c.x+d);if(hi>lo)spans.push([lo,hi])}spans.sort((a,b)=>a[0]-b[0]);let lo=0,hi=0;for(const a of spans){if(a[0]>hi){area+=(hi-lo)*dy;lo=a[0];hi=a[1]}else hi=Math.max(hi,a[1])}area+=(hi-lo)*dy}return area/(KMU*KMU)}
+function updateRangeSummary(sig){if(!G)return;const h=RALT[RG.ai],key=RG.ai+'|'+(sig??rangeSiteSignature());if(rangeSummary.game!==G||rangeSummary.key!==key){rangeSummary.game=G;rangeSummary.key=key;rangeSummary.area=unionArea(radarCircles(h));rangeSummary.value=powerDefense('W',assets('W'),sites('W'),h).value;const ad=$('#rng .ad');if(ad)ad.textContent=altNote(h)}
+  const el=$('#rng .summary');if(el){const text=`${altTxt(h)} irtifada: radar görüşü ≈ ${f1(rangeSummary.area/1000)} bin km² · korunan tesis %${Math.round(rangeSummary.value)}`;if(el.textContent!==text)el.textContent=text;el.title='Harita içindeki birleşik radar alanı; koruma tesis değeriyle ağırlıklı İHA/seyir/balistik ortalamasıdır.'}}
+// Visible boundary arcs only: overlaps have no internal dashed seams.
+function exposedArcs(c,circles,index){const tau=Math.PI*2,blocked=[];for(let j=0;j<circles.length;j++){if(j===index)continue;const b=circles[j],dx=b.x-c.x,dy=b.y-c.y,d=hyp(dx,dy);
+    if(d+c.r<=b.r+1e-7){if(d>1e-7||b.r>c.r+1e-7||j<index)return [];continue}if(d>=c.r+b.r||d+b.r<=c.r||d<1e-7)continue;
+    const a=(Math.atan2(dy,dx)+tau)%tau,w=Math.acos(clamp((d*d+c.r*c.r-b.r*b.r)/(2*d*c.r),-1,1)),lo=a-w,hi=a+w;
+    if(lo<0){blocked.push([0,hi],[lo+tau,tau])}else if(hi>tau){blocked.push([lo,tau],[0,hi-tau])}else blocked.push([lo,hi])}
+  blocked.sort((a,b)=>a[0]-b[0]);let at=0;const arcs=[];for(const [lo,hi] of blocked){if(lo>at)arcs.push([at,lo]);at=Math.max(at,hi)}if(at<tau)arcs.push([at,tau]);return arcs}
+function paintRangeGroup(out,mask,circles,blind,color){const screen=c=>({x:sX(c.x),y:sY(c.y),r:c.r*cam.z});mask.clearRect(0,0,CW,CH);mask.fillStyle=`rgb(${color})`;
+  for(const c of circles){const p=screen(c);mask.beginPath();mask.arc(p.x,p.y,p.r,0,Math.PI*2);mask.fill()}
+  out.save();out.globalAlpha=.10;out.drawImage(rangeCache.mask,0,0,CW,CH);out.globalAlpha=1;out.strokeStyle=`rgba(${color},.78)`;out.lineWidth=1.2;out.setLineDash([7,5]);
+  circles.forEach((c,i)=>{const p=screen(c);for(const [lo,hi] of exposedArcs(c,circles,i)){out.beginPath();out.arc(p.x,p.y,p.r,lo,hi);out.stroke()}});
+  out.strokeStyle=`rgba(${color},.24)`;out.fillStyle=`rgba(${color},.6)`;out.lineWidth=1;out.setLineDash([3,7]);out.font='10px monospace';out.textAlign='center';
+  for(const c of blind){const p=screen(c);out.beginPath();out.arc(p.x,p.y,p.r,0,Math.PI*2);out.stroke();out.fillText(c.label||'kör',p.x,p.y-p.r-5)}out.restore()}
+function drawRangeLayer(){if(!G)return;updRng();const sig=rangeSiteSignature();updateRangeSummary(sig);
+  const key=[CW,CH,DPR,cam.x,cam.y,cam.z,RG.ai,!!G.cov,RGROUP.filter(g=>g[0]!=='SWEEP').map(g=>RG.on[g[0]]).join(','),sig].join('|');
+  if(rangeCache.game!==G||rangeCache.key!==key){rangeCache.game=G;rangeCache.key=key;rangeCache.builds++;
+    for(const c of [rangeCache.canvas,rangeCache.mask]){const w=Math.ceil(CW*DPR),h=Math.ceil(CH*DPR);if(c.width!==w)c.width=w;if(c.height!==h)c.height=h}
+    const out=rangeCache.canvas.getContext('2d'),mask=rangeCache.mask.getContext('2d');out.setTransform(DPR,0,0,DPR,0,0);mask.setTransform(DPR,0,0,DPR,0,0);out.clearRect(0,0,CW,CH);
+    const h=RALT[RG.ai];for(const [k,,ts,color] of RGROUP){if(k==='SWEEP'||k==='ENEMY'||!(RG.on[k]||(G.cov&&k!=='RAD')))continue;
+      const circles=[],blind=[];if(k==='RAD')circles.push(...radarCircles(h));else for(const e of sites('W')){if(!ts.includes(e.t)||e.bt>0)continue;const R=reachAt(e.side,e.t,h);
+        if(R&&e.mode!=='off')circles.push({x:e.x,y:e.y,r:R});else blind.push({x:e.x,y:e.y,r:rngOf(e.side,e.t),label:R?'sessiz':`${altTxt(h)} · kör`})}paintRangeGroup(out,mask,circles,blind,color)}
+    if(RG.on.ENEMY||G.cov)for(const s of G.sides){if(s==='W')continue;const circles=[],blind=[];for(const g of G.ghost.W.values()){if((g.side||gS(g))!==s||!SITE[g.t]?.rng)continue;const R=reachAt(s,g.t,h);(R?circles:blind).push({x:g.x,y:g.y,r:R||rngOf(s,g.t),label:`${altTxt(h)} · kör · tahmini`})}paintRangeGroup(out,mask,circles,blind,SCOL[s])}}
+  ctx.save();ctx.setTransform(DPR,0,0,DPR,0,0);ctx.drawImage(rangeCache.canvas,SHX,SHY,CW,CH);ctx.restore()}
+function drawPlacementRange(x,y,t){const d=SITE[t];if(!d.rng&&!d.sens)return;const h=RALT[RG.ai],R=reachAt('W',t,h),r=R||rngOf('W',t),color=(groupOf(t)||RGROUP[0])[3];
+  ctx.save();ctx.setLineDash([px(7),px(5)]);ctx.strokeStyle=`rgba(${color},${R?.85:.3})`;ctx.lineWidth=px(1.4);ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(R){ctx.fillStyle=`rgba(${color},.1)`;ctx.fill()}ctx.stroke();ctx.setLineDash([]);
+  mono(`${altTxt(h)} · ${R?f1(R/KMU)+' km':'kör'}`,x,y-r-px(8),`rgba(${color},.95)`,11,'center');ctx.restore()}
 // ================================================================ quick actions: click an enemy, choose what to do right there
 const qaEl=document.getElementById('qa');let QA=null;
 function qaClose(){qaEl.hidden=true;QA=null}
-function qaOpen(kind,ref,sx,sy){QA={kind,ref,sx,sy};qaRender()}
+function qaOpen(kind,ref,sx,sy){if(mapBusy())return;QA={kind,ref,sx,sy};qaRender()}
 function etaTxt(k,tx,ty){const L=sites('W',MUN[k].from).sort((a,b)=>hyp(a.x-tx,a.y-ty)-hyp(b.x-tx,b.y-ty))[0];if(!L)return '';return Math.round(flightTime('W',k,L.x,L.y,tx,ty,[]))+' sn'}
 // estimate of a strike: how many rounds to destroy, odds of getting through known defences, cost, time
 function strikeEst(k,e){const M=MUN[k];if(!M)return null;const unit=costOf('W',k),have=G.stock.W[k]||0;const war=G.phase==='war';
@@ -1755,7 +1780,7 @@ function strikeEst(k,e){const M=MUN[k];if(!M)return null;const unit=costOf('W',k
   const costKill=isFinite(N)?N*unit:Infinity;
   const r=[];if(p>=.8)r.push('bilinen savunma bunu durduramaz');else if(p>=.5)r.push('savunmayı iyi delen');if(waves===1&&isFinite(N))r.push('tek salvoda biter');if(!buy)r.push('stokta var');
   return{k,M,unit,have,N,nNow,p,waves,tAll,costKill,buy,why,eta:fl?Math.round(fl)+' sn':'',reason:r.slice(0,2).join(', ')||'en düşük toplam maliyet'}}
-function qaRender(){if(!QA||!G){qaClose();return}let head='',opts=[];const war=G.phase==='war';
+function qaRender(){if(!QA||!G||mapBusy()){qaClose();return}let head='',opts=[];const war=G.phase==='war';
   if(QA.kind==='trk'&&airById(QA.ref)&&airById(QA.ref).side==='W'){const o=airById(QA.ref);if(!o.alive){qaClose();return}const ip=impactPt(o)||{x:o.tx,y:o.ty};
     head=`<b style="color:#bfeef5">${esc(trkName(o))}</b><span>${f1(o.z)} km · ${Math.ceil(etaOf(o))} sn</span>`;
     opts.push({id:'info',ok:false,b:'Kendi silahın',em:'',i:`hedef: ${ip&&ip.x!=null?esc(tgtLabel(ip.x,ip.y)):'—'} · irtifa ${f1(o.z)} km`});
@@ -1791,7 +1816,7 @@ qaEl.addEventListener('click',ev=>{const b=ev.target.closest('[data-qa]');if(!b|
 const icEl=document.getElementById('icard');const CARDIMG={MRAD:'c4a',LRAD:'c5a',UPPER:'c6a',DEC:'c12'};let icKey=null;
 function cardImg(e){if(e.cat==='asset')return piecesOf(e)[0]?piecesOf(e)[0][0]:null;return CARDIMG[e.t]||(COMP[e.t]&&COMP[e.t][0][0])}
 const ASSET_ROLE={HQ:'komuta ve kontrol',CITY:'yerleşim · sivil',PWR:'elektrik üretimi',REFN:'yakıt üretimi',AIRB:'savaş uçakları',FAB:'savunma sanayii',DEPO:'mühimmat',FUEL:'yakıt stoku',COMM:'iletişim ağı',MIL:'kara birlikleri'};
-function renderCard(){if(!G){icEl.hidden=true;icKey=null;return}const e=G.sel&&ent(G.sel);if(!e||(!e.alive&&!e.ruin)){if(!icEl.hidden){icEl.hidden=true;icKey=null}return}
+function renderCard(){if(!G||mapBusy()||G.infoRequest!=='ent:'+G.sel){icEl.hidden=true;icKey=null;return}const e=G.sel&&ent(G.sel);if(!e||(!e.alive&&!e.ruin)){if(!icEl.hidden){icEl.hidden=true;icKey=null}return}
   const own=e.side==='W',k=cardImg(e),site=e.cat==='site',d=site?SITE[e.t]:ASSET_DEF[e.t];const key=e.id+':'+(e.alive?1:0);
   const nm=site?nameOf(e.side,e.t):e.nm,sub=site?(d.n+' · '+d.role):(d.n+' · '+ASSET_ROLE[e.t]);
   const f=Math.max(0,e.hp/e.max),hc=f>.6?'#7fe0a0':f>.3?'#e6c35a':'#ff5a4a';
@@ -1808,7 +1833,7 @@ function renderCard(){if(!G){icEl.hidden=true;icKey=null;return}const e=G.sel&&e
   icEl.querySelector('.bd').innerHTML=`<div class="ey ${e.side}">${own?'Kendi':'Düşman'} · ${site?(d.off?'saldırı':d.rng?'hava savunma':'destek'):'tesis'}</div><h3>${esc(nm)}<small>${esc(sub)}</small></h3>
    <div class="hp"><i><b style="width:${f*100}%;background:${hc}"></b></i><span>${Math.round(e.hp)}/${e.max}</span></div><dl>${rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>${note}`;
   if(icEl.hidden){icEl.hidden=false;icEl.classList.remove('sw')}else if(icKey!==key&&icKey&&icKey.split(':')[0]!==String(e.id)){icEl.classList.remove('sw');void icEl.offsetWidth;icEl.classList.add('sw')}icKey=key}
-icEl.addEventListener('click',e=>{if(e.target.closest('[data-ic="x"]')&&G){G.sel=null;renderSel()}});
+icEl.addEventListener('click',e=>{if(e.target.closest('[data-ic="x"]')&&G){closeInfo()}});
 function renderSel(){renderCard();const el=$('#selp');if(!el||!G)return;if(infoKey){el.innerHTML=specHTML(infoKey);return}
   const tr=G.selTrk&&airById(G.selTrk);if(tr&&tr.alive&&G.trk.W.has(tr.id)){const sp=hyp(tr.vx||0,tr.vy||0,(tr.vz||0)*KMU)*50/8/340;const ip=impactPt(tr);const hit=ip&&G.ents.find(a=>a.alive&&a.side==='W'&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);
     el.innerHTML=`<h4 style="color:#ff8a7e">${KNAME[tr.kind==='decoy'?'bm':tr.kind]}</h4><div class="m">İrtifa ${f1(tr.z)} km · hız ≈ Mach ${f1(sp)} · varış ${Math.ceil(etaOf(tr))} sn${hit?` · hedef: <b style="color:#fff">${hit.cat==='asset'?hit.nm:nameOf('W',hit.t)}</b>`:ip?' · boş araziye düşecek':''}${tr.eng?` · ${tr.eng} önleyici yolda`:''}</div><div class="acts"><button class="btn sm pri" data-sa="engage">Elle önle · konsol</button></div>`;return}
@@ -1824,7 +1849,7 @@ side.addEventListener('click',e=>{if(!G)return;audioInit();const tb=e.target.clo
   const sm=e.target.closest('[data-sm]');if(sm){const s=ent(G.sel);if(s){s.mode=sm.dataset.sm;sfx('beep');renderSel()}return}
   const sa=e.target.closest('[data-sa]');if(sa){const k=sa.dataset.sa;const s=ent(G.sel);if(k==='emit'&&s){s.emit=!s.emit}else if(k==='sell'&&s){G.cash.W+=costOf('W',s.t)*.5;s.alive=false;G.sel=null;sfx('ok')}else if(k==='engage'){openCon('def')}renderSel();return}
   const b=e.target.closest('.card-b');if(!b||b.classList.contains('off'))return;const k=b.dataset.k,kind=b.dataset.kind;
-  if(kind==='site'){mode={k:'place',t:k};hint(`<b>${esc(nameOf('W',k))}</b>: haritada kendi toprağında bir yere tıkla. Sağ tık ya da Esc vazgeçer.`);renderSide(true)}
+  if(kind==='site'){mode={k:'place',t:k};closeInfo();qaClose();hint(`<b>${esc(nameOf('W',k))}</b>: haritada kendi toprağında bir yere tıkla. Sağ tık ya da Esc vazgeçer.`);renderSide(true)}
 });
 const specPop=document.createElement('div');specPop.id='specpop';specPop.hidden=true;document.body.appendChild(specPop);let popKey=null;
 function showPop(key,el,where){if(!G||!key)return;if(popKey!==key){popKey=key;specPop.innerHTML=specHTML(key)}specPop.hidden=false;const r=el.getBoundingClientRect(),h=specPop.offsetHeight,w=specPop.offsetWidth;
@@ -1835,8 +1860,8 @@ document.addEventListener('pointerover',e=>{const t=e.target.closest&&e.target.c
 // ================================================================ launch console
 const CW_KEYS=['BM','HGV','CM','DRN','ARMD','MALD','RCN','SEAD','GLIDE'];
 const FCS={armed:false,hold:0,holding:false,firedAt:0};
-function toggleCon(){if(conEl.hidden)openCon(G.con.mode);else{conEl.hidden=true;stage.style.setProperty('--conH','0px')}renderTop()}
-function openCon(m){G.con.mode=m||G.con.mode;conEl.hidden=false;stage.style.setProperty('--conH',CONH+'px');buildCon();renderTop()}
+function toggleCon(){if(conEl.hidden)openCon(G.con.mode);else{conEl.hidden=true;if(mode?.k==='target'){mode=null;hint('')}stage.style.setProperty('--conH','0px')}renderTop()}
+function openCon(m){G.con.mode=m||G.con.mode;if(G.con.mode==='def'&&mode?.k==='target')mode=null;conEl.hidden=false;stage.style.setProperty('--conH',CONH+'px');buildCon();renderTop()}
 const CONH=186;
 function buildCon(){conEl.style.setProperty('--conH',CONH+'px');conEl.style.height=CONH+'px';
   conEl.innerHTML=`<div class="col cA" id="cA"></div><div class="col cB" id="cB"></div><div class="col cP" id="cP"></div><div class="fc" id="cC">
@@ -1885,13 +1910,13 @@ function renderCon(){if(conEl.hidden||!G)return;const C=G.con,A=$('#cA'),B=$('#c
     setH(B,`<h6>2 · Özellikler</h6>${sh}`);
     // 3 · target & plan
     const t=C.tgt;let info;
-    if(!t)info='<b>Haritada düşman tarafına tıkla.</b> Tıkladığın nokta hedef olur; sarı çemberin içindeki her şey hasar alır.';
+    if(!t)info='<b>Hedef seç düğmesine bas, sonra haritaya tıkla.</b> Sarı çemberin içindeki her şey hasar alır. Esc seçimi bitirir.';
     else{const M=MUN[k];const L=M?launchersFor('W',k)[0]||sites('W',M.from)[0]:assets('W').find(a=>a.t==='AIRB');const o=L||HQPOS.W;const d=hyp(t.x-o.x,t.y-o.y);const ft=M?flightTime('W',k,o.x,o.y,t.x,t.y,C.wp):d/110;const risk=riskOf(k,o,t,C.wp);
       info=`<b>${esc(t.lbl)}</b> · ${f1(d/KMU)} km · ${Math.ceil(ft)} sn <button class="lnk" data-p="clrt">sil</button><br>${risk.length?`<span class="risk">Yolda: ${esc(risk.join(', '))}</span>`:'<span class="ok">Yolda bilinen savunma yok</span>'}`}
     const pk=C.pkg;let ph='';
     if(pk.length){const mxAt=Math.max(...pk.map(p=>p.at),1);ph=`<div class="plan">${pk.map((p,i)=>`<div class="pi"><span class="n">${i+1}</span><span class="w">${p.n}× ${esc(wName(p.w))}</span><span class="t">${esc(p.lbl)}</span><span class="at"><button data-at="${i}" data-d="-5">−</button>${p.at?'+'+p.at:'0'} sn<button data-at="${i}" data-d="5">+</button></span><button class="x" data-rm="${i}">×</button></div>`).join('')}</div>
       <div class="tl">${pk.map((p,i)=>`<span style="left:${4+p.at/mxAt*88}%" title="${esc(wName(p.w))}">${i+1}</span>`).join('')}</div><div class="pt">Plan: ${pk.length} kalem · ${money(planCost(pk))} · numaralar hedefe varış sırası</div>`}
-    setH(P,`<h6>3 · Hedef ve plan</h6><div class="tinfo">${info}</div><div class="row pb"><button class="btn sm" data-p="add" title="Bu silahı ve hedefi plana ekle; sonra başka silah ve hedef ekleyip hepsini tek ATEŞ'le gönder">+ Plana ekle</button><button class="btn sm pri" data-p="blind" title="Hedefin çevresindeki radarları önce karıştırıcı ve anti-radar İHA ile kör eder, aldatıcılarla önleyicileri boşa çeker, ana silahı 12 sn sonra indirir">Kör et + vur</button>${pk.length?'<button class="btn sm ghost" data-p="clr">Planı sil</button>':''}</div>${ph}`)}
+    setH(P,`<h6>3 · Hedef ve plan</h6><button class="btn sm ${mode?.k==='target'?'on':''}" data-p="target">${mode?.k==='target'?'Hedef seçimini bitir':'Hedef seç'}</button><div class="tinfo">${info}</div><div class="row pb"><button class="btn sm" data-p="add" title="Bu silahı ve hedefi plana ekle; sonra başka silah ve hedef ekleyip hepsini tek ATEŞ'le gönder">+ Plana ekle</button><button class="btn sm pri" data-p="blind" title="Hedefin çevresindeki radarları önce karıştırıcı ve anti-radar İHA ile kör eder, aldatıcılarla önleyicileri boşa çeker, ana silahı 12 sn sonra indirir">Kör et + vur</button>${pk.length?'<button class="btn sm ghost" data-p="clr">Planı sil</button>':''}</div>${ph}`)}
   else{const L=[...G.air].filter(o=>o.alive&&o.side!=='W'&&G.trk.W.has(o.id)&&o.kind!=='icp').sort((a,b)=>etaOf(a)-etaOf(b)).slice(0,8);
     setH(A,`<h6>Gelen tehdit · elle önle${md}</h6><div class="wsel" data-keep="tl">${L.map(o=>`<button class="wcard ${G.selTrk===o.id?'on':''}" data-trk="${o.id}"><span class="st">${Math.ceil(etaOf(o))}s</span><img src="${icon(o.k&&MUN[o.k]?o.k:({drone:'DRN',armd:'ARMD',mald:'MALD',recon:'RCN',cruise:'CM',bm:'BM',decoy:'BM',hgv:'HGV',ftr:'SEAD',glide:'GLIDE',arm:'MALD',jam:'JAM'}[o.kind]))}" alt=""><b>${esc(trkName(o))}</b><i>${f1(o.z)} km · ${o.eng?o.eng+' önleyici':'angajmansız'}</i></button>`).join('')||'<span class="muted" style="font-size:13px">İzlenen tehdit yok.</span>'}</div>`);
     const t=G.selTrk&&airById(G.selTrk);let info='Bataryaların zaten otomatik ateş eder. Burası istediğin tehdide <b>elle</b> önleyici göndermek için: listeden ya da haritadan bir tehdit seç; konsol en uygun bataryayı bulur, ATEŞ iki önleyici gönderir.';
@@ -1908,7 +1933,7 @@ function blindPlan(){const C=G.con;if(!C.tgt){hint('Önce haritada ana hedefi i�
   else if(em.length&&G.air4.W.some(a=>a.st==='ready'))P.push({w:'SEAD',n:1,x:em[0].g.x,y:em[0].g.y,wp:[],lbl:nameOf(gS(em[0].g),em[0].g.t),at:0});
   P.push({w:main,n:main===C.w?C.n:1,x:t.x,y:t.y,wp:C.wp.slice(),lbl:t.lbl,at:12});C.pkg=P;C.wp=[];sfx('beep');
   hint(hasD?`Plan hazır: önce karıştırıcı${em.length?` ve ${em.length} radara anti-radar İHA`:''}, 6 sn sonra aldatıcılar, 12 sn sonra ${wName(main)}. Sürelerle oynayabilirsin. Emniyeti kaldır, ATEŞ.`:'İHA rampan yok: karıştırıcı ve aldatıcı atamıyorum. Sağda Rampalar sekmesinden İHA rampası kur.',!hasD);renderCon()}
-conEl.addEventListener('click',e=>{if(!G)return;audioInit();const C=G.con;const m=e.target.closest('[data-cm]');if(m){C.mode=m.dataset.cm;setArm(false);renderCon();return}
+conEl.addEventListener('click',e=>{if(!G)return;audioInit();const C=G.con;const m=e.target.closest('[data-cm]');if(m){C.mode=m.dataset.cm;if(mode?.k==='target')mode=null;setArm(false);renderCon();return}
   const ed=e.target.closest('[data-ed]');if(ed){openDesigner(ed.dataset.ed==='new'?null:ed.dataset.ed);return}
   const cl=e.target.closest('[data-cls]');if(cl){C.cls=cl.dataset.cls;const first=C.cls==='AIR'?'SEAD':C.cls==='X'?CUSTOM[0]:(VAR[C.cls].find(v=>v[0]===C.cls)||VAR[C.cls][0])[0];if(first){C.w=first;TUT.ev.w=C.w;C.n=defN(first)}setArm(false);renderCon();return}
   const w=e.target.closest('[data-w]');if(w){C.w=w.dataset.w;TUT.ev.w=C.w;C.n=defN(C.w);setArm(false);renderCon();return}
@@ -1916,7 +1941,7 @@ conEl.addEventListener('click',e=>{if(!G)return;audioInit();const C=G.con;const 
   const q=e.target.closest('[data-q]');if(q){const mx=isAir(C.w)?1:MUN[C.w].from==='TEL'?8:12;C.n=clamp(C.n+(+q.dataset.q),1,mx);renderCon();return}
   const at=e.target.closest('[data-at]');if(at){const p=C.pkg[+at.dataset.at];if(p)p.at=clamp(p.at+(+at.dataset.d),0,60);renderCon();return}
   const rm=e.target.closest('[data-rm]');if(rm){C.pkg.splice(+rm.dataset.rm,1);renderCon();return}
-  const p=e.target.closest('[data-p]');if(p){const k=p.dataset.p;if(k==='clrt'){C.tgt=null;C.wp=[];setArm(false)}else if(k==='clr')C.pkg=[];else if(k==='blind'){blindPlan();return}else if(k==='add'){if(!C.tgt){hint('Önce haritada hedef seç.',1);return}const last=C.pkg.length?Math.max(...C.pkg.map(x=>x.at)):0;C.pkg.push({w:C.w,n:C.n,x:C.tgt.x,y:C.tgt.y,wp:C.wp.slice(),lbl:C.tgt.lbl,at:C.pkg.length?last+5:0});C.wp=[];sfx('beep');hint('Plana eklendi. Başka silah ya da hedef seçip ekle; numaralar hedefe varış sırası. Hepsi tek ATEŞ ile gider.')}renderCon();return}});
+  const p=e.target.closest('[data-p]');if(p){const k=p.dataset.p;if(k==='target'){mode=mode?.k==='target'?null:{k:'target'};closeInfo();qaClose();hint(mode?'Saldırı hedefini işaretle · Shift: ara nokta · Esc: bitir':'');renderCon();return}if(k==='clrt'){C.tgt=null;C.wp=[];setArm(false)}else if(k==='clr')C.pkg=[];else if(k==='blind'){blindPlan();return}else if(k==='add'){if(!C.tgt){hint('Önce haritada hedef seç.',1);return}const last=C.pkg.length?Math.max(...C.pkg.map(x=>x.at)):0;C.pkg.push({w:C.w,n:C.n,x:C.tgt.x,y:C.tgt.y,wp:C.wp.slice(),lbl:C.tgt.lbl,at:C.pkg.length?last+5:0});C.wp=[];sfx('beep');hint('Plana eklendi. Başka silah ya da hedef seçip ekle; numaralar hedefe varış sırası. Hepsi tek ATEŞ ile gider.')}renderCon();return}});
 // ---------------- weapon workshop
 let DZ=null;
 function openDesigner(id){const base=id&&MUN[id]?MUN[id].design:{cls:'BM',head:'S',eng:'B',gd:'G',sv:'N',name:''};DZ={id,d:{...base}};drawDesigner()}
@@ -2014,12 +2039,12 @@ const TSTEPS=[
  {t:'3 · Füze rampası kur',x:'Saldırmak için rampa gerekir. Paneldeki <b>Rampalar</b> sekmesine geç, <b>füze rampası</b> kartını seç, halkaya koy.',el:()=>tab!=='A'?'[data-tab="A"]':tutCard('TEL'),world:()=>mode&&mode.t==='TEL'?TUT.spot:null,enter:()=>tutSpot('TEL'),done:()=>sites('W','TEL').length>0},
  {t:'Hazırlık tamam',x:'Gerçek oyunda 2 dakikalık hazırlıkta istediğin kadar kurarsın, para bitene kadar. Şimdi savaşı başlat: üstteki <b>Hazırım · başlat</b>.',el:()=>'[data-t="go"]',done:()=>G.phase==='war',leave:()=>{G.ai.next=1e9}},
  {t:'4 · Silah seç',x:'Alttaki şerit <b>atış konsolu</b>. Soldan <b>balistik füzeyi</b> seç. Füzeyi ayrıca satın almazsın: ateşlediğin anda fiyatı kasandan düşer.',el:()=>'[data-w="BM"]',enter:()=>{G.con.w='DRN';G.con.n=6;G.con.tgt=null;TUT.ev.w=null;renderCon()},done:()=>TUT.ev.w==='BM'},
- {t:'5 · Hedefi işaretle',x:'Kamera düşman tarafına geçti. Haritada <b>yanıp sönen halkaya</b>, düşmanın rafinerisine tıkla. Tıkladığın nokta hedeftir: sarı çemberin içindeki her şey hasar alır, merkeze yakın olan daha çok.',world:()=>TUT.spot,enter:()=>{const r=foeAssets().find(a=>a.t==='REFN')||foeAssets()[0];TUT.spot={x:r.x,y:r.y,r:60};cam.x=r.x-150;cam.y=r.y+80;cam.z=.75;camClamp()},done:()=>G.con.tgt&&G.con.w==='BM'&&hyp(G.con.tgt.x-TUT.spot.x,G.con.tgt.y-TUT.spot.y)<220},
+ {t:'5 · Hedefi işaretle',x:'Kamera düşman tarafına geçti; hedef seçimi açık. Haritada <b>yanıp sönen halkaya</b>, düşmanın rafinerisine tıkla. Tıkladığın nokta hedeftir: sarı çemberin içindeki her şey hasar alır, merkeze yakın olan daha çok.',world:()=>TUT.spot,enter:()=>{const r=foeAssets().find(a=>a.t==='REFN')||foeAssets()[0];TUT.spot={x:r.x,y:r.y,r:60};mode={k:'target'};closeInfo();qaClose();renderCon();cam.x=r.x-150;cam.y=r.y+80;cam.z=.75;camClamp()},done:()=>G.con.tgt&&G.con.w==='BM'&&hyp(G.con.tgt.x-TUT.spot.x,G.con.tgt.y-TUT.spot.y)<220,leave:()=>{mode=null;renderCon()}},
  {t:'6 · Emniyeti kaldır',x:'Kırmızı-siyah çizgili kapak emniyettir. Ona tıkla: kapak kalkar, rampan füzeyi dikine kaldırır.',el:()=>'#armb',done:()=>FCS.armed},
  {t:'7 · Ateş',x:'<b>ATEŞ</b> düğmesine bas ve bırakma. Düğme yuvasına iner; dibe değince füze kalkar. Erken bırakırsan iptal olur. (Klavyede Space de olur.)',el:()=>'#fbtn',enter:()=>{TUT.ev.fired=false},done:()=>TUT.ev.fired},
  {t:'Füzeni izle',x:'Balistik füze önce dikine kalkar, bulut katmanını delip 90 km\'ye çıkar, sonra hedefe dik iner. Yolda sahte başlıklar bırakır. Rakibin uzun menzil savunması onu yine de düşürebilir.<br><br>Mavi çember senin füzen. Düşünce sonucu sağda rapor olarak görürsün.',enter:()=>{TUT.t=0},tick:dt=>{const m=G.air.find(o=>o.alive&&o.side==='W'&&o.kind==='bm');if(m){cam.z+=(.42-cam.z)*.03;cam.x+=(m.x-cam.x)*.06;cam.y+=(m.y-LIFT(m.z)*.6-cam.y)*.06;camClamp();TUT.t=0}else TUT.t+=dt},done:()=>TUT.t>3&&G.time>4},
  {t:'8 · Şimdi savunma',x:'Rakip sana 4 kamikaze İHA ve 1 seyir füzesi gönderdi. <b>Kırmızı elmaslar</b> onlar; sağ üstteki kutu kaç saniyede geleceklerini söylüyor.<br><br>Bataryaların menziline gireni <b>kendisi</b> vurur, senin bir şey yapman gerekmez. Bir elmasın üstüne gelirsen nereye düşeceğini görürsün.',enter:()=>{tutAttack();const h=assets('W').find(a=>a.t==='HQ');cam.x=h.x+260;cam.y=h.y-260;cam.z=.6;camClamp()},done:()=>TUT.att.length>=5&&!TUT.att.some(o=>o&&o.alive)},
- {t:'Hazırsın',x:'Özet:<br>• <b>Sağ panel</b> = kur. Savunma bataryaları kendi kendine ateş eder; rampalar saldırı içindir.<br>• <b>Alt konsol</b> = vur: silah seç → haritaya tıkla → emniyeti kaldır → ATEŞ\'e basılı tut.<br>• <b>Üst şerit</b> = danışman. Ne yapman gerektiğini söyler; düğmesine basarsan kendisi yapar.<br><br>Rakip artık gerçekten saldıracak. 15 dakika dayan, ondan çok hasar verdir. Komuta merkezin düşerse kaybedersin.',btn:'Oyuna devam',leave:()=>tutEnd()},
+ {t:'Hazırsın',x:'Özet:<br>• <b>Sağ panel</b> = kur. Savunma bataryaları kendi kendine ateş eder; rampalar saldırı içindir.<br>• <b>Alt konsol</b> = vur: silah seç → Hedef seç → haritaya tıkla → emniyeti kaldır → ATEŞ\'e basılı tut.<br>• <b>Üst şerit</b> = danışman. Ne yapman gerektiğini söyler; düğmesine basarsan kendisi yapar.<br><br>Rakip artık gerçekten saldıracak. 15 dakika dayan, ondan çok hasar verdir. Komuta merkezin düşerse kaybedersin.',btn:'Oyuna devam',leave:()=>tutEnd()},
 ];
 function tutSpot(t){const p=advSpot(t,t==='TEL'?HQPOS.W:assets('W').find(a=>a.t==='HQ')||HQPOS.W);TUT.spot=p?{x:p.x,y:p.y,r:46}:null;if(p){cam.x=p.x+80;cam.y=p.y-60;cam.z=.7;camClamp()}}
 function tutAttack(){const h=assets('W').find(a=>a.t==='HQ');const tg=assets('W').filter(a=>a.t!=='HQ'&&hyp(a.x-h.x,a.y-h.y)<900);const dx=FOEPT('W').x-h.x,dy=FOEPT('W').y-h.y,d=hyp(dx,dy);const sx=h.x+dx/d*950,sy=h.y+dy/d*950;TUT.att=[];
@@ -2045,7 +2070,7 @@ function drawTutWorld(time){if(!TUT.on||!G)return;const st=TSTEPS[TUT.i];const p
 
 // ================================================================ threat info card (click a hostile track)
 const trkPop=document.createElement('div');trkPop.id='trkpop';trkPop.hidden=true;document.body.appendChild(trkPop);
-function trkInfo(){const t=G&&G.selTrk&&airById(G.selTrk);if(!t||!t.alive||t.side==='W'||!ov.hidden){trkPop.hidden=true;return}
+function trkInfo(){const t=G&&G.selTrk&&airById(G.selTrk);if(!t||!t.alive||mapBusy()||G.infoRequest!=='trk:'+t.id||!ov.hidden){trkPop.hidden=true;return}
   const M=t.k&&MUN[t.k];const sp=hyp(t.vx||0,t.vy||0,(t.vz||0)*KMU)*50/8/340;const ip=impactPt(t);const hit=ip&&G.ents.find(a=>a.alive&&a.side==='W'&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);
   const rows=[];const byT={};for(const s of sites('W')){const d=SITE[s.t];if(!d.rng||d.ew)continue;(byT[s.t]=byT[s.t]||[]).push(s)}
   const ref=ip||t;
@@ -2062,7 +2087,7 @@ function trkInfo(){const t=G&&G.selTrk&&airById(G.selTrk);if(!t||!t.alive||t.sid
    <div class="cta"><button class="btn sm pri" data-tp="eng">Elle önle</button></div>`;trkPop.hidden=false;placeTrkPop()}
 function placeTrkPop(){if(trkPop.hidden||!G)return;const t=G.selTrk&&airById(G.selTrk);if(!t||!t.alive){trkPop.hidden=true;return}const r=cv.getBoundingClientRect();const x=r.left+sX(t.x),y=r.top+sY(t.y-LIFT(t.z));const w=trkPop.offsetWidth,h=trkPop.offsetHeight;
   let L=x+26,T=y-h/2;if(L+w>r.right-8)L=x-w-26;trkPop.style.left=clamp(L,r.left+6,r.right-w-6)+'px';trkPop.style.top=clamp(T,r.top+6,r.bottom-h-6)+'px'}
-trkPop.addEventListener('click',e=>{const b=e.target.closest('[data-tp]');if(!b)return;if(b.dataset.tp==='x'){G.selTrk=null;trkPop.hidden=true}else{openCon('def');renderCon()}});
+trkPop.addEventListener('click',e=>{const b=e.target.closest('[data-tp]');if(!b)return;if(b.dataset.tp==='x'){closeInfo()}else{openCon('def');renderCon()}});
 
 // ================================================================ threat HUD
 function updHUD(){const th=$('#threats');if(!G||G.phase!=='war'){th.hidden=true;return}const gr={};for(const o of G.air){if(!o.alive||o.side==='W'||!G.trk.W.has(o.id)||o.kind==='icp')continue;const k=G.quad?o.side+':'+trkName(o):trkName(o);const g=gr[k]=gr[k]||{n:0,eta:1e9,o:null,ign:0,kind:o.kind};g.n++;const e=etaOf(o);if(e<g.eta){g.eta=e;g.o=o}const ip=impactPt(o);if(ip&&!G.ents.some(a=>a.alive&&a.side==='W'&&hyp(a.x-ip.x,a.y-ip.y)<a.r+90))g.ign++}
@@ -2074,26 +2099,60 @@ function toW(e){const r=cv.getBoundingClientRect();const sx=e.clientX-r.left,sy=
 function pickTrack(w,R=34){let best=null,bd=1e9;for(const o of G.air){if(!o.alive||o.kind==='icp'||(o.side!=='W'&&!G.trk.W.has(o.id)))continue;const sx=sX(o.x),sy=sY(o.y-LIFT(o.z));const d=hyp(sx-w.sx,sy-w.sy);if(d<R&&d<bd){bd=d;best=o}}return best}
 function pickEnt(w){let best=null,bd=1e9;for(const e of G.ents){if(!e.alive&&!e.ruin)continue;if(e.side!=='W'&&e.cat==='site'&&!G.ghost.W.has(e.id))continue;const r=Math.max(vr(e),px(16))+px(4);const d=hyp(e.x-w.x,e.y-w.y);if(d<r&&d<bd){bd=d;best=e}}return best}
 function tgtLabel(x,y){const e=G.ents.filter(e=>e.alive&&e.side!=='W'&&(e.cat==='asset'||G.ghost.W.has(e.id))).sort((a,b)=>hyp(a.x-x,a.y-y)-hyp(b.x-x,b.y-y))[0];if(e&&hyp(e.x-x,e.y-y)<e.r+40)return e.cat==='asset'?e.nm:nameOf(e.side,e.t);return `${(x/KMU)|0}/${(y/KMU)|0} km noktası`}
+const selectionLabel=document.createElement('div');selectionLabel.id='selection-label';selectionLabel.hidden=true;
+selectionLabel.innerHTML='<span></span><button type="button" aria-label="Seçimin bilgisini aç" title="Bilgi · I">ⓘ</button>';stage.appendChild(selectionLabel);
+const mapBusy=()=>!!mode&&['place','target','sat'].includes(mode.k);
+function closeInfo(){if(G)G.infoRequest=null;icEl.hidden=true;icKey=null;trkPop.hidden=true}
+function clearSelection(){if(!G)return;G.sel=null;G.selTrk=null;closeInfo();qaClose();selectionLabel.hidden=true;renderSel()}
+function selectionItem(){if(!G)return null;const tr=G.selTrk&&airById(G.selTrk);if(tr&&tr.alive&&(tr.side==='W'||G.trk.W.has(tr.id)))return{kind:'trk',o:tr,x:tr.x,y:tr.y-LIFT(tr.z)};
+  const e=G.sel&&ent(G.sel);return e&&(e.alive||e.ruin)&&(e.side==='W'||e.cat==='asset'||G.ghost.W.has(e.id))?{kind:'ent',o:e,x:e.x,y:e.y}:null}
+function requestInfo(){if(!G||mapBusy()||!ov.hidden)return;const item=selectionItem();if(!item)return;G.infoRequest=item.kind+':'+item.o.id;qaClose();renderCard();trkInfo()}
+selectionLabel.querySelector('button').addEventListener('click',requestInfo);
+function drawSelectionHUD(){const item=selectionItem();if(!item||mapBusy()||!ov.hidden){selectionLabel.hidden=true;return}const {kind,o,x,y}=item;
+  const sx=sX(x)+SHX,sy=sY(y)+SHY,r=Math.max(18,kind==='ent'?vr(o)*cam.z+6:18);
+  ctx.save();ctx.strokeStyle='#ffd27a';ctx.lineWidth=px(1.5);ctx.beginPath();ctx.arc(x,y,r/cam.z,0,Math.PI*2);ctx.stroke();ctx.restore();
+  if(sx<0||sx>CW||sy<0||sy>CH){selectionLabel.hidden=true;return}selectionLabel.hidden=false;
+  const name=kind==='trk'?trkName(o):o.cat==='asset'?o.nm:nameOf(o.side,o.t);if(selectionLabel.firstChild.textContent!==name)selectionLabel.firstChild.textContent=name;
+  selectionLabel.style.left=clamp(sx+22,4,Math.max(4,CW-selectionLabel.offsetWidth-4))+'px';selectionLabel.style.top=clamp(sy-36,4,CH-30)+'px'}
+function pickCandidates(w){const list=[];for(const o of G.air){if(!o.alive||o.kind==='icp'||(o.side!=='W'&&!G.trk.W.has(o.id)))continue;
+    const d=hyp(sX(o.x)+SHX-w.sx,sY(o.y-LIFT(o.z))+SHY-w.sy);if(d<=18)list.push({kind:'trk',o,d,rank:o.side==='W'?3:0})}
+  for(const o of G.ents){if(!o.alive&&!o.ruin)continue;if(o.side!=='W'&&o.cat==='site'&&!G.ghost.W.has(o.id))continue;
+    const d=hyp(sX(o.x)+SHX-w.sx,sY(o.y)+SHY-w.sy);if(d<=Math.max(18,vr(o)*cam.z+4))list.push({kind:'ent',o,d,rank:o.side==='W'?2:1})}
+  return list.sort((a,b)=>a.rank-b.rank||a.d-b.d||a.o.id-b.o.id)}
+let clickCycle=null,clickReady=null,lastMapSpecial=false;
+function chooseMapItem(w,cycle){const list=pickCandidates(w);if(!list.length){clickCycle=null;return null}const ids=list.map(p=>p.kind+':'+p.o.id).join(','),camera=[cam.x,cam.y,cam.z].join(',');let i=0;
+  if(cycle&&clickCycle&&clickCycle.game===G&&clickCycle.ids===ids&&clickCycle.camera===camera&&hyp(w.sx-clickCycle.x,w.sy-clickCycle.y)<=6)i=(clickCycle.i+1)%list.length;
+  clickCycle={game:G,ids,camera,x:w.sx,y:w.sy,i};return list[i]}
+function selectMapItem(item,w,menu=true){closeInfo();qaClose();G.sel=item?.kind==='ent'?item.o.id:null;G.selTrk=item?.kind==='trk'?item.o.id:null;renderSel();
+  if(item&&menu&&item.o.side!=='W'&&item.o.alive)qaOpen(item.kind,item.o.id,w.sx,w.sy);if(!conEl.hidden&&G.con.mode==='def')renderCon();if(item)sfx('beep',null,null,900)}
+function mapClick(w,shift){lastMapSpecial=mapBusy();if(mapBusy()){closeInfo();qaClose();
+    if(mode.k==='sat'){const r=requestSatellite('W',w.x,w.y);if(r)hint(r,1);else{mode=null;hint('');renderPower()}return}
+    if(mode.k==='place'){const r=build('W',mode.t,w.x,w.y);if(typeof r==='string')hint(r,1);else{if(!shift)mode=null;hint('');renderSide()}return}
+    if(mode.k==='target'){if(sideOf(w.x,w.y)==='W'){hint('Hedef için düşman tarafına tıkla.',1);return}const C=G.con;
+      if(shift&&C.tgt&&MUN[C.w]&&(MUN[C.w].from==='DLN'||MUN[C.w].kind==='cruise')){C.wp.push({x:w.x,y:w.y});hint(`Ara nokta ${C.wp.length} eklendi.`)}else{C.tgt={x:w.x,y:w.y,lbl:tgtLabel(w.x,w.y)};C.wp=[]}sfx('beep',null,null,760);renderCon();return}}
+  const item=chooseMapItem(w,true);if(!item)clearSelection();else selectMapItem(item,w)}
 cv.addEventListener('contextmenu',e=>e.preventDefault());
-cv.addEventListener('pointerdown',e=>{if(!G)return;audioInit();cv.setPointerCapture(e.pointerId);const w=toW(e);hover=w;
-  if(e.button===1||e.button===2){if(e.button===2&&mode){mode=null;hint('');renderSide();return}mDown={pan:true,x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y,moved:false,right:e.button===2};return}
-  if(mode&&mode.k==='sat'){const r=requestSatellite('W',w.x,w.y);if(r)hint(r,1);else{mode=null;hint('');renderPower()}mDown=null;return}
-  if(mode&&mode.k==='place'){const r=build('W',mode.t,w.x,w.y);if(typeof r==='string')hint(r,1);else{if(!e.shiftKey)mode=null;hint('');renderSide()}return}
-  mDown={x:e.clientX,y:e.clientY,w,shift:e.shiftKey,cx:cam.x,cy:cam.y,moved:false}});
-cv.addEventListener('pointermove',e=>{if(!G)return;const w=toW(e);hover=w;edge={x:w.sx,y:w.sy};if(!mDown)return;if(!mDown.pan&&hyp(e.clientX-mDown.x,e.clientY-mDown.y)>8)mDown.pan=true;if(!mDown.pan)return;const dx=e.clientX-mDown.x,dy=e.clientY-mDown.y;if(Math.abs(dx)+Math.abs(dy)>5)mDown.moved=true;if(mDown.moved){G.follow=null;cam.x=mDown.cx-dx/cam.z;cam.y=mDown.cy-dy/cam.z;camClamp()}});
-cv.addEventListener('pointerup',e=>{if(!G||!mDown){mDown=null;return}const d=mDown;mDown=null;const w=toW(e);
-  if(d.pan){if(d.right&&!d.moved){G.sel=null;G.selTrk=null;renderSel()}return}
-  {const tr=pickTrack(w,30);if(tr){G.selTrk=tr.id;G.sel=null;trkInfo();renderSel();qaOpen('trk',tr.id,w.sx,w.sy);if(!conEl.hidden&&G.con.mode==='def')renderCon();sfx('beep',null,null,900);return}}
-  if(!conEl.hidden&&G.con.mode==='atk'&&sideOf(w.x,w.y)!=='W'){const C=G.con;if(d.shift&&C.tgt&&MUN[C.w]&&(MUN[C.w].from==='DLN'||MUN[C.w].kind==='cruise')){C.wp.push({x:w.x,y:w.y});hint(`Ara nokta ${C.wp.length} eklendi.`)}else{C.tgt={x:w.x,y:w.y,lbl:tgtLabel(w.x,w.y)};C.wp=[];const en=pickEnt(w);if(en&&en.alive&&en.side!=='W'){G.sel=en.id;G.selTrk=null;renderSel();qaOpen('ent',en.id,w.sx,w.sy)}else qaClose()}sfx('beep',null,null,760);renderCon();return}
-  const tr=pickTrack(w);if(tr){G.selTrk=tr.id;G.sel=null;trkInfo();renderSel();if(!conEl.hidden&&G.con.mode==='def')renderCon();qaOpen('trk',tr.id,w.sx,w.sy);sfx('beep',null,null,900);return}
-  if(!conEl.hidden&&G.con.mode==='atk'&&sideOf(w.x,w.y)==='W'&&!pickEnt(w)){hint('Burası kendi toprağın. Hedef için kesik çizginin öbür tarafına, düşman tarafına tıkla.',1)}
-  const en=pickEnt(w);G.sel=en?en.id:null;G.selTrk=null;renderSel();if(en&&en.alive&&en.side!=='W')qaOpen('ent',en.id,w.sx,w.sy);else qaClose();if(en)sfx('beep',null,null,900)});
+cv.addEventListener('pointerdown',e=>{if(!G||!ov.hidden)return;audioInit();cv.setPointerCapture(e.pointerId);hover=toW(e);clickReady=null;
+  mDown={x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y,moved:false,button:e.button,shift:e.shiftKey,special:mapBusy()}});
+cv.addEventListener('pointermove',e=>{if(!G)return;const w=toW(e);hover=w;edge={x:w.sx,y:w.sy};
+  if(mDown){const dx=e.clientX-mDown.x,dy=e.clientY-mDown.y;if(hyp(dx,dy)>6)mDown.moved=true;if(mDown.moved){G.follow=null;cam.x=mDown.cx-dx/cam.z;cam.y=mDown.cy-dy/cam.z;camClamp()}}
+  cv.style.cursor=mDown?.moved?'grabbing':mapBusy()?'crosshair':pickCandidates(toW(e)).length?'pointer':'grab'});
+cv.addEventListener('pointerup',e=>{const d=mDown;mDown=null;clickReady=null;if(!G||!d)return;const w=toW(e);if(d.moved||hyp(e.clientX-d.x,e.clientY-d.y)>6||w.sx<0||w.sy<0||w.sx>CW||w.sy>CH)return;
+  if(d.button===2){lastMapSpecial=d.special;if(d.special){mode=null;closeInfo();qaClose();hint('');renderSide();if(!conEl.hidden)renderCon();return}
+    const list=pickCandidates(w),selected=selectionItem();const item=list.find(p=>selected&&p.kind===selected.kind&&p.o.id===selected.o.id)||list[0];if(!item){clearSelection();return}selectMapItem(item,w,false);requestInfo();return}
+  if(d.button===0)clickReady={w,shift:d.shift}});
+// Native click.detail distinguishes the second click of a double-click from a new single click.
+cv.addEventListener('click',e=>{const ready=clickReady;clickReady=null;if(!ready||e.detail>1)return;mapClick(ready.w,ready.shift)});
+cv.addEventListener('dblclick',e=>{e.preventDefault();if(!lastMapSpecial&&!mapBusy())requestInfo()});
+cv.addEventListener('pointercancel',()=>{mDown=null;clickReady=null});
+cv.addEventListener('lostpointercapture',()=>{mDown=null});
 cv.addEventListener('wheel',e=>{if(!G)return;e.preventDefault();const w=toW(e);cam.z*=Math.exp(-clamp(e.deltaY,-150,150)*.0024);camClamp();cam.x=w.x-(w.sx-CW/2)/cam.z;cam.y=w.y-(w.sy-CH/2)/cam.z;camClamp()},{passive:false});
 let edge=null,edgeT=0;cv.addEventListener('pointerleave',()=>{edge=null;hover=null});document.addEventListener('pointermove',e=>{if(e.target!==cv)edge=null},true);
 const keys={};
-addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(!G||!ov.hidden)return;if(e.target.tagName==='INPUT')return;
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(!G||!ov.hidden)return;if(e.target.matches('input,textarea,select')||e.target.isContentEditable)return;
+  if(k==='i'){e.preventDefault();requestInfo();return;}
   if(k===' '){e.preventDefault();if(!conEl.hidden&&FCS.armed){if(!e.repeat)holdStart()}else if(!TUT.on){G.paused=!G.paused;updTop()}return}
-  if(k==='escape'){mode=null;G.powerSide=null;renderPower();hint('');if(QA)qaClose();if(G.sel){G.sel=null;renderSel()}if(FCS.armed)setArm(false);renderSide();return}
+  if(k==='escape'){mode=null;G.powerSide=null;renderPower();hint('');clearSelection();if(!conEl.hidden)renderCon();if(FCS.armed)setArm(false);renderSide();return}
   if(k==='c'){G.cov=!G.cov;renderTop();return}if(k==='v'){setView(VIEW==='tac'?'sat':'tac');return}if(k==='h'){cam.x=HQPOS.W.x+300;cam.y=HQPOS.W.y-250;camClamp();return}
   if(k==='a'&&!conEl.hidden){setArm(!FCS.armed);return}});
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys[k]=false;if(k===' '&&FCS.holding)holdEnd()});
