@@ -180,3 +180,13 @@ Her değişiklik için:
 - `tools/mat4.py`: Harita fotoğrafından su/orman/kaya maskesi çıkarır.
 - `tools/merge4.py`: Dört yüksek detaylı çeyreği orijinal haritaya hizalar (ECC) ve harmanlar.
 - `tools/srv.py` + `tools/fuzz.py`: `dist/` klasörünü yerelde sunar. Rastgele tıklama, tuş ve ateşleme ile iki modu oynatıp hata arar. Playwright + Chromium (swiftshader) gerekir.
+
+## GÖREV 4 + 5 (Claude, doğrudan uygulandı)
+- Menzil paneli: dolgu alfa .2, kesikli kenar 1.6 px, radar görüşü rengi açık gri-beyaz (denizden ayrışır), panel 192 px, özet panelin içinde, "yok" kısa etiket (tam metin title'da).
+- Deneysel sınıf (`VAR.XP`, sekme "Deneysel"): `EMP`, `GRAF`, `MOTH`, `BAL`; hepsi `proto:1`, fırlatmada %12 arıza (`PROTO_FAIL`, `failAt` → `protoFail`).
+  - EMP: çarpışmada 6 km (`emp:120`) içindeki düşman sitelerine `empT` (30 sn) → sense/engage/jammedAt/launchersFor/powerDefense bunları yok sayar.
+  - GRAF: `grafBurst` → varlıklara `blackT` (60 sn, gelir ×.2, gece ışığı yok); PWR vurulursa `G.blackS[side]` (taraf geliri ×.85, kasaba ışıkları söner).
+  - MOTH: yolun yarısında `motherSplit` → 8 DRN.
+  - BAL: yeni `kind:'balloon'`, 30 km irtifa, 120 sn loiter, 800 u (40 km) keşif; yalnızca LRAD vurur (PK .75).
+  - YZ ara sıra satın alır; paketin başına koyar (rampaları önce onlar alır).
+- GÖREV 5: `</style>` öncesindeki "v5" bloğu oyun içi arayüzü ana menü diline çeker (düz yüzey, köşe 0, gölge yok, mono başlıklar, tek soluk vurgu, kırmızı sadece tehlike). Sınıf adları ve data-* değişmedi.
