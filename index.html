@@ -323,7 +323,7 @@ body{font:13.5px/1.45 var(--sans)}
 #rng .alt .av{display:flex;justify-content:space-between;font:500 10.5px var(--mono);letter-spacing:.08em;color:var(--mute)}#rng .alt .av b{color:#fff;font-weight:600;letter-spacing:0}
 #rng input[type=range]{width:100%;margin:6px 0 2px;accent-color:#9fd2dc;height:16px}
 #rng .ad{font:500 11px/1.3 var(--sans);color:#8d969c;min-height:28px}
-#rng:empty{display:none}#rng.min .rl,#rng.min .alt{display:none}#rng.min{width:auto;padding:5px 0 5px}
+#rng:empty{display:none}#perf{position:fixed;left:10px;bottom:10px;z-index:30;max-width:min(560px,90vw);background:rgba(20,8,8,.92);border:1px solid #5a2a24;border-left:3px solid #ff5a4a;border-radius:6px;padding:7px 10px;font:500 11.5px/1.45 var(--mono);color:#f1d6d2;white-space:pre-wrap;pointer-events:auto}#perf[hidden]{display:none}#perf b{color:#fff}#perf button{float:right;background:none;border:0;color:#f1d6d2;font:600 13px var(--mono);cursor:pointer;margin:-3px -4px 0 8px}#rng.min .rl,#rng.min .alt{display:none}#rng.min{width:auto;padding:5px 0 5px}
 </style>
 </head>
 <body>
@@ -336,6 +336,7 @@ body{font:13.5px/1.45 var(--sans)}
   </div>
 </div>
 <div class="overlay" id="ov" hidden></div>
+<div id="perf" hidden></div>
 
 <script>(()=>{
 'use strict';
@@ -625,7 +626,7 @@ function newGame(mode,opts={}){
   for(const k in HQPOS)delete HQPOS[k];Object.assign(HQPOS,JSON.parse(JSON.stringify(quad?HQ_QUAD:HQ_DUO)));
   const nat={W:opts.nat||'TR'};if(quad){const o=opts.enats||Object.keys(NAT).filter(k=>k!==nat.W);SD.slice(1).forEach((s,i)=>nat[s]=o[i%o.length])}else nat.E=opts.enat||'RU';
   const per=f=>Object.fromEntries(SD.map(s=>[s,f(s)]));
-  G={mode,quad,sides:SD,out:{},time:0,phase:'prep',prepT:PREP_T,speed:1,paused:false,over:false,ents:[],air:[],parts:[],fx:[],deb:[],later:[],
+  G={started:performance.now(),mode,quad,sides:SD,out:{},time:0,phase:'prep',prepT:PREP_T,speed:1,paused:false,over:false,ents:[],air:[],parts:[],fx:[],deb:[],later:[],
     nat,diff:opts.diff||'easy',cash:per(s=>s==='W'?900:Math.round(900*D.bud)),stock:per(()=>({})),
     trk:per(()=>new Map()),ghost:per(()=>new Map()),score:per(()=>({dmg:0,sp:0,civ:0})),icp:per(()=>({n:0,hit:0,cost:0,miss:0})),suf:per(()=>0),grudge:per(()=>({})),
     air4:per(()=>[]),sel:null,selTrk:null,cov:false,wx:{state:'clear',t:60+Math.random()*60,cover:.15,rain:0,flash:0,wind:{x:6+Math.random()*6,y:-2+Math.random()*4}},clouds:[],tod:.3,
@@ -1058,8 +1059,8 @@ function landSpot(x,y,r,s,taken,ws){if(!WMASK)buildMask();if(!WMASK)return{x,y};
 
 // ================================================================ ground (WebGL): map photograph far away, photographed textures up close
 // ground resolution: starts at min(DPR,1.5) and adapts to keep frames smooth on weaker GPUs
-const GLQ={s:Math.min(window.devicePixelRatio||1,1.5),ema:16,t:0};
-const GL=(()=>{const c=document.getElementById('gl');let g=null;try{g=c.getContext('webgl2',{antialias:false,alpha:false,premultipliedAlpha:false,preserveDrawingBuffer:false})}catch(e){}if(!g)return null;
+const GLQ={s:Math.min(window.devicePixelRatio||1,1),ema:16,t:0};
+let GL=(()=>{const c=document.getElementById('gl');let g=null;try{g=c.getContext('webgl2',{antialias:false,alpha:false,premultipliedAlpha:false,preserveDrawingBuffer:false})}catch(e){}if(!g)return null;
   const VS=`#version 300 es
 in vec2 p;out vec2 v;void main(){v=p;gl_Position=vec4(p,0.,1.);}`;
   const FS=`#version 300 es
@@ -1118,11 +1119,11 @@ void main(){
   float wMid=smoothstep(.9,3.,uMpp);
   // close range: photographs at their true size (never magnified, so trees stay tree-sized next to the vehicles)
   if(wMid<.999&&ww<.999){
-    if(wf>.002){det+=tx(t4,3,d,wm)*wf;mean+=vec3(.246,.249,.13)*wf;}
-    if(wr>.002){det+=tx(t3,2,d,wm)*wr;mean+=vec3(.458,.377,.294)*wr;}
-    if(rest*sg>.002){det+=tx(t1,0,d,wm)*rest*sg;mean+=vec3(.502,.382,.271)*rest*sg;}
-    if(rest*(1.-sg)>.002){det+=tx(t2,1,d,wm)*rest*(1.-sg);mean+=vec3(.427,.324,.196)*rest*(1.-sg);}
-  }else{mean=vec3(.246,.249,.13)*wf+vec3(.458,.377,.294)*wr+vec3(.502,.382,.271)*rest*sg+vec3(.427,.324,.196)*rest*(1.-sg);det=mean;}
+    if(wf>.002){det+=tx(t4,3,d,wm)*wf;mean+=vec3(.354,.27,.108)*wf;}
+    if(wr>.002){det+=tx(t3,2,d,wm)*wr;mean+=vec3(.584,.418,.263)*wr;}
+    if(rest*sg>.002){det+=tx(t1,0,d,wm)*rest*sg;mean+=vec3(.633,.447,.308)*rest*sg;}
+    if(rest*(1.-sg)>.002){det+=tx(t2,1,d,wm)*rest*(1.-sg);mean+=vec3(.498,.335,.147)*rest*(1.-sg);}
+  }else{mean=vec3(.354,.27,.108)*wf+vec3(.584,.418,.263)*wr+vec3(.633,.447,.308)*rest*sg+vec3(.498,.335,.147)*rest*(1.-sg);det=mean;}
   // middle range: photographs taken from higher up (1-2 km frames) take over
   if(wMid>0.&&ww<.999){vec3 dm=vec3(0.),mm=vec3(0.);
     if(wf>.002){dm+=txM(t7,0,d,wm)*wf;mm+=vec3(.286,.279,.151)*wf;}
@@ -1158,7 +1159,7 @@ void main(){
     const w=k[0]==='g'?g.REPEAT:g.CLAMP_TO_EDGE;g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_S,w);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_T,w);if(an)g.texParameterf(g.TEXTURE_2D,an.TEXTURE_MAX_ANISOTROPY_EXT,8);made[k]=t;return false}return PRE.every(k=>made[k])}
   // tile sizes in metres: gravel clearing, heath, granite, forest, sea. Each is drawn at one of several scale levels
   // (×4 apart) picked so the photograph is never magnified much beyond its own resolution; neighbouring levels crossfade.
-  const T0=[75,24,70,60,120];const md=(a,t)=>a-Math.floor(a/t)*t;let okAll=false;
+  const T0=[80,80,80,80,120];const md=(a,t)=>a-Math.floor(a/t)*t;let okAll=false;
   return{pre,resize(){const k=GLQ.s;c.width=Math.max(64,Math.round(CW*k));c.height=Math.max(64,Math.round(CH*k));g.viewport(0,0,c.width,c.height)},
     draw(t){okAll=up();{if(!made[MAP.img]||!made[MAP.mat]){g.clearColor(.03,.035,.04,1);g.clear(g.COLOR_BUFFER_BIT);return}}
       const mpp=M_U/(cam.z*(c.width/CW)),mx=(cam.x-SHX/cam.z)*M_U,my=(cam.y-SHY/cam.z)*M_U;const tiles=new Float32Array(10),off=new Float32Array(20),lv=new Float32Array(5);
@@ -2065,16 +2066,33 @@ ov.addEventListener('click',e=>{const h=e.target.closest('[data-h]');if(h){openH
 
 // ================================================================ loop
 let lastT=performance.now(),uiT=0,mmT=0;
-function frame(now){const rawDt=now-lastT;const dt=Math.min(.05,rawDt/1000);lastT=now;
-  if(GL&&!document.hidden&&rawDt<500){GLQ.ema+=(rawDt-GLQ.ema)*.05;GLQ.t+=rawDt;if(GLQ.t>1500){GLQ.t=0;const mx=Math.min(window.devicePixelRatio||1,1.5);let ns=GLQ.s;if(GLQ.ema>24&&GLQ.s>.5)ns=Math.max(.5,GLQ.s*.8);else if(GLQ.ema<15&&GLQ.s<mx)ns=Math.min(mx,GLQ.s*1.15);if(Math.abs(ns-GLQ.s)>.01){GLQ.s=ns;GL.resize()}}}
+// ---- watchdog: the loop never dies on an error, and long stalls are written down (shown in the corner, kept in localStorage)
+const DIAG={errs:[],hitch:[],shownAt:0,last:''};
+function diagShow(msg){const el=document.getElementById('perf');if(!el)return;DIAG.last=msg;el.innerHTML='<button aria-label="Kapat" onclick="this.parentNode.hidden=true">×</button>'+msg;el.hidden=false;DIAG.shownAt=performance.now();try{localStorage.setItem('menzil.diag',JSON.stringify({errs:DIAG.errs.slice(-8),hitch:DIAG.hitch.slice(-12)}))}catch(e){}}
+function diagErr(where,e){const m=`${where}: ${e&&e.message||e}`;if(DIAG.errs.some(x=>x.m===m))return;DIAG.errs.push({m,st:String(e&&e.stack||'').split('\n').slice(0,3).join(' | '),t:G?Math.round(G.time):0});console.error('[menzil]',m,e);diagShow(`<b>Hata yakalandı, oyun devam ediyor</b>\n${esc(m)}\n${esc(DIAG.errs[DIAG.errs.length-1].st)}`)}
+addEventListener('error',e=>diagErr('genel',e.error||e.message));
+const TM={u:0,ui:0,r:0};
+function frame(now){const rawDt=now-lastT;
+  if(G&&rawDt>350&&!document.hidden&&ov.hidden&&now-(G.started||0)>4000){const h={t:Math.round(G.time),ms:Math.round(rawDt),js:Math.round(TM.u+TM.ui+TM.r),upd:Math.round(TM.u),ui:Math.round(TM.ui),ciz:Math.round(TM.r),hava:G.air.filter(o=>o.alive).length,parca:G.parts.length,efekt:G.fx.length,zoom:+cam.z.toFixed(2),zemin:GL?+GLQ.s.toFixed(2):'yok'};DIAG.hitch.push(h);console.warn('[menzil] takılma',h);
+    diagShow(`<b>Takılma: ${(h.ms/1000).toFixed(1)} sn</b> · oyun kodu ${h.js} ms (güncelleme ${h.upd}, arayüz ${h.ui}, çizim ${h.ciz})\nhavada ${h.hava} · parçacık ${h.parca} · efekt ${h.efekt} · yakınlık ${h.zoom} · zemin ölçeği ${h.zemin}\n${h.js<rawDt/3?'Gecikme oyun kodunda değil: tarayıcı/grafik kartı tarafında.':'Gecikme oyun kodunda.'}`)}
+  let t0=performance.now();
+  try{
+const rawDt=now-lastT;const dt=Math.min(.05,rawDt/1000);lastT=now;
+  if(GL&&!document.hidden&&rawDt<500){GLQ.ema+=(rawDt-GLQ.ema)*.05;GLQ.t+=rawDt;if(GLQ.t>1500){GLQ.t=0;const mx=Math.min(window.devicePixelRatio||1,1.25);let ns=GLQ.s;if(GLQ.ema>24&&GLQ.s>.5)ns=Math.max(.5,GLQ.s*.8);else if(GLQ.ema<15&&GLQ.s<mx)ns=Math.min(mx,GLQ.s*1.15);if(Math.abs(ns-GLQ.s)>.01){GLQ.s=ns;GL.resize()}}}
   if(G&&!G.over&&!G.paused&&ov.hidden)for(let i=0;i<G.speed;i++)update(dt);
+  TM.u=performance.now()-t0;t0=performance.now();
   if(G){const pan=(keys.arrowright?1:0)-(keys.arrowleft?1:0),panY=(keys.arrowdown?1:0)-(keys.arrowup?1:0);let ex=0,ey=0;if(edge&&ov.hidden&&!mDown){if(edge.x<10)ex=-1;if(edge.y<10)ey=-1;else if(edge.y>CH-10&&conEl.hidden)ey=1;if(ex||ey)edgeT+=dt;else edgeT=0;if(edgeT<.35)ex=ey=0}
     if(pan||panY||ex||ey){cam.x+=(pan+ex)*dt*800/cam.z;cam.y+=(panY+ey)*dt*800/cam.z;camClamp()}
     if(G.follow){const o=airById(G.follow);if(o&&o.alive){cam.x+=(o.x-cam.x)*Math.min(1,dt*6);cam.y+=(o.y-LIFT(o.z)-cam.y)*Math.min(1,dt*6);camClamp()}else G.follow=null}
     tickFire(dt);tutTick(dt);placeTrkPop();
     uiT+=dt;if(uiT>.25){uiT=0;if(QA){if(QA.kind==='trk'){const o=airById(QA.ref);if(o&&o.alive){QA.sx=sX(o.x);QA.sy=sY(o.y-LIFT(o.z))}}else{const e=ent(QA.ref);if(e){QA.sx=sX(e.x);QA.sy=sY(e.y)}}qaRender()}$('#cash').textContent=money(G.cash.W);$('#inc').textContent=`+${money(income('W'))}/sn`;renderSide();updTop();advisor();updHUD();if(G.sel||G.selTrk||infoKey)renderSel();trkInfo();if(!conEl.hidden){if(G.con.mode==='def'||Math.random()<.3)renderCon();else updFire()}if(hintT>0){hintT-=.25;if(hintT<=0)hintEl.innerHTML=''}}
     mmT+=dt;if(mmT>.3){mmT=0;drawMinimap()}}
-  render(now/1000);requestAnimationFrame(frame)}
+    }catch(e){diagErr('döngü',e)}
+  TM.ui=performance.now()-t0;t0=performance.now();
+  try{render(now/1000)}catch(e){diagErr('çizim',e)}
+  TM.r=performance.now()-t0;
+  requestAnimationFrame(frame)}
+document.getElementById('gl').addEventListener('webglcontextlost',e=>{e.preventDefault();GL=null;diagShow('<b>Grafik kartı WebGL bağlantısını kesti</b>\nZemin basit görüntüye geçti; oyun devam ediyor.')});
 addEventListener('resize',resize);try{new ResizeObserver(()=>resize()).observe(stage)}catch(e){}
 EVA.on=false;loadCustom();resize();intro();requestAnimationFrame(frame);
 {let step=0;const warm=setInterval(()=>{if(G&&ov.hidden)return;try{if(GL&&GL.pre&&!GL.pre())return;const want=['duo','quad'].find(k=>!WCACHE[k]&&ready(MAPS[k].mat));if(want){const keep=MAP;MAP=MAPS[want];const mw=MW,mh=MH;MW=MAP.w;MH=MAP.h;WMASK=null;buildMask();MAP=keep;MW=mw;MH=mh;const C=WCACHE[MAP.k];if(C){WMASK=C.m;OCEAN=C.o;WMW=C.w;WMH=C.h}else WMASK=null;return}if(++step>40)clearInterval(warm)}catch(e){clearInterval(warm)}},300)}
