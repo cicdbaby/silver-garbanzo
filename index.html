@@ -1405,7 +1405,7 @@ function drawSmoke(){if(!ready('s1'))return;const wa=Math.atan2(G.wx.wind.y,G.wx
   for(const f of G.fx){if(f.k!=='smk'||f.t<0)continue;const k=f.t/f.life,L=f.z?LIFT(f.z):0;const grow=Math.pow(Math.min(1,f.t/6),.6);
     const S=Math.max(f.fr*(f.z?3:6)*(.4+1.4*grow+k*1)*f.sp,px((f.z?16:40)+f.D/(f.z?20:6))*(.5+grow+k*.6));const dx=Math.cos(wa)*wv*f.t*.012,dy=Math.sin(wa)*wv*f.t*.012;
     const a=(f.z?.5:.78)*Math.min(1,f.t*3)*Math.pow(1-k,1.4);if(a<.01)continue;ctx.save();ctx.globalCompositeOperation='source-over';ctx.globalAlpha=a;ctx.translate(f.x+dx+Math.cos(wa)*S*.25,f.y+dy+Math.sin(wa)*S*.25-L);ctx.rotate(wa+Math.PI*.75+f.rot*.25);
-    if(f.z){ctx.filter='grayscale(1) brightness(1.7)'}const sm=IMG['s'+(1+((f.rot*100|0)%4))];ctx.drawImage(sm,-S/2,-S/2,S,S);ctx.filter='none';ctx.restore()}}
+    const sk='s'+(1+((f.rot*100|0)%4));const sm=f.z?tinted(sk,'grayscale(1) brightness(1.7)'):IMG[sk];ctx.drawImage(sm,-S/2,-S/2,S,S);ctx.restore()}}
 function drawFX(time,nk){drawSmoke();for(const f of G.fx){const k=f.t/f.life;
   if(f.k==='smk')continue;
   if(f.k==='flash2'){const R=Math.max(f.fr*7,px(30+f.D/8))*(.6+k);const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,R);g.addColorStop(0,`rgba(255,250,235,${1-k})`);g.addColorStop(.3,`rgba(255,200,120,${.7*(1-k)})`);g.addColorStop(1,'rgba(255,140,60,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.x,f.y,R,0,7);ctx.fill();continue}
@@ -1585,9 +1585,11 @@ function renderSide(force){const el=$('#build');if(!el||!G)return;const sig=[tab
 let infoKey=null;
 
 
+// a filtered copy of a sprite, made once (canvas filters are far too slow to run every frame)
+const TINT={};function tinted(k,f){const id=k+'|'+f;if(TINT[id])return TINT[id];const im=IMG[k];if(!im||!im.naturalWidth)return im;const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');x.filter=f;x.drawImage(im,0,0);return TINT[id]=c}
 function drawWreck(e,a,time){const age=G.time-e.deadAt,hot=clamp(1-age/150,0,1);ctx.setTransform(DPR,0,0,DPR,0,0);
   piecesOf(e).forEach(([k,dx,dy],i)=>{const im=IMG['w'+(1+(e.id+i)%4)];if(!im||!im.complete||!im.naturalWidth)return;const S=PADW[k]*.42/M_U*cam.z;const sx=(e.x+dx/M_U-cam.x)*cam.z+CW/2+SHX,sy=(e.y+dy/M_U-cam.y)*cam.z+CH/2+SHY;
-    ctx.save();ctx.translate(sx,sy);ctx.rotate((e.id*1.7+i)%6.283);ctx.globalAlpha=a;ctx.filter=`brightness(${.32+.68*hot*(.85+.15*Math.sin(time*9+i))})`;ctx.drawImage(im,-S/2,-S/2,S,S);ctx.filter='none';
+    ctx.save();ctx.translate(sx,sy);ctx.rotate((e.id*1.7+i)%6.283);const bk=.68*hot*(.85+.15*Math.sin(time*9+i))/.68;const dk=tinted('w'+(1+(e.id+i)%4),'brightness(.32)');ctx.globalAlpha=a;ctx.drawImage(dk,-S/2,-S/2,S,S);if(bk>.01){ctx.globalAlpha=a*Math.min(1,bk);ctx.drawImage(im,-S/2,-S/2,S,S)}ctx.globalAlpha=a;
     if(hot>.05){ctx.globalCompositeOperation='lighter';ctx.globalAlpha=a*hot*(.35+.25*Math.sin(time*11+i*2));const g=ctx.createRadialGradient(0,0,0,0,0,S*.6);g.addColorStop(0,'rgba(255,150,60,.9)');g.addColorStop(1,'rgba(255,80,20,0)');ctx.fillStyle=g;ctx.fillRect(-S*.6,-S*.6,S*1.2,S*1.2)}ctx.restore()});
   ctx.globalAlpha=1;worldTf()}
 // radar picture: instrumented range for high targets, low-altitude horizon, rotating beam
