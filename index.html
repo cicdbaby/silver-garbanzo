@@ -324,6 +324,14 @@ body{font:13.5px/1.45 var(--sans)}
 #rng input[type=range]{width:100%;margin:6px 0 2px;accent-color:#9fd2dc;height:16px}
 #rng .ad{font:500 11px/1.3 var(--sans);color:#8d969c;min-height:28px}
 #rng:empty{display:none}#perf{position:fixed;left:10px;bottom:10px;z-index:30;max-width:min(560px,90vw);background:rgba(20,8,8,.92);border:1px solid #5a2a24;border-left:3px solid #ff5a4a;border-radius:6px;padding:7px 10px;font:500 11.5px/1.45 var(--mono);color:#f1d6d2;white-space:pre-wrap;pointer-events:auto}#perf[hidden]{display:none}#perf b{color:#fff}#perf button{float:right;background:none;border:0;color:#f1d6d2;font:600 13px var(--mono);cursor:pointer;margin:-3px -4px 0 8px}#rng.min .rl,#rng.min .alt{display:none}#rng.min{width:auto;padding:5px 0 5px}
+/* Power barometer */
+#power{display:flex;gap:8px;flex-wrap:wrap;flex-basis:100%;order:3;padding-top:5px;border-top:1px solid var(--line)}
+.pw-side{position:relative;flex:1;min-width:145px;max-width:270px;color:var(--pc)}
+.pw-button{width:100%;border:0;border-left:2px solid currentColor;background:#101619;color:inherit;text-align:left;padding:5px 9px;cursor:pointer;font:500 10px var(--mono)}
+.pw-button:hover,.pw-button[aria-expanded="true"]{background:#1c252a}.pw-name{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px}.pw-name small{font-size:9px;opacity:.7}
+.pw-line{display:flex;align-items:center;gap:7px;margin-top:3px}.pw-line>span{min-width:48px}.pw-line i{height:3px;background:#2a3034;flex:1}.pw-line i b{display:block;height:100%;background:currentColor}.pw-line strong{min-width:35px;text-align:right;font-weight:500}
+.pw-detail{position:absolute;top:100%;left:0;z-index:15;width:min(285px,calc(100vw - 32px));padding:12px;background:#0d1317;border:1px solid var(--pc);box-shadow:0 12px 24px #0009;font:12px/1.5 var(--sans)}
+.pw-side:last-child .pw-detail{left:auto;right:0}.pw-detail p{color:var(--ink);margin:8px 0}.pw-detail small{color:var(--mute)}
 </style>
 </head>
 <body>
@@ -630,12 +638,13 @@ function newGame(mode,opts={}){
     nat,diff:opts.diff||'easy',cash:per(s=>s==='W'?900:Math.round(900*D.bud)),stock:per(()=>({})),
     trk:per(()=>new Map()),ghost:per(()=>new Map()),score:per(()=>({dmg:0,sp:0,civ:0})),icp:per(()=>({n:0,hit:0,cost:0,miss:0})),suf:per(()=>0),grudge:per(()=>({})),
     air4:per(()=>[]),sel:null,selTrk:null,cov:false,wx:{state:'clear',t:60+Math.random()*60,cover:.15,rain:0,flash:0,wind:{x:6+Math.random()*6,y:-2+Math.random()*4}},clouds:[],tod:.3,
-    ai:per(s=>{const i=SD.indexOf(s);return{t:3+i,wave:0,next:22+(i-1)*11,buy:i*2}}),sat:{t:100},con:{mode:'atk',w:'BM',n:1,tgt:null,wp:[],pkg:[],tot:true},log:[],adv:new Set()};
+    ai:per(s=>{const i=SD.indexOf(s);return{t:3+i,wave:0,next:22+(i-1)*11,buy:i*2}}),sat:per(s=>({readyAt:0,pending:null,aiAt:45+SD.indexOf(s)*17})),con:{mode:'atk',w:'BM',n:1,tgt:null,wp:[],pkg:[],tot:true},log:[],adv:new Set()};
   for(const k in MUN)for(const s of SD)G.stock[s][k]=0;
   TOWNS.length=0;PTS.length=0;
   SD.forEach((s,si)=>{let ci=0;for(const a of (quad?LAYOUT_Q:LAYOUT_W)){const p0=quad?qmap(s,a):s==='W'?{x:a.x,y:a.y}:mir(a);const d=ASSET_DEF[a.t];const vv=a.t==='CITY'?(ci+si*2)%5:0;const pk=(piecesFor('asset',a.t,vv)[0]||[])[0];const vrr=Math.max(visRT('asset',a.t,vv),8);const p=landSpot(p0.x,p0.y,vrr,s,G.ents.filter(q=>q.side===s).map(q=>({x:q.x,y:q.y,r:Math.max(visR(q),8)})),WATERSIDE[pk]);
     const e=addE(s,'asset',a.t,p.x,p.y);if(a.t==='CITY')e.var=(ci+si*2)%5;e.nm=a.t==='CITY'?CITYNAMES[s][ci++]:a.nm||d.n;if(a.t==='HQ')HQPOS[s]={x:p.x,y:p.y};if(a.t==='CITY')TOWNS.push({x:p.x,y:p.y,r:d.r,n:e.nm});else PTS.push(p)}
     for(let i=0;i<4;i++)G.air4[s].push({id:i,st:'ready',t:0})});
+  G.publicAssets=per(s=>assets(s).map(a=>({t:a.t,x:a.x,y:a.y})));G.power=null;G.powerSide=null;
   genMap((Math.random()*1e9)|0);
   for(let i=0;i<70;i++)G.clouds.push(newCloud(Math.random()*MW));
   for(const s of SD){G.stock[s].DRN=6;G.stock[s].CM=2}
@@ -848,12 +857,12 @@ function worthIt(e,o){const d=SITE[e.t];
   return G.ents.some(a=>a.alive&&a.side===e.side&&hyp(a.x-ip.x,a.y-ip.y)<(a.r+90));}
 function impactPt(o){if(o.kind==='bm'||o.kind==='decoy'||o.kind==='hgv')return o.s>.25?{x:o.x1,y:o.y1}:null;if(o.route)return o.route[o.route.length-1];if(o.kind==='glide'||o.kind==='arm')return{x:o.tx,y:o.ty};return null}
 function etaOf(o){if(o.kind==='bm'||o.kind==='decoy'||o.kind==='hgv')return Math.max(0,o.T-(G.time-o.t0));if(o.route){let d=0,px=o.x,py=o.y;for(let i=o.ri;i<o.route.length;i++){d+=hyp(o.route[i].x-px,o.route[i].y-py);px=o.route[i].x;py=o.route[i].y}return d/o.spd}if(o.tx!=null)return hyp(o.tx-o.x,o.ty-o.y)/(o.spd||50);return 99}
-function revealLaunch(e){for(const s of G.sides){if(s===e.side||G.out[s])continue;const g=G.ghost[s];const p=g.get(e.id);g.set(e.id,{id:e.id,t:e.t,x:e.x,y:e.y,at:G.time,src:'atış izi'});if(s==='W'&&!p)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}
-function revealAround(s,x,y,R){for(const e of G.ents)if(e.alive&&e.side!==s&&e.cat==='site'&&hyp(e.x-x,e.y-y)<R){const had=G.ghost[s].has(e.id);G.ghost[s].set(e.id,{id:e.id,t:e.t==='DEC'?'LRAD':e.t,x:e.x,y:e.y,at:G.time,src:'keşif'});if(s==='W'&&!had)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}
+function revealLaunch(e){for(const s of G.sides){if(s===e.side||G.out[s])continue;const g=G.ghost[s];const p=g.get(e.id);g.set(e.id,{...p,id:e.id,side:e.side,cat:e.cat,t:e.t,x:e.x,y:e.y,at:G.time,src:'atış izi'});if(s==='W'&&!p)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}
+function revealAround(s,x,y,R){for(const e of G.ents)if(e.alive&&e.side!==s&&e.cat==='site'&&hyp(e.x-x,e.y-y)<R){const had=G.ghost[s].has(e.id);G.ghost[s].set(e.id,{...G.ghost[s].get(e.id),id:e.id,side:e.side,cat:e.cat,t:e.t==='DEC'?'LRAD':e.t,x:e.x,y:e.y,at:G.time,src:'keşif'});if(s==='W'&&!had)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}
 function intel(){
   for(const s of G.sides){if(G.out[s])continue;const g=G.ghost[s];
     for(const e of G.ents){if(e.side===s||e.cat!=='site')continue;if(!e.alive){g.delete(e.id);continue}
-      if(SITE[e.t].emit&&e.emit&&e.mode!=='off'&&e.bt<=0){const p=g.get(e.id);if(!p||G.time-p.at>4){const err=e.t==='RAD'?18:30;g.set(e.id,{id:e.id,t:e.t==='DEC'?'LRAD':e.t,x:(p&&p.src!=='ELINT'?p.x:e.x+gauss()*err),y:(p&&p.src!=='ELINT'?p.y:e.y+gauss()*err),at:G.time,src:p&&p.src!=='ELINT'?p.src:'ELINT'});if(s==='W'&&!p)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}}
+      if(SITE[e.t].emit&&e.emit&&e.mode!=='off'&&e.bt<=0){const p=g.get(e.id);if(!p||G.time-p.at>4){const err=e.t==='RAD'?18:30;g.set(e.id,{...p,id:e.id,side:e.side,cat:e.cat,t:e.t==='DEC'?'LRAD':e.t,x:(p&&p.src!=='ELINT'?p.x:e.x+gauss()*err),y:(p&&p.src!=='ELINT'?p.y:e.y+gauss()*err),at:G.time,src:p&&p.src!=='ELINT'?p.src:'ELINT'});if(s==='W'&&!p)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}}
   }
 }
 
@@ -941,7 +950,7 @@ function update(dt){
   updDebris(dt);
   senseT+=dt;if(senseT>=.15){senseT=0;sense()}
   if(G.phase==='war')engage(dt);
-  intelT+=dt;if(intelT>=1){intelT=0;intel();if(G.phase==='war'){G.sat.t-=1;if(G.sat.t<=0){G.sat.t=110;satPass()}}}
+  intelT+=dt;if(intelT>=1){intelT=0;intel();satelliteAI()}
   for(const p of G.parts){p.t+=dt;const dr=p.drag?Math.exp(-p.drag*dt):1;p.vx*=dr;p.vy*=dr;p.x+=p.vx*dt;p.y+=p.vy*dt;p.z=Math.max(0,p.z+(p.vz||0)*dt);if(p.gr)p.r+=p.gr*dt}
   G.parts=G.parts.filter(p=>p.t<p.life);if(G.parts.length>2200)G.parts.splice(0,G.parts.length-2200);
   for(const f of G.fx)f.t+=dt;G.fx=G.fx.filter(f=>f.t<f.life);
@@ -950,9 +959,70 @@ function update(dt){
   if(G.time>=GAME_T&&!G.over){G.over=true;const n=s=>G.score[s].dmg-G.score[s].sp*.25;const al=G.sides.filter(x=>!G.out[x]).sort((a,b)=>n(b)-n(a));G.winner=al.length>1&&n(al[0])===n(al[1])?null:al[0]}
   if(G.over)setTimeout(showEnd,1400);
 }
-function satPass(){const band=Math.random()*MH;let n=0;for(const e of G.ents)if(e.alive&&e.side!=='W'&&e.cat==='site'&&Math.abs(e.y-band)<300){if(!G.ghost.W.has(e.id))n++;G.ghost.W.set(e.id,{id:e.id,t:e.t==='DEC'?'LRAD':e.t,x:e.x,y:e.y,at:G.time,src:'uydu'})}
-  G.fx.push({k:'satband',y:band,t:0,life:3});if(n)toast(`<b>Uydu geçişi</b>${n} düşman tesisi görüntülendi.`,'W',true)}
+function satPass(s,area){let n=0;for(const e of G.ents)if(e.alive&&e.side!==s&&Math.abs(e.x-area.x)<=SAT_SIZE/2&&Math.abs(e.y-area.y)<=SAT_SIZE/2){
+  G.ghost[s].set(e.id,{id:e.id,side:e.side,cat:e.cat,t:e.t==='DEC'?'LRAD':e.t,x:e.x,y:e.y,at:G.time,src:'uydu',satAt:G.time});n++}
+  if(s==='W'){G.fx.push({k:'satband',x:area.x,y:area.y,size:SAT_SIZE,t:0,life:3});toast(`<b>Uydu görüntüsü</b>60 × 60 km alanda ${n} düşman tesisi görüntülendi.`,'W',true)}}
 function startWar(){if(!G||G.phase!=='prep')return;G.phase='war';G.prepT=0;G.bannerAt=performance.now();sfx('alarm');eva('Harekât başladı','war',1);toast('<b>Harekât</b>Hazırlık bitti. Gelir artık tesislerinden gelir; rakip ilk dalgasını hazırlıyor.','E',true);renderTop()}
+// Power is sampled once per wall-clock second; hostile estimates never read private economy or readiness.
+const POWER_THREATS=[['drone','İHA',.7,.7],['cruise','Seyir',.05,.05],['bm','Balistik',10,150]];
+const POWER_REF=6000,SAT_SIZE=60*KMU,SAT_COST=15,SAT_WAIT=90,SAT_DELAY=8;
+function powerDefense(s,aa,bb){
+  const total=aa.reduce((n,a)=>n+(ASSET_DEF[a.t]?.v||0),0);
+  const active=e=>e.alive!==false&&!(e.bt>0)&&e.mode!=='off';
+  const radar=bb.some(e=>active(e)&&SITE[e.t]?.emit&&SITE[e.t]?.sens&&e.emit!==false);
+  const sub=POWER_THREATS.map(([kind,label,lo,hi])=>{let covered=0;
+    for(const a of aa)if(bb.some(e=>{const d=SITE[e.t];return d&&active(e)&&e.mag>0&&(PK[e.t]?.[kind]||0)>0&&d.a0<=hi&&d.a1>=lo&&hyp(e.x-a.x,e.y-a.y)<=rngOf(s,e.t)}))covered+=ASSET_DEF[a.t]?.v||0;
+    return {label,value:total?100*covered/total*(radar?1:.65):0}});
+  return {sub,radar,value:sub.reduce((n,p)=>n+p.value,0)/3};
+}
+function powerAttack(s,bb,stock,cash,inc){
+  let budget=Math.max(0,cash)+60*Math.max(0,inc),damage=0;const have={...stock};
+  for(const type of ['TEL','DLN']){const d=SITE[type],capacity=bb.filter(e=>e.t===type&&e.alive!==false&&!(e.bt>0)&&!(e.rl>0)).length*(1+Math.floor(59.999/d.rl))*(type==='DLN'?6:1);
+    const ammo=Object.keys(MUN).filter(k=>MUN[k].from===type&&MUN[k].dmg>0).sort((a,b)=>MUN[b].dmg*(MUN[b].cl||1)-MUN[a].dmg*(MUN[a].cl||1)||costOf(s,a)-costOf(s,b));
+    for(let i=0;i<capacity;i++){const k=ammo.find(k=>(have[k]||0)>0||costOf(s,k)<=budget);if(!k)break;if((have[k]||0)>0)have[k]--;else budget-=costOf(s,k);damage+=MUN[k].dmg*(MUN[k].cl||1)}
+  }
+  return {value:clamp(damage/POWER_REF*100,0,100),damage};
+}
+function samplePower(){
+  const now=performance.now();if(G.power&&now-G.power.at<1000)return G.power;
+  const values={};
+  for(const s of G.sides){const own=s==='W',known=own?[]:[...G.ghost.W.values()].filter(g=>(g.side||gS(g))===s);
+    if(G.out[s]){values[s]={out:true};continue}if(!own&&!known.length){values[s]=null;continue}
+    const aa=own?assets(s):G.publicAssets[s];
+    const bb=own?sites(s):known.filter(g=>SITE[g.t]).map(g=>({t:g.t,x:g.x,y:g.y,mag:SITE[g.t].mag||0,emit:true,mode:'auto',rl:0,bt:0}));
+    const stock=own?G.stock[s]:{DRN:6*bb.filter(e=>e.t==='DLN').length,BM:bb.filter(e=>e.t==='TEL').length};
+    const inc=own?income(s):aa.reduce((n,a)=>n+(ASSET_DEF[a.t]?.inc||0),0);
+    values[s]={estimated:!own,def:own||bb.some(e=>PK[e.t]||SITE[e.t]?.sens)?powerDefense(s,aa,bb):null,atk:own||bb.some(e=>SITE[e.t]?.off)?powerAttack(s,bb,stock,own?G.cash[s]:0,inc):null,known:known.length};
+  }
+  return G.power={at:now,values};
+}
+function renderPower(){
+  const root=$('#power');if(!root||!G)return;const P=samplePower();
+  const pct=v=>Math.round(v)+'%',bar=(name,v)=>`<span class="pw-line"><span>${name}</span><i><b style="width:${v==null?0:v}%"></b></i><strong>${v==null?'?':pct(v)}</strong></span>`;
+  setH(root,G.sides.map(s=>{const p=P.values[s],open=G.powerSide===s;return `<div class="pw-side" style="--pc:${SHEX[s]}"><button data-t="power" data-side="${s}" aria-expanded="${open}" class="pw-button"><span class="pw-name">${esc(natOf(s).n)} <small>${p?.out?'ELENDİ':s==='W'?'kesin':'tahmini'}</small></span>${bar('SAVUNMA',p&&!p.out?p.def?.value:p?.out?0:null)}${bar('SALDIRI',p&&!p.out?p.atk?.value:p?.out?0:null)}</button>${open?`<div class="pw-detail"><b>${esc(natOf(s).n)} · güç</b>${!p?'Bilgi yok. Uydu veya keşif iste.':p.out?'Harekât dışı.':`${POWER_THREATS.map((t,i)=>bar(t[1],p.def?.sub[i].value)).join('')}<p>${!p.def?'Savunma bilgisi yok.':p.def.radar?'Radar desteği var.':'Bilinen etkin radar yok: kapsama ×0,65.'}</p><p>${p.atk?'60 sn ham saldırı: ≈'+Math.round(p.atk.damage)+' hasar.':'Rampa bilgisi yok.'}</p><p>${p.estimated?'Tahmini: bilinen bataryalar hazır ve dolu; bilinen rampalarda bir yük stok; kasa 0, gelir açık tesislerin nominal geliri varsayılır. Gizli stok/kasa okunmaz.':'Mevcut hazır rampalar, stok, kasa ve gelir kullanılır.'}</p><small>Kapsama, isabet garantisi değildir. Saldırı puanı savunma ve uçuş süresi öncesidir.</small>`}</div>`:''}</div>`}).join(''));
+  const btn=topEl.querySelector('[data-t="sat"]');if(btn){const st=G.sat.W,left=Math.max(0,Math.ceil(st.readyAt-G.time));btn.disabled=G.phase!=='war'||G.over||!!G.out.W||left>0||G.cash.W<SAT_COST;btn.textContent=st.pending?`Uydu · ${Math.max(0,Math.ceil(st.pending.at-G.time))} sn`:left?`Uydu · ${left} sn`:'Uydu iste · $15M'}
+}
+function satArea(x,y){const half=SAT_SIZE/2;return {x:clamp(x,half,MW-half),y:clamp(y,half,MH-half)}}
+function requestSatellite(s,x,y){
+  if(!G||G.over||G.phase!=='war'||!G.sides.includes(s)||G.out[s])return 'Uydu yalnızca harekâtta istenebilir.';
+  const st=G.sat[s];if(st.pending||G.time<st.readyAt)return 'Uydu henüz hazır değil.';
+  if(!Number.isFinite(x)||!Number.isFinite(y))return 'Geçerli bir alan seç.';
+  if(G.cash[s]<SAT_COST)return 'Uydu için $15M gerekiyor.';
+  const area=satArea(x,y),game=G;G.cash[s]-=SAT_COST;st.readyAt=G.time+SAT_WAIT;st.pending={...area,at:G.time+SAT_DELAY};
+  later(SAT_DELAY,()=>{if(G!==game)return;st.pending=null;if(!G.out[s])satPass(s,area)});
+  if(s==='W')toast('<b>Uydu istendi</b>Görüntü 8 saniye sonra gelecek.','W',true);return '';
+}
+function satelliteAI(){
+  if(G.phase!=='war'||G.over||G.aiOff)return;
+  for(const s of G.sides){if(s==='W'||G.out[s])continue;const st=G.sat[s];if(G.time<st.aiAt)continue;st.aiAt=G.time+30;
+    if(G.time<st.readyAt||st.pending||G.cash[s]<SAT_COST+60||Math.random()>.35)continue;
+    const foes=G.sides.filter(f=>f!==s&&!G.out[f]);if(!foes.length)continue;const target=foes[(Math.random()*foes.length)|0];
+    const known=[...G.ghost[s].values()].filter(g=>(g.side||gS(g))===target);const p=known.length?known[(Math.random()*known.length)|0]:HQPOS[target];requestSatellite(s,p.x,p.y);
+  }
+}
+function beginSatellite(){if(!G||G.phase!=='war'||G.over||G.out.W)return;mode={k:'sat'};G.powerSide=null;qaClose();hint('60 × 60 km çekim alanının merkezine tıkla · $15M · Esc: iptal');renderPower()}
+function drawSatelliteBand(f,k,tactical=false){const x=f.x-f.size/2,y=f.y-f.size/2,c=tactical?'130,220,170':'95,208,224';ctx.fillStyle=`rgba(${c},${.07*(1-k)})`;ctx.fillRect(x,y,f.size,f.size);ctx.strokeStyle=`rgba(${c},${.7*(1-k)})`;ctx.lineWidth=px(1.5);ctx.strokeRect(x,y,f.size,f.size);ctx.beginPath();ctx.moveTo(x,y+f.size*k);ctx.lineTo(x+f.size,y+f.size*k);ctx.stroke()}
+
 // optional W autopilot for testing
 function aiThink2W(dt){const s='W';G.ai2=G.ai2||{t:2,next:50,wave:0};const A=G.ai2;A.t-=dt;if(A.t>0)return;A.t=2;
   for(const t of AI_BUILD.med){if(sites(s,t).length<AI_BUILD.med.filter(x=>x===t).length&&G.cash[s]>costOf(s,t)+30){const p=aiSpot(s,t);if(p){build(s,t,p.x,p.y);break}}}
@@ -1185,7 +1255,7 @@ function tacFX(time){for(const f of G.fx){const k=f.t/f.life;
   else if(f.k==='tracer'){ctx.strokeStyle=`rgba(220,226,214,${(1-k)*.6})`;ctx.lineWidth=px(1);ctx.setLineDash([px(2),px(4)]);ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(f.tx,f.ty);ctx.stroke();ctx.setLineDash([])}
   else if(f.k==='ring'){ctx.strokeStyle=`rgba(${f.col},${1-k})`;ctx.lineWidth=px(1.5);ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1+k),0,7);ctx.stroke()}
   else if(f.k==='ping'){ctx.strokeStyle=`rgba(255,120,105,${.9*(1-k)})`;ctx.lineWidth=px(1.3);ctx.beginPath();ctx.arc(f.x,f.y,px(10+50*k),0,7);ctx.stroke()}
-  else if(f.k==='satband'){ctx.fillStyle=`rgba(130,220,170,${.05*(1-k)})`;ctx.fillRect(0,f.y-300,MW,600)}}
+  else if(f.k==='satband'){drawSatelliteBand(f,k,true)}}
  for(const e of G.ents)if(e.alive&&e.burn&&inView(worldView(),e.x,e.y,50)){const r=vr(e)+px(10);ctx.strokeStyle='rgba(255,110,95,.85)';ctx.lineWidth=px(1.2);ctx.setLineDash([px(3),px(3)]);ctx.beginPath();ctx.arc(e.x,e.y,r,0,7);ctx.stroke();ctx.setLineDash([]);mono('HASARLI',e.x,e.y+r+px(9),'#ff8a7e',9,'center')}}
 let TMINI=null;function tacMini(){if(TMINI)return TMINI;if(!WMASK)buildMask();if(!WMASK)return null;const c=document.createElement('canvas');c.width=WMW;c.height=WMH;const x=c.getContext('2d'),im=x.createImageData(WMW,WMH);
   for(let i=0;i<WMASK.length;i++){const w=WMASK[i]>.5;const d=im.data;d[i*4]=w?6:30;d[i*4+1]=w?10:36;d[i*4+2]=w?15:38;d[i*4+3]=255}
@@ -1330,7 +1400,7 @@ function render(time){
     else if(e.side==='W'&&(TAC()?cam.z>.45:Spx>60))mono(nameOf('W',e.t),e.x,e.y+vr(e)+px(14),'#9fc9d2',9.5,'center');
     if(e.jam&&e.side==='W')mono('KARIŞTIRILIYOR',e.x,e.y-vr(e)-px(12),'#ff9d90',9.5,'center')}
   // ghosts of enemy sites
-  for(const g of G.ghost.W.values()){const e=ent(g.id);if(!e||!e.alive)continue;if(!inView(V,g.x,g.y,60))continue;const age=G.time-g.at;const b=Math.max(visRT('site',g.t,0),px(15))+px(6);
+  for(const g of G.ghost.W.values()){const e=ent(g.id);if(!e||!e.alive||e.cat==='asset')continue;if(!inView(V,g.x,g.y,60))continue;const age=G.time-g.at;const b=Math.max(visRT('site',g.t,0),px(15))+px(6);
     const gc=SCOL[gS(g)];ctx.strokeStyle=`rgba(${gc},${age<10?.95:.6})`;ctx.lineWidth=px(1.3);for(const [sx,sy] of [[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.beginPath();ctx.moveTo(g.x+sx*b,g.y+sy*b-sy*px(7));ctx.lineTo(g.x+sx*b,g.y+sy*b);ctx.lineTo(g.x+sx*b-sx*px(7),g.y+sy*b);ctx.stroke()}
     if(g.src==='ELINT'){ctx.fillStyle=`rgba(${gc},.12)`;ctx.beginPath();ctx.arc(g.x,g.y,b*1.4,0,7);ctx.fill()}
     if(cam.z>.3)label(`${G.quad?natOf(gS(g)).n+' · ':''}${nameOf(gS(g),g.t)} · ${g.src}${age>8?' · '+Math.round(age)+' sn':''}`,g.x,g.y+b+px(12),G.quad?SHEX[gS(g)]:'#ff9d90',11)}
@@ -1423,7 +1493,7 @@ function drawFX(time,nk){drawSmoke();for(const f of G.fx){const k=f.t/f.life;
   else if(f.k==='beam'){const s=ent(f.site),t=airById(f.tgt);if(s&&t&&t.alive){const L=LIFT(t.z);ctx.strokeStyle=`rgba(150,225,255,${.9})`;ctx.lineWidth=px(1.6);ctx.beginPath();ctx.moveTo(s.x,s.y-px(5));ctx.lineTo(t.x,t.y-L);ctx.stroke();ctx.strokeStyle='rgba(150,225,255,.25)';ctx.lineWidth=px(7);ctx.stroke();const g=ctx.createRadialGradient(t.x,t.y-L,0,t.x,t.y-L,px(10));g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(150,225,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(t.x,t.y-L,px(10),0,7);ctx.fill()}}
   else if(f.k==='ring'){ctx.strokeStyle=`rgba(${f.col},${1-k})`;ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1+k),0,7);ctx.stroke()}
   else if(f.k==='ping'){ctx.strokeStyle=`rgba(255,120,105,${.9*(1-k)})`;ctx.lineWidth=px(1.5);ctx.beginPath();ctx.arc(f.x,f.y,px(10+50*k),0,7);ctx.stroke()}
-  else if(f.k==='satband'){ctx.fillStyle=`rgba(95,208,224,${.08*(1-k)})`;ctx.fillRect(0,f.y-300,MW,600);ctx.strokeStyle=`rgba(95,208,224,${.5*(1-k)})`;ctx.lineWidth=px(1.5);ctx.strokeRect(0,f.y-300,MW,600)}}
+  else if(f.k==='satband'){drawSatelliteBand(f,k)}}
   for(const e of G.ents)if(e.alive&&e.burn&&ready('s1')){const S=Math.max(vr(e)*2.4,px(40));const wa=Math.atan2(G.wx.wind.y,G.wx.wind.x);ctx.save();ctx.globalCompositeOperation='source-over';ctx.globalAlpha=.75;ctx.translate(e.x+Math.cos(wa)*S*.25,e.y+Math.sin(wa)*S*.25);ctx.rotate(wa+Math.PI*.75);ctx.drawImage(IMG['s'+(1+e.id%4)],-S/2,-S/2,S,S);ctx.restore();ctx.globalCompositeOperation='lighter'}
   for(const e of G.ents)if(e.alive&&e.burn){const fl=.6+.4*Math.sin(time*8+e.id);const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,vr(e)*.7);g.addColorStop(0,`rgba(255,150,60,${.5*fl})`);g.addColorStop(1,'rgba(255,80,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,vr(e)*.7,0,7);ctx.fill()}}
 const ABBR={drone:'İHA',armd:'ARM-İHA',mald:'SEYİR?',recon:'KEŞİF',cruise:'SEYİR',bm:'BALİSTİK',decoy:'BALİSTİK',hgv:'HİPERSONİK',ftr:'UÇAK',glide:'BOMBA',arm:'ARM'};
@@ -1483,6 +1553,7 @@ function drawEdgeArrows(){if(G.phase!=='war')return;let n=0;for(const o of G.air
   ctx.font='700 13px "IBM Plex Mono",monospace';ctx.textAlign='center';const tx=clamp(cx-Math.cos(a)*28,30,CW-30),ty=clamp(cy-Math.sin(a)*24,16,CH-10);ctx.fillStyle='#000';ctx.fillText(Math.ceil(etaOf(o))+'s',tx+1,ty+1);ctx.fillStyle='#fff';ctx.fillText(Math.ceil(etaOf(o))+'s',tx,ty)}}
 function drawRain(){const k=G.wx.rain;ctx.strokeStyle=`rgba(200,214,228,${.22+.3*k})`;ctx.lineWidth=1.2;ctx.beginPath();const n=Math.floor(RAIN.length*k);for(let i=0;i<n;i++){const r=RAIN[i];r.y+=r.v*.028;r.x+=.006;if(r.y>1){r.y=0;r.x=Math.random()}if(r.x>1)r.x-=1;const x=r.x*CW,y=r.y*CH;ctx.moveTo(x,y);ctx.lineTo(x+6,y+20)}ctx.stroke()}
 function drawCursor(V){if(!hover||!mode)return;const x=hover.x,y=hover.y;
+  if(mode.k==='sat'){const a=satArea(x,y),h=SAT_SIZE/2;ctx.strokeStyle='#5fd0e0';ctx.lineWidth=px(1.5);ctx.fillStyle='rgba(95,208,224,.08)';ctx.fillRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);ctx.strokeRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);mono('UYDU · 60 × 60 km · $15M',a.x,a.y-h-px(12),'#5fd0e0',11,'center');return}
   if(mode.k==='place'){const err=canPlace('W',mode.t,x,y);const Rv=visRT('site',mode.t,0);if(Rv*2*cam.z>16)drawPhotos(piecesFor('site',mode.t,0),x,y,.7,false);ctx.strokeStyle=err?'#ff6a5a':'#7fe0a0';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();if(SITE[mode.t].rng)rangeRing({x,y,side:'W',t:mode.t},true);if(err)label(err,x,y-px(28),'#ff9d90',13)}
   if(mode.k==='target'){ctx.strokeStyle='#ffd27a';ctx.lineWidth=px(1.6);const r=px(14);ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.moveTo(x-r*1.6,y);ctx.lineTo(x-r*.5,y);ctx.moveTo(x+r*.5,y);ctx.lineTo(x+r*1.6,y);ctx.moveTo(x,y-r*1.6);ctx.lineTo(x,y-r*.5);ctx.moveTo(x,y+r*.5);ctx.lineTo(x,y+r*1.6);ctx.stroke()}}
 
@@ -1548,14 +1619,15 @@ const MDESC={DRN:'Ucuz ve yavaş; sürü halinde gelip pahalı önleyicileri tü
 let tab='D';
 function setView(v){if(v===VIEW)return;VIEW=v;try{localStorage.setItem('gok.view',v)}catch(e){}renderTop();updTop();if(typeof drawMinimap==='function')drawMinimap()}
 function renderTop(){
-  topEl.innerHTML=`<div class="brand">MENZİL<small>GÖK</small></div>${G?`<div class="clock" id="clk"></div><div class="score" id="scr"></div>`:'<div style="margin-left:auto"></div>'}
-  <div class="top-r">${G&&G.phase==='prep'?'<button class="btn pri" data-t="go">Hazırım · başlat</button>':''}${G?'<button class="btn" data-t="pause">Duraklat</button><button class="btn" data-t="speed">2×</button>':''}<button class="btn ghost" data-t="how">Nasıl oynanır</button>${G?`<div class="vsw" role="group" aria-label="Görünüm"><button class="btn sm ${VIEW==='sat'?'on':''}" data-t="view" data-v="sat" title="Uydu görüntüsü (V)">Uydu</button><button class="btn sm ${VIEW==='tac'?'on':''}" data-t="view" data-v="tac" title="Taktik ekran (V)">Taktik</button></div>`:''}${G?`<button class="btn ${G.cov?'on':'ghost'}" data-t="cov" title="Bataryaların menzil çemberlerini göster">Menziller</button>`:''}<button class="btn ghost" data-t="mute">${SND.muted?'Sessiz':'Ses'}</button>${G?'<button class="btn ghost" data-t="quit">Çık</button>':''}</div>`}
-function updTop(){if(!G)return;const c=$('#clk'),s=$('#scr');const nk=nightK(),W=G.wx;
+  topEl.innerHTML=`<div class="brand">MENZİL<small>GÖK</small></div>${G?`<div class="clock" id="clk"></div><div class="score" id="scr"></div><div id="power" aria-label="Tarafların güç barometresi"></div>`:'<div style="margin-left:auto"></div>'}
+  <div class="top-r">${G&&G.phase==='prep'?'<button class="btn pri" data-t="go">Hazırım · başlat</button>':''}${G?'<button class="btn" data-t="sat">Uydu iste · $15M</button><button class="btn" data-t="pause">Duraklat</button><button class="btn" data-t="speed">2×</button>':''}<button class="btn ghost" data-t="how">Nasıl oynanır</button>${G?`<div class="vsw" role="group" aria-label="Görünüm"><button class="btn sm ${VIEW==='sat'?'on':''}" data-t="view" data-v="sat" title="Uydu görüntüsü (V)">Uydu</button><button class="btn sm ${VIEW==='tac'?'on':''}" data-t="view" data-v="tac" title="Taktik ekran (V)">Taktik</button></div>`:''}${G?`<button class="btn ${G.cov?'on':'ghost'}" data-t="cov" title="Bataryaların menzil çemberlerini göster">Menziller</button>`:''}<button class="btn ghost" data-t="mute">${SND.muted?'Sessiz':'Ses'}</button>${G?'<button class="btn ghost" data-t="quit">Çık</button>':''}</div>`}
+function updTop(){if(!G)return;renderPower();const c=$('#clk'),s=$('#scr');const nk=nightK(),W=G.wx;
   if(c)c.innerHTML=G.phase==='prep'?`<span class="ph">HAZIRLIK</span>${mmss(G.prepT)}`:`${mmss(G.time)}<small>/ ${mmss(GAME_T)}</small>`;
   const n=x=>G.score[x].dmg;if(s)s.innerHTML=`<small style="opacity:.6;font-weight:500;margin-right:6px">verilen hasar</small>${G.sides.map(x=>`<span class="${x}"${G.out[x]?' style="opacity:.4;text-decoration:line-through"':''}>${natOf(x).n} ${money(n(x))}</span>`).join(' · ')}`;
   const pb=topEl.querySelector('[data-t="pause"]');if(pb){pb.classList.toggle('on',G.paused);pb.textContent=G.paused?'Devam':'Duraklat'}const sb=topEl.querySelector('[data-t="speed"]');if(sb)sb.classList.toggle('on',G.speed===2);
   $('#wx').textContent=`${{clear:'Açık',cloudy:'Bulutlu',overcast:'Kapalı'}[W.state]} · bulut %${Math.round(W.cover*100)} · rüzgâr ${Math.round(hyp(W.wind.x,W.wind.y)*3)} km/sa · ${nk>.5?'gece':nk>.1?'alacakaranlık':'gündüz'}`}
 topEl.addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;audioInit();const k=b.dataset.t;
+  if(k==='power'&&G){G.powerSide=G.powerSide===b.dataset.side?null:b.dataset.side;renderPower();return}if(k==='sat'&&G){beginSatellite();return}
   if(k==='go'&&G){startWar();return}if(k==='pause'&&G)G.paused=!G.paused;else if(k==='speed'&&G)G.speed=G.speed===2?1:2;else if(k==='con'&&G){toggleCon()}else if(k==='cov'&&G){G.cov=!G.cov;renderTop()}else if(k==='view'){setView(b.dataset.v)}
   else if(k==='eva'){EVA.on=!EVA.on;lsSet('gok.eva',EVA.on?'1':'0');if(EVA.on)eva('Sesli uyarılar açık','evaon',1);renderTop()}else if(k==='mute'){setMute(!SND.muted);renderTop()}else if(k==='how'){ovBack=null;openHowto(0)}else if(k==='quit')intro();updTop()});
 
@@ -1732,7 +1804,7 @@ function renderCard(){if(!G){icEl.hidden=true;icKey=null;return}const e=G.sel&&e
   if(e.burn&&e.alive)note+=`<div class="nt"><b style="color:#ffb070">Yanıyor.</b> Gelir düşüyor.</div>`;
   const st=!e.alive?'İmha edildi':e.bt>0?'Kuruluyor':f<.35?'Ağır hasarlı':f<.99?'Hasarlı':'Sağlam';
   if(icKey!==key)icEl.innerHTML=`<button class="x" data-ic="x" aria-label="Kartı kapat">×</button><div class="ph${e.alive?'':' ruin'}">${k?`<img src="img/${k}.webp" alt="">`:''}<span class="st"></span></div><div class="bd"></div>`;
-  const stEl=icEl.querySelector('.st');stEl.textContent=st;stEl.style.color=e.alive?hc:'#9aa3a8';
+  const stEl=icEl.querySelector('.st');const satSeen=!own&&G.ghost.W.get(e.id)?.satAt;stEl.textContent=satSeen!=null&&satSeen!==false?'UYDU · T+'+mmss(satSeen):st;stEl.style.color=e.alive?hc:'#9aa3a8';
   icEl.querySelector('.bd').innerHTML=`<div class="ey ${e.side}">${own?'Kendi':'Düşman'} · ${site?(d.off?'saldırı':d.rng?'hava savunma':'destek'):'tesis'}</div><h3>${esc(nm)}<small>${esc(sub)}</small></h3>
    <div class="hp"><i><b style="width:${f*100}%;background:${hc}"></b></i><span>${Math.round(e.hp)}/${e.max}</span></div><dl>${rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>${note}`;
   if(icEl.hidden){icEl.hidden=false;icEl.classList.remove('sw')}else if(icKey!==key&&icKey&&icKey.split(':')[0]!==String(e.id)){icEl.classList.remove('sw');void icEl.offsetWidth;icEl.classList.add('sw')}icKey=key}
@@ -2005,6 +2077,7 @@ function tgtLabel(x,y){const e=G.ents.filter(e=>e.alive&&e.side!=='W'&&(e.cat===
 cv.addEventListener('contextmenu',e=>e.preventDefault());
 cv.addEventListener('pointerdown',e=>{if(!G)return;audioInit();cv.setPointerCapture(e.pointerId);const w=toW(e);hover=w;
   if(e.button===1||e.button===2){if(e.button===2&&mode){mode=null;hint('');renderSide();return}mDown={pan:true,x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y,moved:false,right:e.button===2};return}
+  if(mode&&mode.k==='sat'){const r=requestSatellite('W',w.x,w.y);if(r)hint(r,1);else{mode=null;hint('');renderPower()}mDown=null;return}
   if(mode&&mode.k==='place'){const r=build('W',mode.t,w.x,w.y);if(typeof r==='string')hint(r,1);else{if(!e.shiftKey)mode=null;hint('');renderSide()}return}
   mDown={x:e.clientX,y:e.clientY,w,shift:e.shiftKey,cx:cam.x,cy:cam.y,moved:false}});
 cv.addEventListener('pointermove',e=>{if(!G)return;const w=toW(e);hover=w;edge={x:w.sx,y:w.sy};if(!mDown)return;if(!mDown.pan&&hyp(e.clientX-mDown.x,e.clientY-mDown.y)>8)mDown.pan=true;if(!mDown.pan)return;const dx=e.clientX-mDown.x,dy=e.clientY-mDown.y;if(Math.abs(dx)+Math.abs(dy)>5)mDown.moved=true;if(mDown.moved){G.follow=null;cam.x=mDown.cx-dx/cam.z;cam.y=mDown.cy-dy/cam.z;camClamp()}});
@@ -2020,7 +2093,7 @@ let edge=null,edgeT=0;cv.addEventListener('pointerleave',()=>{edge=null;hover=nu
 const keys={};
 addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(!G||!ov.hidden)return;if(e.target.tagName==='INPUT')return;
   if(k===' '){e.preventDefault();if(!conEl.hidden&&FCS.armed){if(!e.repeat)holdStart()}else if(!TUT.on){G.paused=!G.paused;updTop()}return}
-  if(k==='escape'){mode=null;hint('');if(QA)qaClose();if(G.sel){G.sel=null;renderSel()}if(FCS.armed)setArm(false);renderSide();return}
+  if(k==='escape'){mode=null;G.powerSide=null;renderPower();hint('');if(QA)qaClose();if(G.sel){G.sel=null;renderSel()}if(FCS.armed)setArm(false);renderSide();return}
   if(k==='c'){G.cov=!G.cov;renderTop();return}if(k==='v'){setView(VIEW==='tac'?'sat':'tac');return}if(k==='h'){cam.x=HQPOS.W.x+300;cam.y=HQPOS.W.y-250;camClamp();return}
   if(k==='a'&&!conEl.hidden){setArm(!FCS.armed);return}});
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys[k]=false;if(k===' '&&FCS.holding)holdEnd()});
