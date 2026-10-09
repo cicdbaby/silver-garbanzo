@@ -190,3 +190,11 @@ Her değişiklik için:
   - BAL: yeni `kind:'balloon'`, 30 km irtifa, 120 sn loiter, 800 u (40 km) keşif; yalnızca LRAD vurur (PK .75).
   - YZ ara sıra satın alır; paketin başına koyar (rampaları önce onlar alır).
 - GÖREV 5: `</style>` öncesindeki "v5" bloğu oyun içi arayüzü ana menü diline çeker (düz yüzey, köşe 0, gölge yok, mono başlıklar, tek soluk vurgu, kırmızı sadece tehlike). Sınıf adları ve data-* değişmedi.
+
+## GÖREV 6 (Claude, doğrudan uygulandı)
+- HD harita: GPT'nin 6 karosu = duo haritasının batı yarısı (2×3). SIFT+homografi ile hizalandı (kalıntı <1 px), m0'ın düşük frekans tonuna eşitlendi → `public/img/m0hw.webp` (2497×3139, m0 piksel x 0–1086 × 2.3). Shader: `tH`, `uHR`, `uHd`; açılıştan 1,5 sn sonra tembel yüklenir, menüdeyken GPU'ya `preHD` ile yüklenir. GLMAX<3200 ise devre dışı. Doğu yarısı ve quad için aynı yöntem (araç: scratchpad warp.py/finish.py mantığı).
+- Kamera: `VPAD` (konsol/ray/tehdit paneli payları), `camAxis`, contain `minZ`; `fitAll()` (F / #fitbtn), `camTick` tween, minimap görünür alana ortalar. Uzak zoom'da tesis adları gizli.
+- Menzil: `DENS` satırı (yoğunluk; R=önleyici, G=radar, B=bilinen düşman sayımı, 1/3 çözünürlükte), lejant, `#dens-tip`. Uydu görünümünde seçili irtifa halkası `LIFT(h)` kadar yukarıda; silah kubbeleri tel kafes (`paintDomes`).
+- Uluslar: `NAT.IL`; `NPROF` 6 eksen (toplam 19), `AXF/axV/axOf`; costOf, rngOf, sensOf, pk, dolum, CEP, manevra, seyir hızı/RCS, İHA EH dayanımı, keşif süresi, uydu bekleme bunlardan türer. Eski cost/cheap/pk/range/evade/ew alanları artık kullanılmıyor. YZ `aiBuildList` + stok ağırlıkları. Denge (Orta, YZ×YZ, taraf değişimli 87 maç): US %50, RU %58, TR %52, CN %50, IL %40.
+- İHA: DLN silahlarında `.gcs` yer kontrol paneli (GÖREVİ YÜKLE → KALKIŞ, Enter/Esc), `gcsLaunch()`; füzelerde eski kapak/düğme.
+- Ses: reverb (sentetik dış mekân IR), mesafe low-pass + gecikme, yeni sentezler (patlama katmanları, çatırtılı roket, CIWS, iki zamanlı İHA motoru, jet geçişi), ortam (rüzgâr + yakındaki İHA uğultusu). `public/sfx/manifest.json` ile kayıtlı ses dosyaları sentezin yerine geçer: {"boom":["boom1.ogg",...]}.
