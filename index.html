@@ -802,7 +802,7 @@ function emitTrail(o,dt,age){
 // ---------------- debris
 function updDebris(dt){for(const d of G.deb){d.vz-=dt*.9;d.z+=d.vz*dt;d.x+=d.vx*dt;d.y+=d.vy*dt;if(Math.random()<.4)G.parts.push({k:'trail',x:d.x,y:d.y,z:d.z,vx:0,vy:0,vz:0,t:0,life:1.5,r:1,gr:1,a:.35,dark:1});
   if(d.z<=0&&d.stage){d.dead=1;G.fx.push({k:'puff',x:d.x,y:d.y,z:0,t:0,life:1});continue}
-  if(d.z<=0){d.dead=1;G.fx.push({k:'boom',x:d.x,y:d.y,r:7,t:0,life:.4});const tw=TOWNS.find(t=>hyp(t.x-d.x,t.y-d.y)<t.r);
+  if(d.z<=0){d.dead=1;G.fx.push({k:'boom',x:d.x,y:d.y,r:10/M_U,D:25,t:0,life:.5,rot:Math.random()*6.283});const tw=TOWNS.find(t=>hyp(t.x-d.x,t.y-d.y)<t.r);
     for(const e of G.ents)if(e.alive&&hyp(e.x-d.x,e.y-d.y)<e.r*.9){hurt(e,d.m,d.side===e.side?null:d.side,true)}
     if(tw&&sideOf(d.x,d.y)==='W'&&!G.debT){G.debT=6;toast(`Enkaz ${tw.n} üzerine düştü. Önlemeyi şehirden uzakta yapmaya çalış.`,'E')}}}
   G.deb=G.deb.filter(d=>!d.dead);if(G.debT>0)G.debT-=dt}
@@ -1587,6 +1587,7 @@ let infoKey=null;
 
 
 // a filtered copy of a sprite, made once (canvas filters are far too slow to run every frame)
+const RG0=CanvasRenderingContext2D.prototype.createRadialGradient;CanvasRenderingContext2D.prototype.createRadialGradient=function(a,b,c,d,e,f){if(!(isFinite(a)&&isFinite(b)&&isFinite(c)&&isFinite(d)&&isFinite(e)&&isFinite(f))){a=b=d=e=0;c=0;f=1}return RG0.call(this,a,b,Math.max(0,c),d,e,Math.max(0,f))};
 const TINT={};function tinted(k,f){const id=k+'|'+f;if(TINT[id])return TINT[id];const im=IMG[k];if(!im||!im.naturalWidth)return im;const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');x.filter=f;x.drawImage(im,0,0);return TINT[id]=c}
 function drawWreck(e,a,time){const age=G.time-e.deadAt,hot=clamp(1-age/150,0,1);ctx.setTransform(DPR,0,0,DPR,0,0);
   piecesOf(e).forEach(([k,dx,dy],i)=>{const im=IMG['w'+(1+(e.id+i)%4)];if(!im||!im.complete||!im.naturalWidth)return;const S=PADW[k]*.42/M_U*cam.z;const sx=(e.x+dx/M_U-cam.x)*cam.z+CW/2+SHX,sy=(e.y+dy/M_U-cam.y)*cam.z+CH/2+SHY;
@@ -2072,9 +2073,11 @@ function diagShow(msg){const el=document.getElementById('perf');if(!el)return;DI
 function diagErr(where,e){const m=`${where}: ${e&&e.message||e}`;if(DIAG.errs.some(x=>x.m===m))return;DIAG.errs.push({m,st:String(e&&e.stack||'').split('\n').slice(0,3).join(' | '),t:G?Math.round(G.time):0});console.error('[menzil]',m,e);diagShow(`<b>Hata yakalandı, oyun devam ediyor</b>\n${esc(m)}\n${esc(DIAG.errs[DIAG.errs.length-1].st)}`)}
 addEventListener('error',e=>diagErr('genel',e.error||e.message));
 const TM={u:0,ui:0,r:0};
+const ENV=(()=>{let gpu='?';try{const c=document.createElement('canvas').getContext('webgl');const i=c&&c.getExtension('WEBGL_debug_renderer_info');gpu=i?c.getParameter(i.UNMASKED_RENDERER_WEBGL):'?'}catch(e){}const ua=navigator.userAgent;const br=/Edg\//.test(ua)?'Edge':/Chrome\//.test(ua)?'Chrome':/Safari\//.test(ua)?'Safari':/Firefox\//.test(ua)?'Firefox':'?';return `${br} · ${gpu.replace(/ANGLE \(|\)$/g,'').slice(0,60)} · ekran ${screen.width}×${screen.height}@${devicePixelRatio}`})();
+const LOAF=[];try{new PerformanceObserver(l=>{for(const e of l.getEntries()){const sc=(e.scripts||[]).slice().sort((a,b)=>b.duration-a.duration).slice(0,2).map(x=>`${(x.sourceFunctionName||x.invoker||'?').slice(0,40)} ${Math.round(x.duration)}ms`);LOAF.push({at:e.startTime,d:Math.round(e.duration),block:Math.round(e.blockingDuration||0),render:e.renderStart?Math.round(e.startTime+e.duration-e.renderStart):0,style:e.styleAndLayoutStart?Math.round(e.startTime+e.duration-e.styleAndLayoutStart):0,sc});if(LOAF.length>20)LOAF.shift()}}).observe({type:'long-animation-frame',buffered:false})}catch(e){}
 function frame(now){const rawDt=now-lastT;
   if(G&&rawDt>350&&!document.hidden&&ov.hidden&&now-(G.started||0)>4000){const h={t:Math.round(G.time),ms:Math.round(rawDt),js:Math.round(TM.u+TM.ui+TM.r),upd:Math.round(TM.u),ui:Math.round(TM.ui),ciz:Math.round(TM.r),hava:G.air.filter(o=>o.alive).length,parca:G.parts.length,efekt:G.fx.length,zoom:+cam.z.toFixed(2),zemin:GL?+GLQ.s.toFixed(2):'yok'};DIAG.hitch.push(h);console.warn('[menzil] takılma',h);
-    diagShow(`<b>Takılma: ${(h.ms/1000).toFixed(1)} sn</b> · oyun kodu ${h.js} ms (güncelleme ${h.upd}, arayüz ${h.ui}, çizim ${h.ciz})\nhavada ${h.hava} · parçacık ${h.parca} · efekt ${h.efekt} · yakınlık ${h.zoom} · zemin ölçeği ${h.zemin}\n${h.js<rawDt/3?'Gecikme oyun kodunda değil: tarayıcı/grafik kartı tarafında.':'Gecikme oyun kodunda.'}`)}
+    diagShow(`<b>Takılma: ${(h.ms/1000).toFixed(1)} sn</b> · oyun kodu ${h.js} ms (güncelleme ${h.upd}, arayüz ${h.ui}, çizim ${h.ciz})\nhavada ${h.hava} · parçacık ${h.parca} · efekt ${h.efekt} · yakınlık ${h.zoom} · zemin ölçeği ${h.zemin}\n${h.js<rawDt/3?'Gecikme oyun kodunda değil: tarayıcı/grafik kartı tarafında.':'Gecikme oyun kodunda.'}\n${(()=>{const L=LOAF.filter(x=>x.d>200).slice(-2);return L.length?L.map(x=>`tarayıcı karesi ${x.d}ms · çizim/boyama ${x.render}ms · stil ${x.style}ms · betik: ${x.sc.join(', ')||'—'}`).join('\n'):'(tarayıcı kare ayrıntısı yok)'})()}\n${esc(ENV)}`)}
   let t0=performance.now();
   try{
 const rawDt=now-lastT;const dt=Math.min(.05,rawDt/1000);lastT=now;
