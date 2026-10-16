@@ -881,6 +881,7 @@ function newGame(mode,opts={}){
     for(let i=0;i<4;i++)G.air4[s].push({id:i,st:'ready',t:0})});
   G.publicAssets=per(s=>assets(s).map(a=>({t:a.t,x:a.x,y:a.y})));G.power=null;G.powerSide=null;
   genMap((Math.random()*1e9)|0);
+  G.slots=genSlots();
   for(let i=0;i<70;i++)G.clouds.push(newCloud(Math.random()*MW));
   for(const s of SD){G.stock[s].DRN=6;G.stock[s].CM=2}
   if(mode==='tutorial'){G.cash.W=1400;G.aiOff=true}
@@ -890,14 +891,39 @@ const sites=(s,t)=>G.ents.filter(e=>e.alive&&e.cat==='site'&&e.side===s&&(!t||e.
 const assets=s=>G.ents.filter(e=>e.alive&&e.cat==='asset'&&e.side===s);
 const ent=id=>G.ents.find(e=>e.id===id);
 const airById=id=>G.air.find(o=>o.id===id);
-function canPlace(s,t,x,y){
+// ---------------- build sites: each side has fixed, prepared places (zones of 3–4 pads, plus two pads beside each facility).
+// A click snaps to the nearest free pad; when the area is full the game says so. Pads are the same every game on a map,
+// so the map art can show them.
+const SLOT_SNAP=500,ZONE_GAP=400,PAD_GAP=56;
+function slotOK(s,x,y,taken){if(x<70||y<70||x>MW-70||y>MH-70||sideOf(x,y)!==s)return false;
+  for(const [dx,dy] of [[0,0],[16,0],[-16,0],[0,16],[0,-16]])if(waterAt(x+dx,y+dy)>.12)return false;
+  for(const tw of TOWNS)if(hyp(tw.x-x,tw.y-y)<tw.r+34)return false;
+  for(const e of G.ents)if(e.cat==='asset'&&hyp(e.x-x,e.y-y)<Math.max(e.r,visR(e))+30)return false;
+  for(const q of taken)if(hyp(q.x-x,q.y-y)<PAD_GAP-6)return false;return true}
+function genSlots(){const out={};
+  for(const s of G.sides){const L=[];const rnd=mulberry(9173+G.sides.indexOf(s)*31+(MAP.k==='quad'?7:0));
+    // two pads beside every facility (point defence goes here)
+    for(const a of assets(s)){if(a.t==='CITY')continue;let n=0;const R0=Math.max(a.r,visR(a))+44;for(let k=0;k<12&&n<2;k++){const an=k/12*Math.PI*2+a.id%7;const x=a.x+Math.cos(an)*R0,y=a.y+Math.sin(an)*R0;if(slotOK(s,x,y,L)){L.push({x,y,z:'T'+a.id,near:a.nm});n++}}}
+    // open zones by farthest-point sampling over the side's dry land
+    const cand=[];for(let y=90;y<MH-90;y+=60)for(let x=90;x<MW-90;x+=60){const jx=x+(rnd()-.5)*30,jy=y+(rnd()-.5)*30;if(sideOf(jx,jy)===s&&slotOK(s,jx,jy,[]))cand.push({x:jx,y:jy})}
+    const zones=[];const hq=HQPOS[s];
+    const tryZone=c=>{const pads=[],off=[[0,0],[1,0],[0,1],[1,1],[-1,0],[0,-1],[-1,1],[1,-1]];const r=rnd()*Math.PI;for(const [u,v] of off){if(pads.length>=4)break;const x=c.x+(u*Math.cos(r)-v*Math.sin(r))*PAD_GAP,y=c.y+(u*Math.sin(r)+v*Math.cos(r))*PAD_GAP;if(slotOK(s,x,y,L.concat(pads)))pads.push({x,y})}return pads.length>=3?pads:null};
+    let first=cand.slice().sort((a,b)=>hyp(a.x-hq.x,a.y-hq.y)-hyp(b.x-hq.x,b.y-hq.y)).find(c=>hyp(c.x-hq.x,c.y-hq.y)>140&&tryZone(c));
+    if(first){const p=tryZone(first);zones.push(first);p.forEach(q=>L.push({...q,z:'Z1'}))}
+    while(zones.length<11){let best=null,bd=0;for(const c of cand){let d=1e9;for(const z of zones)d=Math.min(d,hyp(z.x-c.x,z.y-c.y));if(d>bd){bd=d;best=c}}if(!best||bd<ZONE_GAP)break;const p=tryZone(best);best.used=1;if(p){zones.push(best);p.forEach(q=>L.push({...q,z:'Z'+zones.length}))}else cand.splice(cand.indexOf(best),1)}
+    L.forEach((q,i)=>{q.id=s+i;q.occ=0});out[s]=L}
+  return out}
+const slotFree=q=>!q.occ||!(ent(q.occ)&&ent(q.occ).alive);
+function slotFor(s,x,y){let b=null,bd=s==='W'?Math.max(SLOT_SNAP,px(70)):SLOT_SNAP;for(const q of (G.slots&&G.slots[s])||[]){if(!slotFree(q))continue;const d=hyp(q.x-x,q.y-y);if(d<bd){bd=d;b=q}}return b}
+function slotsLeft(s){return ((G.slots&&G.slots[s])||[]).filter(slotFree).length}
+function canPlace(s,t,x,y){if(G.slots){if(!slotsLeft(s))return 'Kurulum yeri kalmadı: tüm hazır alanlar dolu.';if(sideOf(x,y)!==s)return 'Yalnızca kendi topraklarına kurabilirsin.';if(slotFor(s,x,y))return '';const R=s==='W'?Math.max(SLOT_SNAP,px(70)):SLOT_SNAP;return G.slots[s].some(q=>hyp(q.x-x,q.y-y)<R)?'Bu bölgede uygun kurulum yeri kalmadı.':'Burada hazır kurulum yeri yok; beyaz karelere yakın tıkla.'}
   const r=SITE[t].r;if(x<30||y<30||x>MW-30||y>MH-30)return 'Harita sınırı.';if(waterAt(x,y,hgt(x,y))>.4)return 'Su üstüne kurulamaz.';
   if(sideOf(x,y)!==s)return 'Yalnızca kendi topraklarına kurabilirsin.';
   for(const e of G.ents)if(e.alive&&hyp(e.x-x,e.y-y)<e.r+r+6)return 'Başka bir tesise çok yakın.';
   for(const tw of TOWNS)if(hyp(tw.x-x,tw.y-y)<tw.r)return 'Şehrin içine kurulamaz.';
   return '';
 }
-function build(s,t,x,y){const c=costOf(s,t);if(G.cash[s]<c)return 'Kasa yetersiz.';const er=canPlace(s,t,x,y);if(er)return er;G.cash[s]-=c;const e=addE(s,'site',t,x,y);if(s==='W'&&t==='RAD')G.fx.push({k:'scan',x,y,t:0,life:3.2,R:SITE.RAD.sens});e.mode=s!=='W'?DIFF[G.diff].doc==='sel'?'sel':'auto':'auto';e.bt=1.2;if(s==='W'){sfx('ok');G.fx.push({k:'ring',x,y,t:0,life:.6,r:SITE[t].r+10,col:'95,208,224'})}return e}
+function build(s,t,x,y){const c=costOf(s,t);if(G.cash[s]<c)return 'Kasa yetersiz.';const er=canPlace(s,t,x,y);if(er)return er;const sl=G.slots&&slotFor(s,x,y);if(sl){x=sl.x;y=sl.y}G.cash[s]-=c;const e=addE(s,'site',t,x,y);if(sl)sl.occ=e.id;if(s==='W'&&t==='RAD')G.fx.push({k:'scan',x,y,t:0,life:3.2,R:SITE.RAD.sens});e.mode=s!=='W'?DIFF[G.diff].doc==='sel'?'sel':'auto':'auto';e.bt=1.2;if(s==='W'){sfx('ok');G.fx.push({k:'ring',x,y,t:0,life:.6,r:SITE[t].r+10,col:'95,208,224'})}return e}
 function buy(s,k,n=1){const c=costOf(s,k)*n;if(G.cash[s]<c)return 'Kasa yetersiz.';G.cash[s]-=c;G.stock[s][k]=(G.stock[s][k]||0)+n;return ''}
 function income(s){if(G.phase!=='war')return 0;let i=0;for(const a of assets(s))i+=ASSET_DEF[a.t].inc*(a.hp/a.max)*(a.blackT>G.time?.2:1);if(G.blackS&&G.blackS[s]>G.time)i*=.85;if(s!=='W')i*=DIFF[G.diff].inc;return i}
 function later(dt,fn){G.later.push({at:G.time+dt,fn})}
@@ -1850,9 +1876,14 @@ function drawEdgeArrows(){if(G.phase!=='war')return;let n=0;for(const o of G.air
   const cx=clamp(sx,26,CW-26),cy=clamp(sy,26,CH-26),a=Math.atan2(sy-CH/2,sx-CW/2);ctx.save();ctx.translate(cx,cy);ctx.rotate(a);ctx.fillStyle=G.quad?SHEX[o.side]:HEAVY.has(o.kind)?'#ff5a4a':'#ffb1a8';ctx.beginPath();ctx.moveTo(16,0);ctx.lineTo(-8,-10);ctx.lineTo(-4,0);ctx.lineTo(-8,10);ctx.closePath();ctx.fill();ctx.restore();
   ctx.font='700 13px "IBM Plex Mono",monospace';ctx.textAlign='center';const tx=clamp(cx-Math.cos(a)*28,30,CW-30),ty=clamp(cy-Math.sin(a)*24,16,CH-10);ctx.fillStyle='#000';ctx.fillText(Math.ceil(etaOf(o))+'s',tx+1,ty+1);ctx.fillStyle='#fff';ctx.fillText(Math.ceil(etaOf(o))+'s',tx,ty)}}
 function drawRain(){const k=G.wx.rain;ctx.strokeStyle=`rgba(200,214,228,${.22+.3*k})`;ctx.lineWidth=1.2;ctx.beginPath();const n=Math.floor(RAIN.length*k);for(let i=0;i<n;i++){const r=RAIN[i];r.y+=r.v*.028;r.x+=.006;if(r.y>1){r.y=0;r.x=Math.random()}if(r.x>1)r.x-=1;const x=r.x*CW,y=r.y*CH;ctx.moveTo(x,y);ctx.lineTo(x+6,y+20)}ctx.stroke()}
+function drawSlots(){if(!G.slots)return;const L=G.slots.W||[];ctx.save();ctx.lineWidth=px(1.2);for(const q of L){if(!slotFree(q))continue;const h=Math.max(px(4.5),7);ctx.strokeStyle='rgba(223,229,226,.75)';ctx.fillStyle='rgba(6,8,9,.35)';ctx.fillRect(q.x-h,q.y-h,h*2,h*2);ctx.strokeRect(q.x-h,q.y-h,h*2,h*2)}
+  const n=slotsLeft('W');ctx.restore();return n}
+function placeGhost(x,y,t,hx,hy){const Rv=visRT('site',t,0);ctx.save();ctx.strokeStyle='rgba(223,229,226,.5)';ctx.setLineDash([px(3),px(4)]);ctx.lineWidth=px(1);ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(x,y);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  if(Rv*2*cam.z>16)drawPhotos(piecesFor('site',t,0),x,y,.75,false);ctx.strokeStyle='#dfe5e2';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();drawPlacementRange(x,y,t);
+  mono(`kurulum yeri · ${slotsLeft('W')} boş`,x,y+Math.max(Rv,px(15))+px(18),'#dfe5e2',10,'center')}
 function drawCursor(V){if(!hover||!mode)return;const x=hover.x,y=hover.y;
   if(mode.k==='sat'){const a=satArea(x,y),h=SAT_SIZE/2;ctx.strokeStyle='#5fd0e0';ctx.lineWidth=px(1.5);ctx.fillStyle='rgba(95,208,224,.08)';ctx.fillRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);ctx.strokeRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);mono('UYDU · 60 × 60 km · $15M',a.x,a.y-h-px(12),'#5fd0e0',11,'center');return}
-  if(mode.k==='place'){const err=canPlace('W',mode.t,x,y);const Rv=visRT('site',mode.t,0);if(Rv*2*cam.z>16)drawPhotos(piecesFor('site',mode.t,0),x,y,.7,false);ctx.strokeStyle=err?'#ff6a5a':'#7fe0a0';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();drawPlacementRange(x,y,mode.t);if(err)label(err,x,y-px(28),'#ff9d90',13)}
+  if(mode.k==='place'){drawSlots();const sl=G.slots&&slotFor('W',x,y);const err=canPlace('W',mode.t,x,y);if(sl&&!err){return placeGhost(sl.x,sl.y,mode.t,x,y)}const Rv=visRT('site',mode.t,0);if(Rv*2*cam.z>16)drawPhotos(piecesFor('site',mode.t,0),x,y,.7,false);ctx.strokeStyle=err?'#ff6a5a':'#7fe0a0';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();drawPlacementRange(x,y,mode.t);if(err)label(err,x,y-px(28),'#ff9d90',13)}
   if(mode.k==='target'){ctx.strokeStyle='#ffd27a';ctx.lineWidth=px(1.6);const r=px(14);ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.moveTo(x-r*1.6,y);ctx.lineTo(x-r*.5,y);ctx.moveTo(x+r*.5,y);ctx.lineTo(x+r*1.6,y);ctx.moveTo(x,y-r*1.6);ctx.lineTo(x,y-r*.5);ctx.moveTo(x,y+r*.5);ctx.lineTo(x,y+r*1.6);ctx.stroke()}}
 
 // ================================================================ minimap
@@ -2175,7 +2206,7 @@ side.addEventListener('click',e=>{if(!G)return;audioInit();const tb=e.target.clo
   const sm=e.target.closest('[data-sm]');if(sm){const s=ent(G.sel);if(s){s.mode=sm.dataset.sm;sfx('beep');renderSel()}return}
   const sa=e.target.closest('[data-sa]');if(sa){const k=sa.dataset.sa;const s=ent(G.sel);if(k==='emit'&&s){s.emit=!s.emit}else if(k==='sell'&&s){G.cash.W+=costOf('W',s.t)*.5;s.alive=false;G.sel=null;sfx('ok')}else if(k==='engage'){openCon('def')}renderSel();return}
   const b=e.target.closest('.card-b');if(!b||b.classList.contains('off'))return;const k=b.dataset.k,kind=b.dataset.kind;
-  if(kind==='site'){mode={k:'place',t:k};closeInfo();qaClose();hint(`<b>${esc(nameOf('W',k))}</b>: haritada kendi toprağında bir yere tıkla. Sağ tık ya da Esc vazgeçer.`);renderSide(true)}
+  if(kind==='site'){mode={k:'place',t:k};closeInfo();qaClose();hint(`<b>${esc(nameOf('W',k))}</b>: tıkladığın yere en yakın boş kurulum yerine kurulur (beyaz kareler). Sağ tık ya da Esc vazgeçer.`);renderSide(true)}
 });
 const specPop=document.createElement('div');specPop.id='specpop';specPop.hidden=true;document.body.appendChild(specPop);let popKey=null;
 function showPop(key,el,where){if(!G||!key)return;if(popKey!==key){popKey=key;specPop.innerHTML=specHTML(key)}specPop.hidden=false;const r=el.getBoundingClientRect(),h=specPop.offsetHeight,w=specPop.offsetWidth;
