@@ -198,3 +198,10 @@ Her değişiklik için:
 - Uluslar: `NAT.IL`; `NPROF` 6 eksen (toplam 19), `AXF/axV/axOf`; costOf, rngOf, sensOf, pk, dolum, CEP, manevra, seyir hızı/RCS, İHA EH dayanımı, keşif süresi, uydu bekleme bunlardan türer. Eski cost/cheap/pk/range/evade/ew alanları artık kullanılmıyor. YZ `aiBuildList` + stok ağırlıkları. Denge (Orta, YZ×YZ, taraf değişimli 87 maç): US %50, RU %58, TR %52, CN %50, IL %40.
 - İHA: DLN silahlarında `.gcs` yer kontrol paneli (GÖREVİ YÜKLE → KALKIŞ, Enter/Esc), `gcsLaunch()`; füzelerde eski kapak/düğme.
 - Ses: reverb (sentetik dış mekân IR), mesafe low-pass + gecikme, yeni sentezler (patlama katmanları, çatırtılı roket, CIWS, iki zamanlı İHA motoru, jet geçişi), ortam (rüzgâr + yakındaki İHA uğultusu). `public/sfx/manifest.json` ile kayıtlı ses dosyaları sentezin yerine geçer: {"boom":["boom1.ogg",...]}.
+
+## GÖREV 7 (yeni görseller, Claude)
+- Duo harita `n0.webp` (4800×3200): GPT'nin 16 karosu SIFT ile hizalanıp (kalıntı <1 px) kazanç dengelenerek harmanlandı, güneş parlaması bastırıldı, doygunluk ×0.9. Kaynak konumları `/mnt/user-data/outputs/gorev7/karo_konumlari.json`. Shader `uNew`: v7 haritada yakın doku sistemi devre dışı, harita tek başına. `texSrc` GLMAX'tan büyük dokuyu küçültür. Duo `maxZ=1.05`.
+- Parçalar `public/img/v7/` (66 webp). Çizim `drawV7`: ped (slot zeminine göre P_orman/tepe/acik/kiyi) + parçalar (`P7` tablosu: anahtar, x, y m, çerçeve m, dönüş, animasyon, pivot) + gölge (`shadowOf`, sağ üste). `SC7=1.6` ölçek, `PAD7`. Tesisler `A7`. Animasyon: RAD/EW anteni döner, CIWS/SHORAD/LASER tareti hedefe (`aim/aimT`), TEL atışta kalkar, DLN kapağı açılır. Site yönü düşmana bakar (`siteRot`).
+- Efektler: e1/e2/e3/e5/s1–s4 anahtarları `FXALIAS` ile yeni dosyalara; ateş görselleri siyah zeminden alfaya çevrildi. `boom` görsel yarıçapı ×SC7×1.4.
+- Kurulum: `PAD_GAP=165`, `ZONE_GAP=560`; ilk bölge hatası düzeltildi (tryZone ikinci çağrıda null dönünce oyun başlamıyordu).
+- Kullanılmayan: `X_burn` (eğik açı), `X_debris`, `X_scorch`. Dörtlü harita hâlâ eski (m4).
