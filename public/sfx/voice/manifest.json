@@ -1,1 +1,173 @@
-{}
+{
+"war_start": [
+"war_start.mp3"
+],
+"launch": [
+"launch.mp3"
+],
+"drones_launched": [
+"drones_launched.mp3"
+],
+"hit_enemy": [
+"hit_enemy.mp3"
+],
+"hit_enemy_HQ": [
+"hit_enemy_HQ.mp3"
+],
+"hit_enemy_REFN": [
+"hit_enemy_REFN.mp3"
+],
+"hit_enemy_PWR": [
+"hit_enemy_PWR.mp3"
+],
+"hit_enemy_AIRB": [
+"hit_enemy_AIRB.mp3"
+],
+"hit_enemy_FAB": [
+"hit_enemy_FAB.mp3"
+],
+"hit_enemy_DEPO": [
+"hit_enemy_DEPO.mp3"
+],
+"hit_enemy_FUEL": [
+"hit_enemy_FUEL.mp3"
+],
+"hit_enemy_COMM": [
+"hit_enemy_COMM.mp3"
+],
+"hit_enemy_MIL": [
+"hit_enemy_MIL.mp3"
+],
+"hit_partial": [
+"hit_partial.mp3"
+],
+"hit_enemy_CITY": [
+"hit_enemy_CITY.mp3"
+],
+"destroyed_enemy": [
+"destroyed_enemy.mp3"
+],
+"destroyed_enemy_HQ": [
+"destroyed_enemy_HQ.mp3"
+],
+"destroyed_enemy_REFN": [
+"destroyed_enemy_REFN.mp3"
+],
+"destroyed_enemy_PWR": [
+"destroyed_enemy_PWR.mp3"
+],
+"destroyed_enemy_AIRB": [
+"destroyed_enemy_AIRB.mp3"
+],
+"destroyed_enemy_FAB": [
+"destroyed_enemy_FAB.mp3"
+],
+"destroyed_enemy_DEPO": [
+"destroyed_enemy_DEPO.mp3"
+],
+"destroyed_enemy_FUEL": [
+"destroyed_enemy_FUEL.mp3"
+],
+"destroyed_enemy_COMM": [
+"destroyed_enemy_COMM.mp3"
+],
+"destroyed_enemy_MIL": [
+"destroyed_enemy_MIL.mp3"
+],
+"intercepted_all": [
+"intercepted_all.mp3"
+],
+"miss": [
+"miss.mp3"
+],
+"incoming_bm": [
+"incoming_bm.mp3"
+],
+"incoming_hgv": [
+"incoming_hgv.mp3"
+],
+"own_hit": [
+"own_hit.mp3"
+],
+"own_hit_HQ": [
+"own_hit_HQ.mp3"
+],
+"own_hit_REFN": [
+"own_hit_REFN.mp3"
+],
+"own_hit_PWR": [
+"own_hit_PWR.mp3"
+],
+"own_hit_AIRB": [
+"own_hit_AIRB.mp3"
+],
+"own_hit_FAB": [
+"own_hit_FAB.mp3"
+],
+"own_hit_DEPO": [
+"own_hit_DEPO.mp3"
+],
+"own_hit_FUEL": [
+"own_hit_FUEL.mp3"
+],
+"own_hit_COMM": [
+"own_hit_COMM.mp3"
+],
+"own_hit_MIL": [
+"own_hit_MIL.mp3"
+],
+"own_hit_CITY": [
+"own_hit_CITY.mp3"
+],
+"incoming_cruise": [
+"incoming_cruise.mp3"
+],
+"incoming_drones": [
+"incoming_drones.mp3"
+],
+"incoming_jet": [
+"incoming_jet.mp3"
+],
+"intercept_ok": [
+"intercept_ok.mp3"
+],
+"own_destroyed": [
+"own_destroyed.mp3"
+],
+"battery_lost": [
+"battery_lost.mp3"
+],
+"own_destroyed_HQ": [
+"own_destroyed_HQ.mp3"
+],
+"own_destroyed_REFN": [
+"own_destroyed_REFN.mp3"
+],
+"own_destroyed_PWR": [
+"own_destroyed_PWR.mp3"
+],
+"own_destroyed_AIRB": [
+"own_destroyed_AIRB.mp3"
+],
+"own_destroyed_FAB": [
+"own_destroyed_FAB.mp3"
+],
+"own_destroyed_DEPO": [
+"own_destroyed_DEPO.mp3"
+],
+"own_destroyed_FUEL": [
+"own_destroyed_FUEL.mp3"
+],
+"own_destroyed_COMM": [
+"own_destroyed_COMM.mp3"
+],
+"own_destroyed_MIL": [
+"own_destroyed_MIL.mp3"
+],
+"destroyed_enemy_CITY": [
+"destroyed_enemy_CITY.mp3"
+],
+"own_destroyed_CITY": [
+"own_destroyed_CITY.mp3"
+]
+}

@@ -2791,7 +2791,7 @@ document.getElementById('gl').addEventListener('webglcontextlost',e=>{e.preventD
 addEventListener('resize',resize);try{new ResizeObserver(()=>resize()).observe(stage)}catch(e){}
 EVA.on=false;loadCustom();resize();intro();requestAnimationFrame(frame);
 {let step=0;const warm=setInterval(()=>{if(G&&ov.hidden)return;try{if(GL&&GL.preHD)GL.preHD();if(GL&&GL.pre&&!GL.pre())return;const want=['duo','quad'].find(k=>!WCACHE[k]&&ready(MAPS[k].mat));if(want){const keep=MAP;MAP=MAPS[want];const mw=MW,mh=MH;MW=MAP.w;MH=MAP.h;WMASK=null;buildMask();MAP=keep;MW=mw;MH=mh;const C=WCACHE[MAP.k];if(C){WMASK=C.m;OCEAN=C.o;WMW=C.w;WMH=C.h}else WMASK=null;return}if(++step>40)clearInterval(warm)}catch(e){clearInterval(warm)}},300)}
-window.__gok={boom,SNDX:()=>SND,sfx,audioInit,gcsLaunch,gcsPress,camClamp,fitAll,densAt,get G(){return G},get TUT(){return TUT},update,render,startGame,cam,build,buy,launch,sortie,openCon,setArm,holdStart,doFire,aiSpot,advSpot,sites,assets,manualEngage,bestBattery};
+window.__gok={boom,voice,VOICE,SNDX:()=>SND,sfx,audioInit,gcsLaunch,gcsPress,camClamp,fitAll,densAt,get G(){return G},get TUT(){return TUT},update,render,startGame,cam,build,buy,launch,sortie,openCon,setArm,holdStart,doFire,aiSpot,advSpot,sites,assets,manualEngage,bestBattery};
 
 })();</script>
 </body></html>
