@@ -205,3 +205,13 @@ Her değişiklik için:
 - Efektler: e1/e2/e3/e5/s1–s4 anahtarları `FXALIAS` ile yeni dosyalara; ateş görselleri siyah zeminden alfaya çevrildi. `boom` görsel yarıçapı ×SC7×1.4.
 - Kurulum: `PAD_GAP=165`, `ZONE_GAP=560`; ilk bölge hatası düzeltildi (tryZone ikinci çağrıda null dönünce oyun başlamıyordu).
 - Kullanılmayan: `X_burn` (eğik açı), `X_debris`, `X_scorch`. Dörtlü harita hâlâ eski (m4).
+
+## GÖREV 8 (Claude)
+- Netlik: `GLQ` zemin iç çözünürlüğü v7 haritada cihaz pikseli (DPR≤2); uzak zoomda shader'da hafif keskinleştirme (`texture(tM,muv,1.6)` ile unsharp). Duo `maxZ=2.4`.
+- Yazı tipi: kendi sunucumuzdan `public/fonts` — Familjen Grotesk (metin) + Archivo 72% genişlik örneği "Archivo Cond" (etiket/sayı; fontTools instancer ile). Google Fonts kaldırıldı. CSS'te geniş harf aralıkları .08em'e indirildi.
+- `label()`: tesis adı büyük harf, ince takım rengi çizgisi, yumuşak gölge.
+- "Nasıl oynanır" yalnız menü ve hazırlıkta. Menzil paneline Hepsi/Hiçbiri.
+- Hedef: saldırı konsolu açıkken düşman toprağına tıklamak doğrudan hedef (`autoTgt`, `setTgtAt`), imleçte nişangâh; belirgin "Hedef seç" düğmesi; `T` kısayolu.
+- Analiz: `defGaps()` (tesis × BAL/SEY/İHA/RAD katmanları), `strikeOps()` (her düşman tesisi × silah: geçiş olasılığı `survP`, hasar, kesilen gelir/dk, maliyet; puan = etki/maliyet), `aimAt()` tek tıkla hedef; sağ panelde "Analiz" sekmesi; üst şerit öneri/fırsatları bunlardan.
+- Duman/patlama boyutları dünyaya bağlı (`pxf` alt sınırı ×0.22). Yanan tesis dumanı büyütüldü.
+- Güç barometresi: duo'da karşılıklı (ortadan iki yana) çubuklar, dörtlüde 4 sütun.
