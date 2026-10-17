@@ -231,3 +231,12 @@ Her değişiklik için:
 - `matchRecord()` → {opts, cmds, ticks, hash}; `replayMatch(rec)` başsız yeniden oynatır, `stateHash()` döner. `tools/replay_test.py` aynı sayfada iki kez + temiz sayfada bir kez tekrar oynatıp hash karşılaştırır (war + ffa, ~400 sn, ~130 komut: hepsi eşit).
 - Oyuncuya: maç sonunda "Tekrarı izle", ana ekranda "Son maçı izle" (kayıt `gok.lastrec`). İzlerken emir verilemez, hız 1/2/4×.
 - Sıradaki: sunucu (maçı sunucu hesaplar, oyuncuya sisle süzülmüş durum gider), oda kodu ile eşleşme.
+
+## ONLINE 2 — arkadaşla oyna (lockstep, Claude)
+- Mimari: sunucu hakem + postacı. `server/` = Cloudflare Worker + Durable Object (`Room`, oda kodu başına bir tane). 100 ms'de bir "tur" (6 tik) yayınlar; içindeki emirler `[taraf,k,args]`, tarafı sunucu damgalar. İki tarayıcı aynı tohum + emirlerle aynı maçı hesaplar. İstemciler her 60 tikte `stateHash` yollar; sunucu karşılaştırır, fark varsa `desync`.
+- İstemci: `NET` nesnesi, `netOpen(code)`, `netApply()` (her tikin başında), frame döngüsü sunucunun onayladığı son turu (`NET.n*TT`) geçmez; gerideyse kare başına açığın 1/4'ü kadar hızlanır (yeniden bağlanmada tüm geçmiş `sync` ile gelir, hızla yeniden oynatılır).
+- `ME` = bu ekranın tarafı; `HUM(s)` = insan taraf (AI ve zorluk çarpanları kapalı). UI'da 'W' yerine ME kullan; sim kuralları taraftan bağımsız kalmalı. `runCmd(side,k,a)` emri gönderen tarafa kilitler.
+- Tarayıcılar arası aynı hesap: `DM` (sin, cos, atan2, exp, log, pow, hypot…) yalnızca + − × ÷ ve sqrt ile; ses kodu hariç tüm `Math.*` trigonometrisi DM'ye çevrildi. Sim kodunda `Math.sin/cos/atan2/exp/log/pow/hypot` ve `**` KULLANMA; sıralama karşılaştırıcısında rastgele sayı çekme.
+- Sunucu adresi: `NET_DEFAULT` (yayınlandıktan sonra workers.dev alt alan adı yazılacak); test için `?net=ws://127.0.0.1:8787`. Davet bağlantısı `?oda=KOD`.
+- Kısıtlar (v1): yalnız 1'e 1 ikili harita, özel silah tasarımları kapalı, duraklatma/hız yok, hile önleme yok (iki taraf da tüm durumu hesaplar).
+- Test: `tools/duel_test.py` iki sayfayla yerel sunucuya karşı oynar (60 sn, 30 hash karşılaştırması eşit; sayfa yenileyip yeniden bağlanma da eşit).

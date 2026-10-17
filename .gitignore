@@ -3,3 +3,5 @@ dist
 .env
 .env.local
 art_in/
+server/node_modules/
+server/.wrangler/
