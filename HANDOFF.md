@@ -223,3 +223,11 @@ Her değişiklik için:
 - Saldırı modunda düşman tesisine/bilinen bataryasına tıklamak saldırı kartını açar (QA); boş düşman toprağı hedef. QA: önerilen ilk sırada, silah başına −/+ adet (`QA.n`), toplam maliyet, beklenen sonuç ("yok eder" / % hasar), "n × fırlat".
 - Talimat kaydı: `newOrder/ordEv/ordTick`, mühimmatta `o.ord`; sağ panel "Kayıt" sekmesi; bitince "Görev sonucu" bildirimi.
 - Telsiz: `voice(key,t)` → `public/sfx/voice/manifest.json` dosyaları; telsiz zinciri (HP 330, LP 3100, tepe 1,7 kHz, tanh, cızırtı). Satır listesi `tools/TELSIZ_ANONSLARI.md` (57 anahtar). Dosya yoksa sessiz.
+
+## ONLINE 1 — deterministik çekirdek (Claude)
+- Sim sabit adımla ilerler: `STEP=1/60`, `frame()` biriktirip `update(STEP)` çağırır (kare başı en çok 8×hız adım). `G.tick` her adımda artar.
+- Rastgelelik: sim `srnd()`/`RN()` kullanır (durum `G.rs`, maç tohumu `G.seed`, `opts.seed` ile verilebilir). Görsel/ses rastgeleliği `Math.random`/`gauss` olarak kaldı; sim akışını kaydırmaz. Yeni sim kodu yazarken **asla Math.random kullanma**.
+- Oyuncu kararları `issue(k,...args)` üzerinden: `CMD` tablosu (build, buy, launch, sortie, engage, sat, go, mode, emit, sell, designs, auto). Argümanlar düz veri (id, sayı); kayıt `G.rec=[[tick,k,args]]`. UI'dan sim durumunu doğrudan değiştirme; yeni bir oyuncu eylemi = yeni CMD girdisi.
+- `matchRecord()` → {opts, cmds, ticks, hash}; `replayMatch(rec)` başsız yeniden oynatır, `stateHash()` döner. `tools/replay_test.py` aynı sayfada iki kez + temiz sayfada bir kez tekrar oynatıp hash karşılaştırır (war + ffa, ~400 sn, ~130 komut: hepsi eşit).
+- Oyuncuya: maç sonunda "Tekrarı izle", ana ekranda "Son maçı izle" (kayıt `gok.lastrec`). İzlerken emir verilemez, hız 1/2/4×.
+- Sıradaki: sunucu (maçı sunucu hesaplar, oyuncuya sisle süzülmüş durum gider), oda kodu ile eşleşme.
