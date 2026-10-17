@@ -215,3 +215,11 @@ Her değişiklik için:
 - Analiz: `defGaps()` (tesis × BAL/SEY/İHA/RAD katmanları), `strikeOps()` (her düşman tesisi × silah: geçiş olasılığı `survP`, hasar, kesilen gelir/dk, maliyet; puan = etki/maliyet), `aimAt()` tek tıkla hedef; sağ panelde "Analiz" sekmesi; üst şerit öneri/fırsatları bunlardan.
 - Duman/patlama boyutları dünyaya bağlı (`pxf` alt sınırı ×0.22). Yanan tesis dumanı büyütüldü.
 - Güç barometresi: duo'da karşılıklı (ortadan iki yana) çubuklar, dörtlüde 4 sütun.
+
+## GÖREV 9 (Claude)
+- Palet: SCOL/SHEX W #9fd0dc, E #e2725b, N #d6b25e, S #a897d8 (eski sabit renkler de değiştirildi).
+- `drawSym`: harf kodu yerine piktogram (`GLYPH`, HS'ler için füze + katman çubukları `SAMBARS`).
+- Sağ panel kartlarında parça fotoğrafı (`card-b.ph`).
+- Saldırı modunda düşman tesisine/bilinen bataryasına tıklamak saldırı kartını açar (QA); boş düşman toprağı hedef. QA: önerilen ilk sırada, silah başına −/+ adet (`QA.n`), toplam maliyet, beklenen sonuç ("yok eder" / % hasar), "n × fırlat".
+- Talimat kaydı: `newOrder/ordEv/ordTick`, mühimmatta `o.ord`; sağ panel "Kayıt" sekmesi; bitince "Görev sonucu" bildirimi.
+- Telsiz: `voice(key,t)` → `public/sfx/voice/manifest.json` dosyaları; telsiz zinciri (HP 330, LP 3100, tepe 1,7 kHz, tanh, cızırtı). Satır listesi `tools/TELSIZ_ANONSLARI.md` (57 anahtar). Dosya yoksa sessiz.
