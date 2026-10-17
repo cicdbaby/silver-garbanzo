@@ -1,0 +1,17 @@
+# Menzil · Gök on Cloudflare: one Worker serves the game (built files in dist/) and the online rooms.
+# Cloudflare Workers Builds: build command `npm run build`, deploy command `npx wrangler deploy`, root directory = repo root.
+name = "menzil"
+main = "server/src/index.js"
+compatibility_date = "2026-06-01"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "Room"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Room"]

@@ -233,10 +233,10 @@ Her değişiklik için:
 - Sıradaki: sunucu (maçı sunucu hesaplar, oyuncuya sisle süzülmüş durum gider), oda kodu ile eşleşme.
 
 ## ONLINE 2 — arkadaşla oyna (lockstep, Claude)
-- Mimari: sunucu hakem + postacı. `server/` = Cloudflare Worker + Durable Object (`Room`, oda kodu başına bir tane). 100 ms'de bir "tur" (6 tik) yayınlar; içindeki emirler `[taraf,k,args]`, tarafı sunucu damgalar. İki tarayıcı aynı tohum + emirlerle aynı maçı hesaplar. İstemciler her 60 tikte `stateHash` yollar; sunucu karşılaştırır, fark varsa `desync`.
+- Mimari: sunucu hakem + postacı. Kök dizindeki `wrangler.toml` tek bir Worker tanımlar: `dist/` içindeki oyunu sunar ve `server/src/index.js` = Durable Object (`Room`, oda kodu başına bir tane). 100 ms'de bir "tur" (6 tik) yayınlar; içindeki emirler `[taraf,k,args]`, tarafı sunucu damgalar. İki tarayıcı aynı tohum + emirlerle aynı maçı hesaplar. İstemciler her 60 tikte `stateHash` yollar; sunucu karşılaştırır, fark varsa `desync`.
 - İstemci: `NET` nesnesi, `netOpen(code)`, `netApply()` (her tikin başında), frame döngüsü sunucunun onayladığı son turu (`NET.n*TT`) geçmez; gerideyse kare başına açığın 1/4'ü kadar hızlanır (yeniden bağlanmada tüm geçmiş `sync` ile gelir, hızla yeniden oynatılır).
 - `ME` = bu ekranın tarafı; `HUM(s)` = insan taraf (AI ve zorluk çarpanları kapalı). UI'da 'W' yerine ME kullan; sim kuralları taraftan bağımsız kalmalı. `runCmd(side,k,a)` emri gönderen tarafa kilitler.
 - Tarayıcılar arası aynı hesap: `DM` (sin, cos, atan2, exp, log, pow, hypot…) yalnızca + − × ÷ ve sqrt ile; ses kodu hariç tüm `Math.*` trigonometrisi DM'ye çevrildi. Sim kodunda `Math.sin/cos/atan2/exp/log/pow/hypot` ve `**` KULLANMA; sıralama karşılaştırıcısında rastgele sayı çekme.
-- Sunucu adresi: `NET_DEFAULT` (yayınlandıktan sonra workers.dev alt alan adı yazılacak); test için `?net=ws://127.0.0.1:8787`. Davet bağlantısı `?oda=KOD`.
+- Sunucu adresi: oyun workers.dev üzerinden açılınca aynı adres (ayar gerekmez); Vercel/yerelden `?net=wss://…`. Yerel: `npm run build && npm run oda` → http://127.0.0.1:8787. Cloudflare Workers Builds: kök dizin, build `npm run build`, deploy `npx wrangler deploy`, proje adı `menzil`. Davet bağlantısı `?oda=KOD`.
 - Kısıtlar (v1): yalnız 1'e 1 ikili harita, özel silah tasarımları kapalı, duraklatma/hız yok, hile önleme yok (iki taraf da tüm durumu hesaplar).
 - Test: `tools/duel_test.py` iki sayfayla yerel sunucuya karşı oynar (60 sn, 30 hash karşılaştırması eşit; sayfa yenileyip yeniden bağlanma da eşit).

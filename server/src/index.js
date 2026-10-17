@@ -18,7 +18,7 @@ const json = (o, status = 200) => cors(new Response(JSON.stringify(o), { status,
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
-    if (url.pathname === '/' || url.pathname === '/health') return json({ ok: true, service: 'menzil-oda' });
+    if (url.pathname === '/health') return json({ ok: true, service: 'menzil-oda' });
     const m = url.pathname.match(/^\/room\/([A-Za-z0-9]+)$/);
     if (m) {
       const code = m[1].toUpperCase();
@@ -26,6 +26,8 @@ export default {
       if (req.headers.get('Upgrade') !== 'websocket') return json({ error: 'websocket expected' }, 426);
       return env.ROOMS.get(env.ROOMS.idFromName(code)).fetch(req);
     }
+    // everything else is the game itself (static files built into dist/)
+    if (env.ASSETS) return env.ASSETS.fetch(req);
     return json({ error: 'not found' }, 404);
   }
 };

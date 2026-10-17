@@ -2842,7 +2842,8 @@ function drawSetup(){const S=SETUP,N=NAT[S.nat],sys=[['Üst katman','UPPER'],['U
 // ================================================================ online (arkadaşla oyna)
 // Lockstep: the room server sends a turn every 100 ms (6 ticks) with the orders given in it; both browsers apply
 // the same orders at the same tick and so play the same match. Each side's orders are stamped by the server.
-const NET_DEFAULT='wss://menzil-oda.SUBDOMAIN.workers.dev';
+// rooms live on the same Cloudflare Worker that serves the game; elsewhere (Vercel, local) point at it with ?net=wss://…
+const NET_DEFAULT=/\.workers\.dev$|\.pages\.dev$/.test(location.hostname)||location.port==='8787'?(location.protocol==='https:'?'wss://':'ws://')+location.host:'wss://menzil.SUBDOMAIN.workers.dev';
 const NET_URL=(()=>{try{const q=new URLSearchParams(location.search).get('net');if(q){localStorage.setItem('gok.net',q);return q}return localStorage.getItem('gok.net')||NET_DEFAULT}catch(e){return NET_DEFAULT}})();
 let NET=null;const TT=6;
 const CODECH='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
