@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b0e10">
-<title>Menzil · Gök</title>
+<title>Menzil Gök</title>
 <style>
 @font-face{font-family:'Familjen';src:url(fonts/familjen-latin.woff2) format('woff2');font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:'Familjen';src:url(fonts/familjen-latin-ext.woff2) format('woff2');font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
@@ -503,13 +503,150 @@ kbd{background:transparent;border:1px solid var(--hair);border-bottom-width:1px}
 .lg-bar{display:flex;gap:2px;height:4px;margin:5px 0 4px;background:rgba(220,230,226,.06)}.lg-bar i{display:block}.lg-bar .h{background:#9fc7a6}.lg-bar .m{background:#8c9694}.lg-bar .d{background:#e2725b}.lg-bar .f{background:#d6b25e}.lg-bar .p{background:repeating-linear-gradient(90deg,rgba(220,230,226,.3) 0 3px,transparent 3px 6px)}
 .lg-t{font:400 11.5px/1.4 var(--sans);color:var(--mute)}.lg-t b{color:#e9ecea;font-weight:600}.lg-t b.k{color:#9fc7a6}.lg-t em{font-style:normal;color:#ffd27a}
 .lg-row.live .lg-h b{color:#ffe0a0}
+
+/* ==== v6: plain-spoken controls. Sentence case, normal tracking; the condensed face only for figures and names.
+   Three jobs in the side panel (Kur / Savunma / Saldırı) plus the log; weapon details open on demand. ==== */
+.btn{font:500 13px/1 var(--sans);letter-spacing:0;text-transform:none;padding:8px 11px}
+.btn.sm{font:500 12px/1 var(--sans);padding:6px 9px}
+header.top .btn{padding:8px 10px}
+header.top .btn.ghost{color:#9aa4a2}
+header.top .btn[aria-pressed="false"]{color:#5f6967;text-decoration:line-through;text-decoration-color:rgba(220,230,226,.25)}
+.brand{font:600 15px/1 var(--cond);letter-spacing:.04em}
+.brand small{font:500 13px var(--cond);letter-spacing:.04em;color:var(--mute)}
+.clock .ph{font:500 12px var(--sans);letter-spacing:0;color:var(--acc);margin-right:8px}
+.clock small{font:500 12px var(--sans);letter-spacing:0}
+.score{font:500 12.5px var(--sans);letter-spacing:0}
+/* side panel */
+.money{padding:14px 16px 4px}
+.money small{font:500 12.5px var(--sans);color:#9fc7a6}
+.prod{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"l b" "t t";gap:3px 10px;align-items:center;padding:2px 16px 10px;font:500 12px var(--sans);color:var(--mute)}
+.prod span{grid-area:l}
+.prod i{grid-area:b;display:block;height:3px;background:rgba(220,230,226,.1)}
+.prod i b{display:block;height:100%;background:#d6d0bf}
+.prod em{grid-area:t;font-style:normal;color:#b9c1bf}
+.tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:12px 16px 0;border-bottom:1px solid var(--hair)}
+.tabs .btn{border:0;border-bottom:2px solid transparent;background:none;color:#8c9694;font:500 14px var(--sans);padding:10px 4px 9px;margin:0 0 -1px}
+.tabs .btn+.btn{margin-left:0}
+.tabs .btn:hover:not([disabled]){background:none;color:#eef1ee;border-color:transparent;border-bottom-color:rgba(220,230,226,.3)}
+.tabs .btn.on{background:none;color:#eef1ee;border-bottom-color:#dfe5e2}
+.tabdesc{font:400 12.5px/1.4 var(--sans);letter-spacing:0;text-transform:none;color:var(--mute);padding:10px 16px 2px}
+.tabdesc:empty{display:none}
+.build{padding:4px 16px 10px}
+.sect{display:block;font:600 13px/1.3 var(--sans);letter-spacing:0;text-transform:none;color:#dfe5e2;margin:14px 0 2px;padding-top:12px}
+.build>.sect:first-child{margin-top:4px}
+.sect em{display:block;font:400 12px/1.35 var(--sans);color:var(--mute);margin-top:1px}
+.card-b b{font:600 14px var(--cond);letter-spacing:.01em}
+.card-b span{font:400 12px var(--sans);color:#8c9694}
+.card-b em{font:500 13px var(--cond);color:#d6d0bf}
+.card-b i{font:500 12px var(--cond);color:var(--acc)}
+.note{font:400 12.5px/1.45 var(--sans)}
+.doc{grid-column:1/-1;display:grid;gap:0;border:1px solid var(--hair)}
+.doc button{display:grid;gap:2px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 10px;color:#b9c1bf;cursor:pointer;font:inherit}
+.doc button:last-child{border-bottom:0}
+.doc button b{font:600 13.5px var(--sans);color:#dfe5e2}
+.doc button span{font:400 12px/1.35 var(--sans);color:var(--mute)}
+.doc button:hover{background:rgba(220,230,226,.04)}
+.doc button.on{background:rgba(220,230,226,.07);box-shadow:inset 2px 0 0 #dfe5e2}
+.bat,.stat{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 10px;align-items:baseline;padding:6px 0;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;text-align:left;font:inherit}
+.bat{cursor:pointer;grid-template-columns:minmax(0,1fr) auto auto}
+.bat:hover{background:rgba(220,230,226,.03)}
+.bat.on{box-shadow:inset 2px 0 0 #dfe5e2;padding-left:8px}
+.bat b,.stat span{font:500 13px var(--sans);color:#dfe5e2}
+.bat span{font:400 12px var(--sans);color:var(--mute)}
+.bat em{font:500 12px var(--cond);font-style:normal;color:#8c9694}
+.stat b{font:500 13px var(--sans);color:#b9c1bf;text-align:right}
+.side-act{grid-column:1/-1;display:flex;gap:6px;margin-top:12px}
+.side-act .btn{flex:1;padding:10px}
+.an-row b{font:600 14px var(--cond)}
+.an-row em{font:400 12px/1.4 var(--sans)}
+.an-ch i{font:500 11px var(--sans);letter-spacing:0;padding:1px 6px}
+.lg-h s{font:500 11.5px var(--cond)}
+.lg-h b{font:600 14px var(--cond)}
+.lg-h span{font:400 12.5px var(--sans)}
+.lg-t{font:400 12px/1.45 var(--sans)}
+/* console: weapons | quantity & target | fire */
+.con{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) 210px}
+.con.def{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) 210px}
+.con .cB{display:none}
+.con.def .cP{display:block}
+.con .col{padding:10px 14px}
+.chead{display:flex;align-items:center;gap:12px;margin:0 0 6px;min-width:0}
+.con .md{display:flex;gap:0;border:1px solid var(--hair);flex:none}
+.con .md button{border:0;background:transparent;color:#9aa4a2;font:500 12.5px var(--sans);letter-spacing:0;text-transform:none;padding:5px 10px;cursor:pointer}
+.con .md button+button{border-left:1px solid var(--hair)}
+.con .md button.on{background:#dfe5e2;color:#0a0c0d}
+.con .md button.onr{background:var(--hot);color:#fff}
+.cnote{font:400 12.5px var(--sans);color:var(--mute);margin:0}
+.ctabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0;gap:2px;min-width:0}
+.ctabs button{font:500 12.5px var(--sans);letter-spacing:0;text-transform:none;padding:4px 6px 3px;color:#7f8a8a;white-space:nowrap}
+.ctabs button.on{color:#eef1ee}
+.wrow{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) 58px 70px;padding:5px 6px}
+.wrow b{font:600 13.5px var(--cond)}
+.wrow span{font:400 12px var(--sans)}
+.wrow em{font:500 13px var(--cond)}
+.wrow i{font:400 12px var(--sans)}
+.wrow span s.pt{font:500 10.5px var(--sans);letter-spacing:0;padding:0 4px}
+.qrow{display:flex;align-items:center;gap:12px;padding:2px 0 8px;border-bottom:1px solid var(--line);min-width:0}
+.qrow .wn{font:600 17px var(--cond);color:#eef1ee;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.qrow .tc{margin-left:auto;font:500 14px var(--cond);color:#d6d0bf;white-space:nowrap}
+.qrow .qty button{width:28px;height:28px;font:600 16px var(--sans)}
+.qrow .qty b{min-width:30px;font:600 17px var(--cond)}
+.trow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 6px}
+.btn.tgtb{font:600 13px var(--sans);letter-spacing:0;padding:9px 12px}
+.tinfo{font:400 13px/1.45 var(--sans)}
+.lnk{background:none;border:0;color:var(--mute);text-decoration:underline;cursor:pointer;font:inherit;padding:0;margin-left:4px}
+.pi{font:400 12px var(--sans)}
+.pt{font:400 12px var(--sans);color:var(--mute);margin-top:4px}
+.armw small{font:500 11.5px var(--sans);letter-spacing:0;text-transform:none}
+.fbtn em{font:500 9.5px var(--sans);letter-spacing:.02em}
+.fstat{font:500 12px var(--sans);letter-spacing:0}
+.wcard .st{font:600 12px var(--cond)}
+.wcard b{font:600 13px var(--cond)}
+.wcard i{font:400 11.5px var(--sans)}
+#prof{width:100%;height:50px;display:block;margin-top:6px}
+/* weapon details popover */
+#specpop{width:330px;padding:14px 16px;background:rgba(8,10,11,.97);border:1px solid var(--hair);pointer-events:auto}
+#specpop h4{font:600 20px var(--cond);letter-spacing:.01em}
+#specpop .m{font:400 12.5px var(--sans)}
+.spec dd{font:500 13px var(--cond)}
+.spec .w{font:400 12.5px/1.45 var(--sans)}
+.spec .w b{color:#dfe5e2}
+.spec .w.kill{color:#c9a59d}
+.spec .bars{margin-top:8px}
+.spec .br{font:400 12px var(--sans);letter-spacing:0;text-transform:none;color:var(--mute)}
+/* the in-game hint line and weather tag read like sentences */
+.hint{font:500 13.5px/1.4 var(--sans)}
+#wx{font:400 12px var(--sans)}
+#rng .rh,#rng .rh button,#rng .rh .rb button,#rng .lg,#rng .alt .av{font:500 11.5px var(--sans);letter-spacing:0;text-transform:none}
+#rng .rl{font:500 13px var(--sans)}
+#rng .rl small{font:400 11px var(--sans);letter-spacing:0}
+#rng .summary{font:400 11.5px/1.45 var(--sans)}
+.adv .tg,.adv.acil .tg,.adv.firsat .tg{font:600 12px var(--sans);letter-spacing:0;text-transform:none}
+.adv .nv{font:500 12px var(--sans)}
+.qa header span,.qa .ft{font:400 12px var(--sans)}
+.qa .o s{font:600 11.5px var(--sans);letter-spacing:0;text-transform:none}
+.qa .o.sk .fire{font:600 12px var(--sans);letter-spacing:0;text-transform:none}
+.gcs dl,.gcs small{font:400 12px/1.45 var(--sans);letter-spacing:0}
+.gcs dt{letter-spacing:0}
+.gcs-b{font:600 13px var(--sans);letter-spacing:0}
+
+/* v6: no shouting labels anywhere in the game surfaces */
+.shell *,#specpop *,#coach *,#trkpop *,#threats *,.qa *{text-transform:none !important}
+.shell h6,.shell .sideh,.pw2 small,.pw2 .m,.pw-side small,#threats h6,#coach .ch span,.icard .ey,.qa header span{letter-spacing:0 !important}
+.score .sp{display:inline-block;width:14px}
+
+.tt-foot,.tt-top{text-transform:none;letter-spacing:.01em;font:500 12px/1.4 var(--sans)}
+.tt-sub{text-transform:none;letter-spacing:.02em;font:500 14px var(--sans)}
+.card-b i{top:auto;bottom:7px;right:16px;font:500 11.5px var(--sans);color:var(--acc)}
+.card-b.ph i{right:16px}
+.card-b em{align-self:start;margin-top:4px}
 </style>
 </head>
 <body>
 <div class="shell">
   <header class="top" id="top"></header>
   <div class="game">
-    <div class="view" id="view"><div class="adv" id="adv" hidden></div><div class="stage" id="stage"><canvas id="gl" aria-hidden="true"></canvas><canvas id="cv" aria-label="Harekât sahası"></canvas><div id="wx"></div><button id="fitbtn" class="btn" aria-pressed="false" title="Tüm haritayı göster (F) · tekrar basınca geri döner">TÜM HARİTA <kbd>F</kbd></button><div id="dens-tip" hidden></div><div id="rng"></div><div id="toasts"></div><div id="threats" hidden></div><div class="hint" id="hint"></div><div id="flash"></div><div class="icard" id="icard" hidden></div><div class="qa" id="qa" hidden></div>
+    <div class="view" id="view"><div class="adv" id="adv" hidden></div><div class="stage" id="stage"><canvas id="gl" aria-hidden="true"></canvas><canvas id="cv" aria-label="Harekât sahası"></canvas><div id="wx"></div><button id="fitbtn" class="btn" aria-pressed="false" title="Tüm haritayı göster (F); tekrar basınca geri döner">Tüm harita <kbd>F</kbd></button><div id="dens-tip" hidden></div><div id="rng"></div><div id="toasts"></div><div id="threats" hidden></div><div class="hint" id="hint"></div><div id="flash"></div><div class="icard" id="icard" hidden></div><div class="qa" id="qa" hidden></div>
       <div class="con" id="con" hidden></div></div></div>
     <aside class="side" id="side"></aside>
   </div>
@@ -630,18 +767,18 @@ const CLOUD_Z=3.2;
 
 // ================================================================ catalogs
 const SITE={
- RAD:{n:'Arama Radarı',role:'erken uyarı',c:60,hp:140,r:16,emit:1,sens:5000,mast:24,d:'360° tarar, gördüğünü tüm bataryalara iz olarak verir. Alçak uçanı ancak ufkun berisine girince görür. Yayın yaptıkça rakip yerini bulur.'},
- CIWS:{n:'Yakın Savunma Topu',role:'son katman · top',c:20,hp:130,r:12,gun:1,rng:150,a0:0,a1:2,mag:24,rl:1.2,ic:.03,cd:.35,sens:140,mast:6,d:'Dakikada binlerce mermi. Dron, seyir füzesi ve bombayı son 3,5 km\'de düşürür. Ucuz ama kısa.'},
- SHORAD:{n:'Kısa Menzil HS',role:'IR güdümlü',c:35,hp:110,r:13,rng:180,a0:0,a1:5,mag:8,rl:6,ic:.4,cd:.9,spd:120,boost:.45,launch:'rail',sens:260,mast:6,ir:1,d:'Isı güdümlü füzeler. Radar yaymadığı için yeri belli olmaz.'},
- MRAD:{n:'Orta Menzil HS',role:'dikey atış',c:110,hp:180,r:18,rng:800,a0:.05,a1:20,mag:8,rl:10,ic:1,cd:1.1,spd:150,boost:.8,launch:'vls',sens:950,mast:12,emit:1,d:'Dikey atış hücrelerinden aktif radar güdümlü füze. Seyir füzesi, uçak ve dronun ana panzehiri.'},
- LRAD:{n:'Uzun Menzil HS',role:'balistik son evre',c:380,hp:220,r:22,rng:1800,a0:.06,a1:50,mag:8,rl:16,ic:4,cd:1.4,spd:220,boost:1,launch:'canted',sens:2100,mast:14,emit:1,salvo:2,d:'Eğik rampalardan çift atış. Balistik füzeyi atmosfere döndüğü son evrede vurur. Önleyicisi pahalı.'},
- UPPER:{n:'Üst Katman HS',role:'atmosfer dışı',c:600,hp:200,r:20,rng:3000,a0:40,a1:150,mag:6,rl:28,ic:12,cd:2.5,spd:300,boost:1.2,launch:'vls',sens:3400,mast:14,emit:1,salvo:2,d:'Balistik füzeyi uzayın eşiğinde, 40–150 km\'de çarparak yok eder. Sahte başlıkları ayırt edemez; hipersonik ise onun altından geçer.'},
- LASER:{n:'Lazer HS',role:'ışın silahı',c:70,hp:140,r:14,laser:1,rng:170,a0:0,a1:3,mag:999,ic:.00001,cd:2.4,sens:170,mast:6,d:'Hedefi 1–2 saniye ısıtıp yakar. Atış başına birkaç dolar. Bulutun üstündeki hedefte gücü düşer.'},
- IDR:{n:'Önleyici İHA',role:'dron avcısı',c:25,hp:100,r:13,rng:320,a0:0,a1:3,mag:12,rl:5,ic:.1,cd:1,spd:55,boost:.3,launch:'drone',sens:300,mast:6,d:'Dronu dronla avlar: kamikaze İHA\'ya karşı en ucuz takas.'},
- EW:{n:'Elektronik Harp',role:'karıştırma',c:40,hp:100,r:13,ew:1,rng:340,emit:1,d:'340 u (17 km) içinde dronların uydu konumunu bozar, seyir füzesinin isabetini düşürür.'},
- DEC:{n:'Şişme Maket',role:'aldatma',c:.2,hp:1,r:20,decoy:1,emit:1,d:'Rakibin elektronik dinlemesine uzun menzil HS gibi görünür; SEAD ve füze çeker. $200K.'},
- TEL:{n:'Füze Rampası',role:'balistik · seyir · hipersonik',c:120,hp:160,r:16,off:1,rl:22,d:'Mobil fırlatıcı. Her rampa bir füze atar, sonra 22 sn yeniden dolar. Salvo için birden çok rampa kur.'},
- DLN:{n:'İHA Rampası',role:'sürü · aldatıcı · keşif',c:50,hp:110,r:14,off:1,rl:10,d:'Kamikaze İHA, anti-radar İHA, aldatıcı füze ve keşif İHA fırlatır. Bir seferde 6 adede kadar.'},
+ RAD:{n:'Arama Radarı',role:'tehdidi uzaktan görür',c:60,hp:140,r:16,emit:1,sens:5000,mast:24,d:'360° tarar, gördüğünü tüm bataryalara iz olarak verir. Alçak uçanı ancak ufkun berisine girince görür. Yayın yaptıkça rakip yerini bulur.'},
+ CIWS:{n:'Yakın Savunma Topu',role:'dron ve seyir füzesini son anda düşürür',c:20,hp:130,r:12,gun:1,rng:150,a0:0,a1:2,mag:24,rl:1.2,ic:.03,cd:.35,sens:140,mast:6,d:'Dakikada binlerce mermi. Dron, seyir füzesi ve bombayı son 3,5 km\'de düşürür. Ucuz ama kısa.'},
+ SHORAD:{n:'Kısa Menzil HS',role:'alçak uçana karşı, radar yaymaz',c:35,hp:110,r:13,rng:180,a0:0,a1:5,mag:8,rl:6,ic:.4,cd:.9,spd:120,boost:.45,launch:'rail',sens:260,mast:6,ir:1,d:'Isı güdümlü füzeler. Radar yaymadığı için yeri belli olmaz.'},
+ MRAD:{n:'Orta Menzil HS',role:'seyir füzesi, uçak ve dron',c:110,hp:180,r:18,rng:800,a0:.05,a1:20,mag:8,rl:10,ic:1,cd:1.1,spd:150,boost:.8,launch:'vls',sens:950,mast:12,emit:1,d:'Dikey atış hücrelerinden aktif radar güdümlü füze. Seyir füzesi, uçak ve dronun ana panzehiri.'},
+ LRAD:{n:'Uzun Menzil HS',role:'balistik füzeyi son evrede vurur',c:380,hp:220,r:22,rng:1800,a0:.06,a1:50,mag:8,rl:16,ic:4,cd:1.4,spd:220,boost:1,launch:'canted',sens:2100,mast:14,emit:1,salvo:2,d:'Eğik rampalardan çift atış. Balistik füzeyi atmosfere döndüğü son evrede vurur. Önleyicisi pahalı.'},
+ UPPER:{n:'Üst Katman HS',role:'balistik füzeyi uzayın eşiğinde vurur',c:600,hp:200,r:20,rng:3000,a0:40,a1:150,mag:6,rl:28,ic:12,cd:2.5,spd:300,boost:1.2,launch:'vls',sens:3400,mast:14,emit:1,salvo:2,d:'Balistik füzeyi uzayın eşiğinde, 40–150 km\'de çarparak yok eder. Sahte başlıkları ayırt edemez; hipersonik ise onun altından geçer.'},
+ LASER:{n:'Lazer HS',role:'dronu neredeyse bedavaya yakar',c:70,hp:140,r:14,laser:1,rng:170,a0:0,a1:3,mag:999,ic:.00001,cd:2.4,sens:170,mast:6,d:'Hedefi 1–2 saniye ısıtıp yakar. Atış başına birkaç dolar. Bulutun üstündeki hedefte gücü düşer.'},
+ IDR:{n:'Önleyici İHA',role:'dronu ucuza avlar',c:25,hp:100,r:13,rng:320,a0:0,a1:3,mag:12,rl:5,ic:.1,cd:1,spd:55,boost:.3,launch:'drone',sens:300,mast:6,d:'Dronu dronla avlar: kamikaze İHA\'ya karşı en ucuz takas.'},
+ EW:{n:'Elektronik Harp',role:'dronların yönünü şaşırtır',c:40,hp:100,r:13,ew:1,rng:340,emit:1,d:'340 u (17 km) içinde dronların uydu konumunu bozar, seyir füzesinin isabetini düşürür.'},
+ DEC:{n:'Şişme Maket',role:'sahte batarya, ateş çeker',c:.2,hp:1,r:20,decoy:1,emit:1,d:'Rakibin elektronik dinlemesine uzun menzil HS gibi görünür; SEAD ve füze çeker. $200K.'},
+ TEL:{n:'Füze Rampası',role:'balistik, seyir ve hipersonik füze atar',c:120,hp:160,r:16,off:1,rl:22,d:'Mobil fırlatıcı. Her rampa bir füze atar, sonra 22 sn yeniden dolar. Salvo için birden çok rampa kur.'},
+ DLN:{n:'İHA Rampası',role:'İHA sürüsü, aldatıcı ve keşif',c:50,hp:110,r:14,off:1,rl:10,d:'Kamikaze İHA, anti-radar İHA, aldatıcı füze ve keşif İHA fırlatır. Bir seferde 6 adede kadar.'},
 };
 // seconds from order to ready: a launcher or a long-range battery is not dropped in place in a moment
 const BUILD_T={RAD:10,CIWS:6,SHORAD:8,MRAD:14,LRAD:22,UPPER:30,LASER:12,IDR:8,EW:8,DEC:2,TEL:16,DLN:10};
@@ -677,7 +814,7 @@ const VAR={
  HGV:[['HGV_L','Hafif','H',{c:30,dmg:190,r:40,cep:8}],['HGV','Standart','',{cep:7}],['HGV_H','Ağır','A',{c:80,dmg:420,r:64,cep:9}]],
  DRN:[['DRN','Hızlı kamikaze','',{cep:4}],['DRN_L','Uzun menzil','U',{c:.03,dmg:60,r:18,spd:36,cep:6}],['DRN_J','Jet kamikaze','J',{c:.25,dmg:55,r:18,spd:105,cep:5}]],
  SUP:[['JAM','Karıştırıcı','',{}],['ARMD','Anti-radar','',{}],['MALD','Aldatıcı','',{}],['RCN','Keşif','',{}]],
- XP:[['EMP','prototip · radar susturur','',{}],['GRAF','prototip · elektrik keser','',{}],['MOTH','prototip · 8 İHA bırakır','',{}],['BAL','prototip · 30 km irtifa','',{}]],
+ XP:[['EMP','prototip, radarları susturur','',{}],['GRAF','prototip, elektriği keser','',{}],['MOTH','prototip, 8 İHA bırakır','',{}],['BAL','prototip, 30 km irtifada','',{}]],
 };
 for(const [cls,L] of Object.entries(VAR))for(const [id,role,suf,o] of L){const own=cls==='SUP'||cls==='XP';const base=MUN[own?id:cls];MUN[id]=Object.assign({},base,MUN[id]||{},o,{cls:own?id:cls,role,suf})}
 MUN.BM.cep=10;MUN.BM.dec=2;MUN.BM.apo=90;
@@ -707,7 +844,7 @@ const KNAME={balloon:'Keşif balonu',jam:'Karıştırıcı İHA',drone:'Kamikaze
 const HEAVY=new Set(['bm','decoy','hgv']);
 // real-world-ish specification sheets
 const SPEC={
- RAD:{Menzil:'250 km (ufka bağlı)',Tarama:'360° · 1 sn',Tür:'AESA, S bandı',Güç:'−'},
+ RAD:{Menzil:'250 km (ufka bağlı)',Tarama:'360°, saniyede bir',Tür:'AESA, S bandı',Güç:'−'},
  CIWS:{Kalibre:'20–35 mm',Atış:'4.500/dk',Menzil:'3,5 km',İrtifa:'0–2 km',Mühimmat:'parçalanır mermi'},
  SHORAD:{Boy:'1,5 m',Çap:'70 mm',Hız:'Mach 2,2',Menzil:'9 km',İrtifa:'0–5 km',Güdüm:'IR + görüntü',Başlık:'3 kg'},
  MRAD:{Boy:'3,7 m',Çap:'178 mm',Hız:'Mach 4',Menzil:'40 km',İrtifa:'0,05–20 km',Güdüm:'aktif radar',Başlık:'20 kg'},
@@ -726,15 +863,15 @@ const SPEC={
  RCN:{Boy:'2 m',Havada:'4 saat',İrtifa:'3–5 km',Sensör:'EO/IR + SAR',Özellik:'25 sn boyunca 20 km çevreyi görür'},
  CM:{Boy:'6,2 m',Çap:'0,52 m',Hız:'Mach 0,75',Menzil:'1.600 km',İrtifa:'30–50 m',Başlık:'450 kg',Güdüm:'INS + TERCOM + DSMAC'},
  BM:{Boy:'7,3 m',Çap:'0,92 m',Hız:'Mach 6 (yeniden giriş)',Menzil:'500 km',Tepe:'≈ 90 km',Başlık:'480 kg',Aldatıcı:'2 sahte başlık'},
- EMP:{Başlık:'yüksek güçlü mikrodalga (HPM)',Etki:'6 km yarıçapta radar ve rampaları 30 sn susturur',Hasar:'düşük',Hız:'Mach 0,8',Durum:'PROTOTİP · %12 arıza'},
- GRAF:{Başlık:'iletken grafit lif kümesi',Etki:'trafo ve hatlarda kısa devre',Süre:'60 sn karartma',Gelir:'vurulan tesiste −%80',Durum:'PROTOTİP · %12 arıza'},
- MOTH:{Taşıma:'8 kamikaze İHA',Ayrılma:'yolun yarısında',Hız:'160 km/sa',İrtifa:'1,6 km',Durum:'PROTOTİP · %12 arıza'},
- BAL:{İrtifa:'30 km (stratosfer)',Hız:'≈ 50 km/sa',Sensör:'geniş alan EO + SAR',Görüş:'40 km çevre, 120 sn',Önleme:'yalnızca uzun menzilli HS',Durum:'PROTOTİP · %12 arıza'},
+ EMP:{Başlık:'yüksek güçlü mikrodalga (HPM)',Etki:'6 km yarıçapta radar ve rampaları 30 sn susturur',Hasar:'düşük',Hız:'Mach 0,8',Durum:'prototip, %12 arıza ihtimali'},
+ GRAF:{Başlık:'iletken grafit lif kümesi',Etki:'trafo ve hatlarda kısa devre',Süre:'60 sn karartma',Gelir:'vurulan tesiste −%80',Durum:'prototip, %12 arıza ihtimali'},
+ MOTH:{Taşıma:'8 kamikaze İHA',Ayrılma:'yolun yarısında',Hız:'160 km/sa',İrtifa:'1,6 km',Durum:'prototip, %12 arıza ihtimali'},
+ BAL:{İrtifa:'30 km (stratosfer)',Hız:'≈ 50 km/sa',Sensör:'geniş alan EO + SAR',Görüş:'40 km çevre, 120 sn',Önleme:'yalnızca uzun menzilli HS',Durum:'prototip, %12 arıza ihtimali'},
  HGV:{Boy:'8 m',Hız:'Mach 10',Menzil:'1.800 km',Süzülme:'35–45 km',Başlık:'manevralı süzülme aracı',Özellik:'iki savunma katmanının arasından geçer'},
 };
 const NAT={
  US:{n:'ABD',trait:'Hassas vuruş ve katmanlı savunma. THAAD + Patriot ikilisi balistiğe karşı en güçlüsü; F-35 radarda zor görünür. Her şey biraz pahalı.',
-  names:{RAD:'AN/TPY-2',CIWS:'Centurion C-RAM',SHORAD:'Avenger · Stinger',MRAD:'NASAMS',LRAD:'Patriot PAC-3',UPPER:'THAAD',LASER:'DE M-SHORAD',IDR:'Coyote Blok 2',EW:'EW Birliği',DRN:'LUCAS',ARMD:'Harpy tipi',MALD:'ADM-160 MALD',RCN:'RQ-20 Puma',CM:'Tomahawk',BM:'PrSM',HGV:'Dark Eagle',FTR:'F-35A',EMP:'CHAMP',GRAF:'BLU-114/B',ICP_LRAD:'PAC-3 MSE',ICP_UPPER:'THAAD',ICP_MRAD:'AIM-120 AMRAAM',ICP_SHORAD:'FIM-92 Stinger'},
+  names:{RAD:'AN/TPY-2',CIWS:'Centurion C-RAM',SHORAD:'Avenger (Stinger)',MRAD:'NASAMS',LRAD:'Patriot PAC-3',UPPER:'THAAD',LASER:'DE M-SHORAD',IDR:'Coyote Blok 2',EW:'EW Birliği',DRN:'LUCAS',ARMD:'Harpy tipi',MALD:'ADM-160 MALD',RCN:'RQ-20 Puma',CM:'Tomahawk',BM:'PrSM',HGV:'Dark Eagle',FTR:'F-35A',EMP:'CHAMP',GRAF:'BLU-114/B',ICP_LRAD:'PAC-3 MSE',ICP_UPPER:'THAAD',ICP_MRAD:'AIM-120 AMRAAM',ICP_SHORAD:'FIM-92 Stinger'},
   cost:1.1,pk:{LRAD:{bm:.07,decoy:.07}},stealth:.65},
  RU:{n:'Rusya',trait:'Menzili uzun hava savunma ve ağır balistik. S-400 ve S-500 geniş alanı kapatır, Iskander son evrede manevra yapar.',
   names:{RAD:'Nebo-M',CIWS:'Pantsir-S1',SHORAD:'Tor-M2',MRAD:'Buk-M3',LRAD:'S-400',UPPER:'S-500',LASER:'Zadira',IDR:'Önleyici İHA',EW:'Krasukha-4',DRN:'Geran-2',ARMD:'Lancet-3',MALD:'Gerbera tuzak İHA',RCN:'Orlan-10',CM:'Kalibr',BM:'Iskander-M',HGV:'Kinzhal',FTR:'Su-34',ICP_LRAD:'48N6',ICP_UPPER:'77N6',ICP_MRAD:'9M317M',ICP_SHORAD:'9M338'},
@@ -754,7 +891,7 @@ const DIFF={easy:{n:'Kolay',d:'Rakip küçük dalgalarla, seyrek saldırır; sav
 const natOf=s=>NAT[(G&&G.nat&&G.nat[s])||'TR'];
 // strengths per nation on six axes (1–5, each nation sums to 19). 3 is neutral; every point is ~8% on that axis.
 const NPROF={US:{bm:3,cm:4,uav:3,ad:4,sen:3,ew:2},RU:{bm:5,cm:4,uav:3,ad:4,sen:1,ew:2},TR:{bm:3,cm:2,uav:5,ad:3,sen:2,ew:4},CN:{bm:5,cm:4,uav:2,ad:3,sen:2,ew:3},IL:{bm:2,cm:3,uav:4,ad:5,sen:4,ew:1}};
-const AXES=[['bm','Balistik'],['cm','Seyir · hipersonik'],['uav','İHA'],['ad','Hava savunma'],['sen','Sensör · keşif'],['ew','Elektronik harp']];
+const AXES=[['bm','Balistik'],['cm','Seyir ve hipersonik'],['uav','İHA'],['ad','Hava savunma'],['sen','Sensör ve keşif'],['ew','Elektronik harp']];
 const natKey=s=>(G&&G.nat&&G.nat[s])||'TR';
 const axV=(s,a)=>(NPROF[natKey(s)]||{})[a]??3;
 const AXF=(s,a)=>1+(axV(s,a)-3)*.08;
@@ -1163,13 +1300,13 @@ function motherSplit(o){o.alive=false;if(o.ord){const r=ordOf(o.ord);if(r)r.n+=o
 // EMP: high-power microwave pulse silences hostile batteries, radars and launchers for 30 s
 function empBurst(o){let n=0,mine=0;G.fx.push({k:'emp',x:o.x,y:o.y,r:o.emp,t:0,life:1.6});
   for(const e of G.ents)if(e.alive&&e.cat==='site'&&e.side!==o.side&&hyp(e.x-o.x,e.y-o.y)<o.emp){e.empT=G.time+EMP_T;n++;if(e.side===ME)mine++}
-  if(o.side===ME)toast(n?`<b>EMP · ${n} sistem sustu</b>Radar ve rampalar 30 sn devre dışı.`:'<b>EMP · etki yok</b>6 km içinde düşman sistemi yoktu.',n?'W':'',true);
+  if(o.side===ME)toast(n?`<b>EMP: ${n} sistem sustu</b>Radar ve rampalar 30 sn devre dışı.`:'<b>EMP etkisiz</b>6 km içinde düşman sistemi yoktu.',n?'W':'',true);
   else if(mine)toast(`<b>EMP darbesi</b>${mine} sistemimiz 30 sn devre dışı.`,'E',true)}
 const empOff=e=>e.empT>G.time;
 // graphite bomb: carbon filaments short the grid; hit assets lose most income and their lights
 function grafBurst(o){const x=o.x,y=o.y,R=o.r||96,hit=[];G.fx.push({k:'graf',x,y,r:R,t:0,life:5});sfx('air',x,y);
   for(const e of G.ents)if(e.alive&&e.cat==='asset'&&e.side!==o.side&&hyp(e.x-x,e.y-y)<R+e.r){e.blackT=G.time+BLACK_T;hit.push(e);if(e.t==='PWR'){G.blackS=G.blackS||{};G.blackS[e.side]=G.time+BLACK_T}}
-  if(o.side===ME)toast(hit.length?`<b>Karartma</b>${esc(hit.map(e=>e.nm).join(', '))} · 60 sn elektrik yok.`:'<b>Grafit bomba · iska</b>Lifler boş araziye yayıldı.',hit.length?'W':'',true);
+  if(o.side===ME)toast(hit.length?`<b>Karartma</b>${esc(hit.map(e=>e.nm).join(', '))} 60 saniye elektriksiz.`:'<b>Grafit bomba ıskaladı</b>Lifler boş araziye yayıldı.',hit.length?'W':'',true);
   else if(hit.some(e=>e.side===ME))toast(`<b>Karartma</b>${esc(hit.filter(e=>e.side===ME).map(e=>e.nm).join(', '))} 60 sn elektriksiz.`,'E',true)}
 const isDark=e=>e.blackT>G.time||(e.side&&G.blackS&&G.blackS[e.side]>G.time);
 function burnup(o){for(let i=0;i<5;i++)G.parts.push({k:'spark',x:o.x,y:o.y,z:o.z,vx:gauss()*10,vy:gauss()*10,vz:-.3,t:0,life:.8,r:1.2,col:'255,200,140'})}
@@ -1183,7 +1320,7 @@ function impact0(o){
   if(o.cl)boom(x,y,o.r*.6,true);
   for(const p of pts){(G.craters=G.craters||[]).push({x:p.x,y:p.y,r:o.r,fr:(6+Math.sqrt(o.cl?o.dmg:o.dmg||40)*2.2)/M_U,rot:Math.random()*6.283});if(G.craters.length>90)G.craters.shift();boom(p.x,p.y,o.r,!o.cl&&(HEAVY.has(o.kind)||o.kind==='cruise'),o.dmg);
     for(const e of G.ents){if(!e.alive)continue;const d=hyp(e.x-p.x,e.y-p.y),R=o.r+e.r*.7;if(d<R){const f=1-d/R;const nm=(e.cat==='asset'?e.nm:nameOf(e.side,e.t))+(f>.6?' (tam isabet)':'');if(e.side!==o.side&&!hitN.includes(nm))hitN.push(nm);(e.marks=e.marks||[]).push({x:p.x-e.x,y:p.y-e.y,r:o.r*(.5+.4*Math.random())});if(e.marks.length>10)e.marks.shift();hurt(e,o.dmg*(.35+.65*f)*(o.pen?(e.cat==='asset'?1.6:.6):1)*(e.t==='HQ'&&e.cat==='asset'?(o.pen?.6:.25):1),o.side)}}}
-  if(o.side===ME&&(HEAVY.has(o.kind)||o.kind==='cruise'||o.kind==='glide')){const dd=G.score[ME].dmg-d0;toast(hitN.length?`<b>İsabet · ${KNAME[o.kind]}</b>${esc(hitN.join(', '))} · hasar ${money(dd)}`:`<b>Iska · ${KNAME[o.kind]}</b>Boş araziye düştü; çemberin içinde düşman tesisi yoktu.`,hitN.length?'W':'',true)}
+  if(o.side===ME&&(HEAVY.has(o.kind)||o.kind==='cruise'||o.kind==='glide')){const dd=G.score[ME].dmg-d0;toast(hitN.length?`<b>${KNAME[o.kind]} isabet etti</b>${esc(hitN.join(', '))}. Hasar ${money(dd)}.`:`<b>${KNAME[o.kind]} ıskaladı</b>Boş araziye düştü; çemberin içinde düşman tesisi yoktu.`,hitN.length?'W':'',true)}
 }
 function hurt(e,dm,by,civ){
   if(!e.alive)return;const v=e.cat==='asset'?ASSET_DEF[e.t].v:costOf(e.side,e.t);const before=e.hp;e.hp-=dm;e.hit=.4;const lost=(Math.min(before,dm)/e.max)*v;
@@ -1191,7 +1328,7 @@ function hurt(e,dm,by,civ){
   if(e.cat==='asset'&&e.hp<e.max*.6)e.burn=1;
   aiHurt(e,dm);
   if(e.side===ME){G.alertT=8;if(e.cat==='asset'&&e.hp>0)voice('own_hit',e.t)}
-  if(e.hp<=0){e.alive=false;e.hp=0;if(e.side===ME)voice(e.cat==='asset'?'own_destroyed':'battery_lost',e.cat==='asset'?e.t:null);boom(e.x,e.y,e.r*1.3,true);if(e.cat==='asset'){e.dead=true;G.ents.push({...e,id:uid++,ruin:true,alive:false});toast(e.side===ME?`${e.nm} yıkıldı.`:`${G.quad?natOf(e.side).n+' · ':'Düşman '}${e.nm} yıkıldı.`,e.side===ME?'E':'W');if(e.t==='HQ'){if(G.quad)eliminate(e.side,by);else{G.over=true;G.winner=other(e.side)}}}
+  if(e.hp<=0){e.alive=false;e.hp=0;if(e.side===ME)voice(e.cat==='asset'?'own_destroyed':'battery_lost',e.cat==='asset'?e.t:null);boom(e.x,e.y,e.r*1.3,true);if(e.cat==='asset'){e.dead=true;G.ents.push({...e,id:uid++,ruin:true,alive:false});toast(e.side===ME?`${e.nm} yıkıldı.`:`${G.quad?natOf(e.side).n+': ':'Düşman '}${e.nm} yıkıldı.`,e.side===ME?'E':'W');if(e.t==='HQ'){if(G.quad)eliminate(e.side,by);else{G.over=true;G.winner=other(e.side)}}}
     else if(e.side===ME){toast(`${nameOf(ME,e.t)} kaybedildi.`,'E')}
     if(G.sel===e.id)G.sel=null}
 }
@@ -1284,7 +1421,7 @@ function newOrder(k,x,y,delay){const tg=G.ents.filter(e=>e.alive&&e.side!==ME&&(
 const ordOf=id=>(G.orders||[]).find(o=>o.id===id);
 function ordEv(id,ev,dmg){const o=ordOf(id);if(!o)return;if(ev==='down')o.down++;else if(ev==='fail')o.fail++;else if(ev==='arr'){o.arr++;if(dmg>0){o.hit++;o.dmg+=dmg}}}
 function ordTick(){for(const o of G.orders||[]){if(o.done)continue;const live=G.air.some(a=>a.alive&&a.ord===o.id);if(live||G.time<o.t+(o.delay||0)+3+o.n*.4)continue;o.done=true;o.end=G.time;
-    const tg=o.tg&&ent(o.tg);o.killed=!!(o.tg&&(!tg||!tg.alive));const txt=`${o.lbl}: ${o.hit}/${o.n} isabet${o.down?` · ${o.down} düşürüldü`:''}${o.fail?` · ${o.fail} arıza`:''} · hasar ${money(o.dmg)}${o.killed?' · TESİS YIKILDI':''}`;
+    const tg=o.tg&&ent(o.tg);o.killed=!!(o.tg&&(!tg||!tg.alive));const txt=`${o.lbl}: ${o.n} atıştan ${o.hit} isabet${o.down?`, ${o.down} düşürüldü`:''}${o.fail?`, ${o.fail} arıza`:''}. Hasar ${money(o.dmg)}.${o.killed?' Tesis yıkıldı.':''}`;
     toast(`<b>Görev sonucu</b>${esc(txt)}`,o.hit?'W':'E',true);voice(o.killed?'destroyed_enemy':o.hit?(o.dmg>o.cost*1.5?'hit_enemy':'hit_partial'):o.down>=Math.max(1,o.n-o.fail)?'intercepted_all':'miss',o.tg&&tg?tg.t:null);if(tab==='L')renderSide(true)}}
 function launch(s,k,n,tx,ty,wp,delay=0,share){
   const M=MUN[k];if((G.stock[s][k]||0)<n)return 'Stok yetersiz.';
@@ -1294,7 +1431,7 @@ function launch(s,k,n,tx,ty,wp,delay=0,share){
     later(delay+(M.from==='TEL'?1.1:.25),()=>{if(!l.alive)return;for(let i=0;i<take;i++)later(i*.35,()=>{if(!l.alive)return;const _o=spawnMun(s,k,l.x+(M.from==='TEL'?-3.4/M_U:RN()*.15),l.y+(M.from==='TEL'?.4/M_U:RN()*.15),tx+(i?RN()*12:0),ty+(i?RN()*12:0),wp,l.id);if(ord&&_o){_o.ord=ord.id;ord.sp++}
       sfx(M.kind==='bm'?'ignite':M.kind==='hgv'?'hgvlaunch':M.kind==='cruise'?'cmlaunch':'dronelaunch',l.x,l.y);if(M.from==='TEL'){padBlast(l.x,l.y,1.3);if(s===ME||hyp(l.x-cam.x,l.y-cam.y)<700/cam.z)shake(.35)}});l.fireT=G.time;if(M.from==='TEL')revealLaunch(l);later(4,()=>{l.erect=0})})}
   G.stock[s][k]-=used;G.score[s].sp+=M.c*used;if(ord){ord.n=used;ord.cost=costOf(s,k)*used;voice(M.from==='DLN'?'drones_launched':'launch')}
-  if(s!==ME&&(k==='BM'||k==='HGV')){const ts=sideOf(tx,ty);if(!G.quad||ts===ME)toast(`Uydu uyarısı: ${natOf(s).n} ${nameOf(s,k)} fırlattı${G.quad?' · hedef sensin':''}.`,'E');else if(Math.random()<.5)toast(`Uydu: ${natOf(s).n} → ${natOf(ts).n} ${nameOf(s,k)} fırlattı.`,'')}
+  if(s!==ME&&(k==='BM'||k==='HGV')){const ts=sideOf(tx,ty);if(!G.quad||ts===ME)toast(`Uydu uyarısı: ${natOf(s).n} ${nameOf(s,k)} fırlattı${G.quad?', hedef sensin':''}.`,'E');else if(Math.random()<.5)toast(`Uydu: ${natOf(s).n}, ${natOf(ts).n} üzerine ${nameOf(s,k)} fırlattı.`,'')}
   return used<n?`${used} adet ateşlendi (rampa yetmedi).`:'';
 }
 function flightTime(s,k,x0,y0,tx,ty,wp){const M=MUN[k];let d=0,px=x0,py=y0;for(const p of [...(wp||[]),{x:tx,y:ty}]){d+=hyp(p.x-px,p.y-py);px=p.x;py=p.y}
@@ -1564,13 +1701,13 @@ function renderPower(){
   const root=$('#power');if(!root||!G)return;const P=samplePower();
   const pct=v=>Math.round(v)+'%',bar=(name,v)=>`<span class="pw-line"><span>${name}</span><i><b style="width:${v==null?0:v}%"></b></i><strong>${v==null?'?':pct(v)}</strong></span>`;
   const val=(p,k)=>p&&!p.out?(k==='d'?p.def?.value:p.atk?.value):p?.out?0:null,num=v=>v==null?'?':Math.round(v),tag=(s,p)=>p?.out?'elendi':s===ME?'kesin':'tahmini';
-  const det=s=>{const p=P.values[s],open=G.powerSide===s;return `${open?`<div class="pw-detail"><b>${esc(natOf(s).n)} · güç</b><div class="pw-prof">${AXES.map(([a,n])=>`<span>${n}</span><i>${[1,2,3,4,5].map(j=>`<b class="${j<=axV(s,a)?'on':''}"></b>`).join('')}</i>`).join('')}</div>${!p?'Bilgi yok. Uydu veya keşif iste.':p.out?'Harekât dışı.':`${POWER_THREATS.map((t,i)=>bar(t[1],p.def?.sub[i].value)).join('')}<p>${!p.def?'Savunma bilgisi yok.':p.def.radar?'Radar desteği var.':'Bilinen etkin radar yok: kapsama ×0,65.'}</p><p>${p.atk?'60 sn ham saldırı: ≈'+Math.round(p.atk.damage)+' hasar.':'Rampa bilgisi yok.'}</p><p>${p.estimated?'Tahmini: bilinen bataryalar hazır ve dolu; bilinen rampalarda bir yük stok; kasa 0, gelir açık tesislerin nominal geliri varsayılır. Gizli stok/kasa okunmaz.':'Mevcut hazır rampalar, stok, kasa ve gelir kullanılır.'}</p><small>Kapsama, isabet garantisi değildir. Saldırı puanı savunma ve uçuş süresi öncesidir.</small>`}</div>`:''}`};
+  const det=s=>{const p=P.values[s],open=G.powerSide===s;return `${open?`<div class="pw-detail"><b>${esc(natOf(s).n)} gücü</b><div class="pw-prof">${AXES.map(([a,n])=>`<span>${n}</span><i>${[1,2,3,4,5].map(j=>`<b class="${j<=axV(s,a)?'on':''}"></b>`).join('')}</i>`).join('')}</div>${!p?'Bilgi yok. Uydu veya keşif iste.':p.out?'Harekât dışı.':`${POWER_THREATS.map((t,i)=>bar(t[1],p.def?.sub[i].value)).join('')}<p>${!p.def?'Savunma bilgisi yok.':p.def.radar?'Radar desteği var.':'Bilinen etkin radar yok: kapsama ×0,65.'}</p><p>${p.atk?'60 sn ham saldırı: ≈'+Math.round(p.atk.damage)+' hasar.':'Rampa bilgisi yok.'}</p><p>${p.estimated?'Tahmini: bilinen bataryalar hazır ve dolu; bilinen rampalarda bir yük stok; kasa 0, gelir açık tesislerin nominal geliri varsayılır. Gizli stok/kasa okunmaz.':'Mevcut hazır rampalar, stok, kasa ve gelir kullanılır.'}</p><small>Kapsama, isabet garantisi değildir. Saldırı puanı savunma ve uçuş süresi öncesidir.</small>`}</div>`:''}`};
   const name=(s,cls)=>{const p=P.values[s];return `<div class="pw-side ${cls}" style="--pc:${SHEX[s]}"><button data-t="power" data-side="${s}" aria-expanded="${G.powerSide===s}" class="pw-button pw2-n"><b>${esc(natOf(s).n)}</b><small>${tag(s,p)}</small></button>${det(s)}</div>`};
   const half=(v,side,col)=>`<i class="pw2-bar ${side}${v==null?' unk':''}" style="--pc:${col}"><u style="width:${v==null?0:clamp(v,0,100)}%"></u></i>`;
   if(G.sides.length===2){const [a,b]=[ME,...G.sides.filter(x=>x!==ME)],pa=P.values[a],pb=P.values[b];
     setH(root,`<div class="pw2 duo">${name(a,'l')}<div class="pw2-rows">${[['d','Savunma'],['t','Saldırı']].map(([k,n])=>{const va=val(pa,k==='d'?'d':'a'),vb=val(pb,k==='d'?'d':'a');const lead=va!=null&&vb!=null?(va>vb+3?'l':vb>va+3?'r':''):'';return `<div class="pw2-row ${lead?'lead-'+lead:''}"><b class="v">${num(va)}</b>${half(va,'l',SHEX[a])}<span class="m">${n}</span>${half(vb,'r',SHEX[b])}<b class="v">${num(vb)}</b></div>`}).join('')}</div>${name(b,'r')}</div>`)}
   else setH(root,`<div class="pw2 quad">${G.sides.map(s=>{const p=P.values[s];return `<div class="pw2-q${p?.out?' out':''}">${name(s,'q')}${[['d','Sav'],['a','Sal']].map(([k,n])=>{const v=val(p,k);return `<div class="pw2-qr"><span>${n}</span>${half(v,'r',SHEX[s])}<b>${num(v)}</b></div>`}).join('')}</div>`}).join('')}</div>`);
-  const btn=topEl.querySelector('[data-t="sat"]');if(btn){const st=G.sat[ME],left=Math.max(0,Math.ceil(st.readyAt-G.time));btn.disabled=G.phase!=='war'||G.over||!!G.out[ME]||left>0||G.cash[ME]<SAT_COST;btn.textContent=st.pending?`Uydu · ${Math.max(0,Math.ceil(st.pending.at-G.time))} sn`:left?`Uydu · ${left} sn`:'Uydu iste · $15M'}
+  const btn=topEl.querySelector('[data-t="sat"]');if(btn){const st=G.sat[ME],left=Math.max(0,Math.ceil(st.readyAt-G.time));btn.disabled=G.phase!=='war'||G.over||!!G.out[ME]||left>0||G.cash[ME]<SAT_COST;btn.textContent=st.pending?`Uydu ${Math.max(0,Math.ceil(st.pending.at-G.time))} sn sonra`:left?`Uydu ${left} sn sonra hazır`:'Uydu iste';btn.title=`Seçtiğin 60×60 km alanın uydu görüntüsü: ${money(SAT_COST)}`}
 }
 function satArea(x,y){const half=SAT_SIZE/2;return {x:clamp(x,half,MW-half),y:clamp(y,half,MH-half)}}
 function requestSatellite(s,x,y){
@@ -1590,7 +1727,7 @@ function satelliteAI(){
     const known=[...G.ghost[s].values()].filter(g=>(g.side||gS(g))===target);const p=known.length?known[(srnd()*known.length)|0]:HQPOS[target];requestSatellite(s,p.x,p.y);
   }
 }
-function beginSatellite(){if(!G||G.phase!=='war'||G.over||G.out[ME])return;mode={k:'sat'};G.powerSide=null;closeInfo();qaClose();hint('60 × 60 km çekim alanının merkezine tıkla · $15M · Esc: iptal');renderPower()}
+function beginSatellite(){if(!G||G.phase!=='war'||G.over||G.out[ME])return;mode={k:'sat'};G.powerSide=null;closeInfo();qaClose();hint(`Uydunun çekeceği 60×60 km alanın ortasına tıkla (${money(SAT_COST)}). Vazgeçmek için Esc.`);renderPower()}
 function drawSatelliteBand(f,k,tactical=false){const x=f.x-f.size/2,y=f.y-f.size/2,c=tactical?'130,220,170':'159,208,220';ctx.fillStyle=`rgba(${c},${.07*(1-k)})`;ctx.fillRect(x,y,f.size,f.size);ctx.strokeStyle=`rgba(${c},${.7*(1-k)})`;ctx.lineWidth=px(1.5);ctx.strokeRect(x,y,f.size,f.size);ctx.beginPath();ctx.moveTo(x,y+f.size*k);ctx.lineTo(x+f.size,y+f.size*k);ctx.stroke()}
 
 // optional W autopilot for testing
@@ -2060,7 +2197,7 @@ function render(time){
   for(const g of G.ghost[ME].values()){const e=ent(g.id);if(!e||!e.alive||e.cat==='asset')continue;if(!inView(V,g.x,g.y,60))continue;const age=G.time-g.at;const b=Math.max(visRT('site',g.t,0),px(15))+px(6);
     const gc=SCOL[gS(g)];ctx.strokeStyle=`rgba(${gc},${age<10?.95:.6})`;ctx.lineWidth=px(1.3);for(const [sx,sy] of [[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.beginPath();ctx.moveTo(g.x+sx*b,g.y+sy*b-sy*px(7));ctx.lineTo(g.x+sx*b,g.y+sy*b);ctx.lineTo(g.x+sx*b-sx*px(7),g.y+sy*b);ctx.stroke()}
     if(g.src==='ELINT'){ctx.fillStyle=`rgba(${gc},.12)`;ctx.beginPath();ctx.arc(g.x,g.y,b*1.4,0,7);ctx.fill()}
-    if(cam.z>.3)label(`${G.quad?natOf(gS(g)).n+' · ':''}${nameOf(gS(g),g.t)} · ${g.src}${age>8?' · '+Math.round(age)+' sn':''}`,g.x,g.y+b+px(12),G.quad?SHEX[gS(g)]:'#ff9d90',11)}
+    if(cam.z>.3)label(`${G.quad?natOf(gS(g)).n+', ':''}${nameOf(gS(g),g.t)} (${g.src}${age>8?', '+Math.round(age)+' sn önce':''})`,g.x,g.y+b+px(12),G.quad?SHEX[gS(g)]:'#ff9d90',11)}
   if(RG.on.SWEEP)drawRadars(time);
   drawRangeLayer();
   // coverage layer
@@ -2091,12 +2228,12 @@ function render(time){
   ctx.setTransform(DPR,0,0,DPR,0,0);
   if(G.wx.flash>0){ctx.fillStyle=`rgba(220,230,255,${G.wx.flash*.55})`;ctx.fillRect(0,0,CW,CH)}
   drawEdgeArrows();
-  if(G.bannerAt){const k=(performance.now()-G.bannerAt)/2800;if(k<1){ctx.globalAlpha=Math.min(1,(1-k)*2.5);ctx.fillStyle='rgba(8,10,12,.6)';ctx.fillRect(0,CH*.3,CW,74);ctx.font='700 42px "Archivo Cond",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#e2725b';ctx.fillText('HAREKÂT',CW/2,CH*.3+30);ctx.font='600 15px "Archivo Cond",sans-serif';ctx.fillStyle='#e6e9ea';ctx.fillText('T+00:00 · ateş serbest',CW/2,CH*.3+58);ctx.globalAlpha=1}}
+  if(G.bannerAt){const k=(performance.now()-G.bannerAt)/2800;if(k<1){ctx.globalAlpha=Math.min(1,(1-k)*2.5);ctx.fillStyle='rgba(8,10,12,.6)';ctx.fillRect(0,CH*.3,CW,74);ctx.font='700 42px "Archivo Cond",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#e2725b';ctx.fillText('HAREKÂT',CW/2,CH*.3+30);ctx.font='600 15px "Archivo Cond",sans-serif';ctx.fillStyle='#e6e9ea';ctx.fillText('Ateş serbest',CW/2,CH*.3+58);ctx.globalAlpha=1}}
 }
 function hpBar(e){const w=Math.max(px(26),vr(e)*1.2),y=e.y-vr(e)-px(8);ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(e.x-w/2,y,w,px(3.5));const f=e.hp/e.max;ctx.fillStyle=f>.6?'#7fe0a0':f>.3?'#e6c35a':'#e2725b';ctx.fillRect(e.x-w/2,y,w*f,px(3.5))}
 const BANDC={CIWS:'127,224,160',LASER:'127,224,160',IDR:'127,224,160',SHORAD:'190,230,120',MRAD:'159,208,220',LRAD:'159,140,255',UPPER:'255,170,240',EW:'230,195,90'};
 function rangeRing(e,lbl){const R=rngOf(e.side,e.t),c=BANDC[e.t]||'230,233,234';ctx.fillStyle=`rgba(${c},.07)`;ctx.beginPath();ctx.arc(e.x,e.y,R,0,7);ctx.fill();ctx.strokeStyle=`rgba(${c},.8)`;ctx.lineWidth=px(1.4);ctx.stroke();
-  if(lbl){const d=SITE[e.t];label(d.a1!=null?`${nameOf(e.side,e.t)} · ${f1(R/KMU)} km · irtifa ${f1(d.a0)}–${d.a1} km`:`${nameOf(e.side,e.t)} · ${f1(R/KMU)} km`,e.x,e.y-R-px(6),`rgb(${c})`,12)}}
+  if(lbl){const d=SITE[e.t];label(d.a1!=null?`${nameOf(e.side,e.t)}: ${f1(R/KMU)} km menzil, ${f1(d.a0)}–${d.a1} km irtifa`:`${nameOf(e.side,e.t)}: ${f1(R/KMU)} km`,e.x,e.y-R-px(6),`rgb(${c})`,12)}}
 function drawCoverage(){
   for(const e of G.ents){if(!e.alive||e.side!==ME||e.cat!=='site')continue;const d=SITE[e.t];if(e.t==='RAD'){ctx.strokeStyle='rgba(230,233,234,.3)';ctx.setLineDash([px(8),px(8)]);ctx.lineWidth=px(1.2);ctx.beginPath();ctx.arc(e.x,e.y,horizon(d.mast,.05),0,7);ctx.stroke();ctx.setLineDash([]);label('alçak uçan ufku (50 m)',e.x,e.y-horizon(d.mast,.05)-px(4),'rgba(230,233,234,.7)',11);continue}
     if(d.rng)rangeRing(e,cam.z>.35)}
@@ -2158,7 +2295,7 @@ function drawFX(time,nk){drawSmoke();for(const f of G.fx){const k=f.t/f.life;
   drawProtoStatus(time);
   for(const e of G.ents)if(e.alive&&e.burn&&ready('s1')){const S=Math.max(vr(e)*2.4,pxf(40));const wa=DM.atan2(G.wx.wind.y,G.wx.wind.x);ctx.save();ctx.globalCompositeOperation='source-over';ctx.globalAlpha=.75;ctx.translate(e.x+DM.cos(wa)*S*.25,e.y+DM.sin(wa)*S*.25);ctx.rotate(wa+Math.PI*.75);ctx.drawImage(IMG['s'+(1+e.id%4)],-S/2,-S/2,S,S);ctx.restore();ctx.globalCompositeOperation='lighter'}
   for(const e of G.ents)if(e.alive&&e.burn){const fl=.6+.4*DM.sin(time*8+e.id);const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,vr(e)*.7);g.addColorStop(0,`rgba(255,150,60,${.5*fl})`);g.addColorStop(1,'rgba(255,80,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,vr(e)*.7,0,7);ctx.fill()}}
-const ABBR={balloon:'BALON',drone:'İHA',armd:'ARM-İHA',mald:'SEYİR?',recon:'KEŞİF',cruise:'SEYİR',bm:'BALİSTİK',decoy:'BALİSTİK',hgv:'HİPERSONİK',ftr:'UÇAK',glide:'BOMBA',arm:'ARM'};
+const ABBR={balloon:'Balon',drone:'İHA',armd:'Anti-radar İHA',mald:'Seyir?',recon:'Keşif',cruise:'Seyir',bm:'Balistik',decoy:'Balistik',hgv:'Hipersonik',ftr:'Uçak',glide:'Bomba',arm:'Anti-radar'};
 function drawProtoFX(f,k,time){if(f.k==='emp'){for(let i=0;i<3;i++){const q=clamp(k*1.4-i*.18,0,1);if(q<=0||q>=1)continue;ctx.strokeStyle=`rgba(150,205,255,${.75*(1-q)})`;ctx.lineWidth=px(2-i*.5);ctx.beginPath();ctx.arc(f.x,f.y,f.r*q,0,7);ctx.stroke()}
     ctx.fillStyle=`rgba(150,205,255,${.08*(1-k)})`;ctx.beginPath();ctx.arc(f.x,f.y,f.r*Math.min(1,k*1.4),0,7);ctx.fill()}
   else{const R=f.r*(.4+.6*Math.min(1,k*3)),r=mulberry((f.x*7+f.y)|0);ctx.strokeStyle=`rgba(40,42,44,${.55*(1-k)})`;ctx.lineWidth=px(.8);ctx.beginPath();for(let i=0;i<46;i++){const a=r()*6.283,d=R*Math.sqrt(r()),x=f.x+DM.cos(a)*d,y=f.y+DM.sin(a)*d,b=r()*6.283,l=px(6+r()*10);ctx.moveTo(x,y);ctx.lineTo(x+DM.cos(b)*l,y+DM.sin(b)*l)}ctx.stroke()}}
@@ -2190,22 +2327,22 @@ function drawTrackOverlay(air,time){
     const vx=o.x-o.px,vy=(o.y-L)-(o.py-LIFT(o.pz||0)),vl=hyp(vx,vy);if(vl>1e-4){ctx.beginPath();ctx.moveTo(o.x+vx/vl*b,y+vy/vl*b);ctx.lineTo(o.x+vx/vl*(b+px(TAC()?30:16)),y+vy/vl*(b+px(TAC()?30:16)));ctx.stroke()}
     const ip=impactPt(o);if(ip&&TAC()&&!(sel||isH)){ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,96,80'},.35)`;ctx.lineWidth=px(1);ctx.setLineDash([px(3),px(5)]);ctx.beginPath();ctx.moveTo(o.x,y);ctx.lineTo(ip.x,ip.y);ctx.stroke();ctx.setLineDash([]);const ir=Math.max((o.r||20),px(6));ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,96,80'},.6)`;ctx.beginPath();ctx.moveTo(ip.x-ir*.5,ip.y-ir*.5);ctx.lineTo(ip.x+ir*.5,ip.y+ir*.5);ctx.moveTo(ip.x+ir*.5,ip.y-ir*.5);ctx.lineTo(ip.x-ir*.5,ip.y+ir*.5);ctx.stroke()}
     if(ip&&(sel||isH)){ctx.strokeStyle=G.quad?'#ffd27a':'rgba(226,114,91,.85)';ctx.lineWidth=px(1.3);ctx.setLineDash([px(4),px(4)]);ctx.beginPath();ctx.ellipse(ip.x,ip.y,(o.r||20)+px(4),((o.r||20)+px(4))*.75,0,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(o.x,y);ctx.lineTo(ip.x,ip.y);ctx.stroke();ctx.setLineDash([]);
-      const hit=G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);mono(hit?`→ ${hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)} · ${Math.ceil(etaOf(o))} sn`:`boş arazi · ${Math.ceil(etaOf(o))} sn`,ip.x,ip.y+(o.r||20)+px(14),hit?(G.quad?SHEX[o.side]:'#ff8a7e'):'#9aa3a8',11,'center')}
+      const hit=G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);mono(hit?`${hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)}, ${Math.ceil(etaOf(o))} sn`:`boş araziye, ${Math.ceil(etaOf(o))} sn`,ip.x,ip.y+(o.r||20)+px(14),hit?(G.quad?SHEX[o.side]:'#ff8a7e'):'#9aa3a8',11,'center')}
     if(o.jamOn){const k=(time*.6)%1;ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,120,90'},${.35*(1-k)})`;ctx.lineWidth=px(1.2);ctx.beginPath();ctx.arc(o.x,o.y,JAMR*k,0,7);ctx.stroke();ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,120,90'},.25)`;ctx.setLineDash([px(3),px(6)]);ctx.beginPath();ctx.arc(o.x,o.y,JAMR,0,7);ctx.stroke();ctx.setLineDash([])}}
   for(const g of groups){const a=g.find(q=>G.selTrk===q.o.id||hv===q.o)||g[0],o=a.o,y=o.y-LIFT(o.z),sel=G.selTrk===o.id||hv===o;const eta=Math.min(...g.map(q=>etaOf(q.o)));
-    const txt=`${a.n}${g.length>1?' ×'+g.length:''} · ${Math.ceil(eta)}s${sel||(TAC()&&HEAVY.has(o.kind))?' · '+f1(o.z)+' km':''}`;const w=(txt.length*7+22);
+    const txt=`${a.n}${g.length>1?' ×'+g.length:''}, ${Math.ceil(eta)} sn${sel||(TAC()&&HEAVY.has(o.kind))?', '+f1(o.z)+' km':''}`;const w=(txt.length*7+22);
     if(free(o.x+px(12),y,w)||sel)chip(o.kind,txt,o.x+px(12),y,sel?'#ffd27a':G.quad?SHEX[o.side]:'#ffb1a8',sel?11.5:10.5)}
   // own weapons in flight: cyan ring + name
   const OW=air.filter(o=>o.side===ME&&o.kind!=='icp'&&o.kind!=='decoy');const ou=new Set();
   for(const o of OW){const y=o.y-LIFT(o.z);ctx.strokeStyle='rgba(159,208,220,.85)';ctx.lineWidth=px(1.2);ctx.beginPath();ctx.arc(o.x,y,px(HEAVY.has(o.kind)?8:5),0,7);ctx.stroke();
     if(o.jamOn){const k=(time*.6)%1;ctx.strokeStyle=`rgba(159,208,220,${.35*(1-k)})`;ctx.beginPath();ctx.arc(o.x,o.y,JAMR*k,0,7);ctx.stroke();ctx.strokeStyle='rgba(159,208,220,.3)';ctx.setLineDash([px(3),px(6)]);ctx.beginPath();ctx.arc(o.x,o.y,JAMR,0,7);ctx.stroke();ctx.setLineDash([])}
     if(ou.has(o))continue;const nm=trkName(o);const same=OW.filter(q=>!ou.has(q)&&trkName(q)===nm&&hyp(sX(q.x)-sX(o.x),sY(q.y-LIFT(q.z))-sY(y))<54);same.forEach(q=>ou.add(q));
-    const txt=`${nm}${same.length>1?' ×'+same.length:''} · ${Math.ceil(etaOf(o))}s`;if(free(o.x+px(11),y,txt.length*7+22))chip(o.kind,txt,o.x+px(11),y,'#9ee7f0',10)}
+    const txt=`${nm}${same.length>1?' ×'+same.length:''}, ${Math.ceil(etaOf(o))} sn`;if(free(o.x+px(11),y,txt.length*7+22))chip(o.kind,txt,o.x+px(11),y,'#9ee7f0',10)}
   for(const o of air){if(o.kind!=='icp')continue;const t=airById(o.tgt);if(!t||!t.alive)continue;ctx.strokeStyle=o.side===ME?'rgba(159,208,220,.28)':`rgba(${G.quad?SCOL[o.side]:'226,114,91'},.2)`;ctx.lineWidth=px(1);ctx.setLineDash([px(2),px(4)]);ctx.beginPath();ctx.moveTo(o.x,o.y-LIFT(o.z));ctx.lineTo(t.x,t.y-LIFT(t.z));ctx.stroke();ctx.setLineDash([])}
   drawTarget(time);
 }
 function drawTarget(time){if(!G||conEl.hidden||G.con.mode!=='atk')return;const C=G.con,t=C.tgt;
-  C.pkg.forEach((p,i)=>{const R=isAir(p.w)?30:Math.max(MUN[p.w].r||14,14);ctx.strokeStyle='rgba(217,195,143,.8)';ctx.lineWidth=px(1.3);ctx.setLineDash([px(4),px(4)]);ctx.beginPath();ctx.arc(p.x,p.y,R,0,7);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#d9c38f';ctx.fillRect(p.x-px(8),p.y-px(8),px(16),px(16));ctx.fillStyle='#0b0e10';ctx.font=`700 ${px(11)}px "Archivo Cond",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(i+1),p.x,p.y+px(.5));mono(`${p.n}× ${wName(p.w)}${p.at?' · +'+p.at+'s':''}`,p.x,p.y+R+px(12),'#d9c38f',10,'center')});
+  C.pkg.forEach((p,i)=>{const R=isAir(p.w)?30:Math.max(MUN[p.w].r||14,14);ctx.strokeStyle='rgba(217,195,143,.8)';ctx.lineWidth=px(1.3);ctx.setLineDash([px(4),px(4)]);ctx.beginPath();ctx.arc(p.x,p.y,R,0,7);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#d9c38f';ctx.fillRect(p.x-px(8),p.y-px(8),px(16),px(16));ctx.fillStyle='#0b0e10';ctx.font=`700 ${px(11)}px "Archivo Cond",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(i+1),p.x,p.y+px(.5));mono(`${p.n} ${wName(p.w)}${p.at?', +'+p.at+' sn':''}`,p.x,p.y+R+px(12),'#d9c38f',10,'center')});
   const M=MUN[C.w];const R=M?Math.max((M.cl?M.r*2.2:M.r)||20,14):40;
   if(t){const L=M?launchersFor(ME,C.w)[0]||sites(ME,M.from)[0]:assets(ME).find(a=>a.t==='AIRB');
     if(L){ctx.strokeStyle='rgba(255,210,122,.28)';ctx.lineWidth=px(1.1);ctx.setLineDash([px(8),px(6)]);ctx.beginPath();ctx.moveTo(L.x,L.y);for(const w of C.wp)ctx.lineTo(w.x,w.y);ctx.lineTo(t.x,t.y);ctx.stroke();ctx.setLineDash([])}
@@ -2215,7 +2352,7 @@ function drawTarget(time){if(!G||conEl.hidden||G.con.mode!=='atk')return;const C
     const r=px(10);ctx.lineWidth=px(2);ctx.beginPath();ctx.moveTo(t.x-r*2,t.y);ctx.lineTo(t.x-r*.5,t.y);ctx.moveTo(t.x+r*.5,t.y);ctx.lineTo(t.x+r*2,t.y);ctx.moveTo(t.x,t.y-r*2);ctx.lineTo(t.x,t.y-r*.5);ctx.moveTo(t.x,t.y+r*.5);ctx.lineTo(t.x,t.y+r*2);ctx.stroke();
     // what is inside the blast radius
     const inR=G.ents.filter(e=>e.alive&&e.side!==ME&&(e.cat==='asset'||G.ghost[ME].has(e.id))&&hyp(e.x-t.x,e.y-t.y)<R+e.r*.7);
-    mono(`HEDEF · ${t.lbl}`,t.x,t.y-R-px(14),'#ffd27a',12,'center');if(inR.length)mono(`etki alanında: ${inR.map(e=>e.cat==='asset'?e.nm:nameOf(e.side,e.t)).join(', ')}`,t.x,t.y+R+px(14),'#ffcf9e',10,'center')}
+    mono(`Hedef: ${t.lbl}`,t.x,t.y-R-px(14),'#ffd27a',12,'center');if(inR.length)mono(`etki alanında: ${inR.map(e=>e.cat==='asset'?e.nm:nameOf(e.side,e.t)).join(', ')}`,t.x,t.y+R+px(14),'#ffcf9e',10,'center')}
   // hover preview: blast circle under cursor
   if(hover&&!mode&&sideOf(hover.x,hover.y)!==ME){ctx.strokeStyle='rgba(255,210,122,.4)';ctx.lineWidth=px(1);ctx.beginPath();ctx.arc(hover.x,hover.y,R,0,7);ctx.stroke()}}
 function drawEdgeArrows(){if(G.phase!=='war')return;let n=0;for(const o of G.air){if(n>8)break;if(!o.alive||o.side===ME||!G.trk[ME].has(o.id)||!['bm','hgv','cruise','ftr'].includes(o.kind))continue;const sx=sX(o.x),sy=sY(o.y-LIFT(o.z));if(sx>0&&sy>0&&sx<CW&&sy<CH)continue;n++;
@@ -2226,10 +2363,10 @@ function drawSlots(){if(!G.slots)return;const L=G.slots[ME]||[];ctx.save();ctx.l
   const n=slotsLeft(ME);ctx.restore();return n}
 function placeGhost(x,y,t,hx,hy){const Rv=visRT('site',t,0);ctx.save();ctx.strokeStyle='rgba(223,229,226,.5)';ctx.setLineDash([px(3),px(4)]);ctx.lineWidth=px(1);ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(x,y);ctx.stroke();ctx.setLineDash([]);ctx.restore();
   if(Rv*2*cam.z>16){if(v7Ready())drawV7({cat:'site',t,id:0,side:ME,x,y,pad:G.slots?(slotFor(ME,hx,hy,true)||{}).pad:undefined},x,y,.75,false,performance.now()/1000);else drawPhotos(piecesFor('site',t,0),x,y,.75,false)}ctx.strokeStyle='#dfe5e2';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();drawPlacementRange(x,y,t);
-  mono(`kurulum yeri · ${slotsLeft(ME)} boş`,x,y+Math.max(Rv,px(15))+px(18),'#dfe5e2',10,'center')}
-function drawCursor(V){if(hover&&!mode&&autoTgt()&&!mDown&&sideOf(hover.x,hover.y)!==ME&&!pickCandidates(hover).some(p=>p.kind!=='trk'&&p.o.side!==ME)){const x=hover.x,y=hover.y,r=px(13);ctx.strokeStyle='rgba(255,210,122,.9)';ctx.lineWidth=px(1.4);ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.moveTo(x-r*1.7,y);ctx.lineTo(x-r*.55,y);ctx.moveTo(x+r*.55,y);ctx.lineTo(x+r*1.7,y);ctx.moveTo(x,y-r*1.7);ctx.lineTo(x,y-r*.55);ctx.moveTo(x,y+r*.55);ctx.lineTo(x,y+r*1.7);ctx.stroke();mono(G.con.tgt?'tıkla · hedefi buraya taşı':'tıkla · hedef',x+r*2,y-r*1.3,'#ffd27a',10);return}
+  mono(`${slotsLeft(ME)} boş kurulum yeri`,x,y+Math.max(Rv,px(15))+px(18),'#dfe5e2',10,'center')}
+function drawCursor(V){if(hover&&!mode&&autoTgt()&&!mDown&&sideOf(hover.x,hover.y)!==ME&&!pickCandidates(hover).some(p=>p.kind!=='trk'&&p.o.side!==ME)){const x=hover.x,y=hover.y,r=px(13);ctx.strokeStyle='rgba(255,210,122,.9)';ctx.lineWidth=px(1.4);ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.moveTo(x-r*1.7,y);ctx.lineTo(x-r*.55,y);ctx.moveTo(x+r*.55,y);ctx.lineTo(x+r*1.7,y);ctx.moveTo(x,y-r*1.7);ctx.lineTo(x,y-r*.55);ctx.moveTo(x,y+r*.55);ctx.lineTo(x,y+r*1.7);ctx.stroke();mono(G.con.tgt?'hedefi buraya taşımak için tıkla':'hedef için tıkla',x+r*2,y-r*1.3,'#ffd27a',10);return}
   if(!hover||!mode)return;const x=hover.x,y=hover.y;
-  if(mode.k==='sat'){const a=satArea(x,y),h=SAT_SIZE/2;ctx.strokeStyle='#9fd0dc';ctx.lineWidth=px(1.5);ctx.fillStyle='rgba(159,208,220,.08)';ctx.fillRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);ctx.strokeRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);mono('UYDU · 60 × 60 km · $15M',a.x,a.y-h-px(12),'#9fd0dc',11,'center');return}
+  if(mode.k==='sat'){const a=satArea(x,y),h=SAT_SIZE/2;ctx.strokeStyle='#9fd0dc';ctx.lineWidth=px(1.5);ctx.fillStyle='rgba(159,208,220,.08)';ctx.fillRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);ctx.strokeRect(a.x-h,a.y-h,SAT_SIZE,SAT_SIZE);mono('Uydu çekimi, 60×60 km',a.x,a.y-h-px(12),'#9fd0dc',11,'center');return}
   if(mode.k==='place'){drawSlots();const sl=G.slots&&slotFor(ME,x,y,true);const err=canPlace(ME,mode.t,x,y,true);if(sl&&!err){return placeGhost(sl.x,sl.y,mode.t,x,y)}const Rv=visRT('site',mode.t,0);if(Rv*2*cam.z>16)drawPhotos(piecesFor('site',mode.t,0),x,y,.7,false);ctx.strokeStyle=err?'#ff6a5a':'#7fe0a0';ctx.lineWidth=px(2);ctx.beginPath();ctx.arc(x,y,Math.max(Rv,px(15))+px(5),0,7);ctx.stroke();drawPlacementRange(x,y,mode.t);if(err)label(err,x,y-px(28),'#ff9d90',13)}
   if(mode.k==='target'){ctx.strokeStyle='#ffd27a';ctx.lineWidth=px(1.6);const r=px(14);ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.moveTo(x-r*1.6,y);ctx.lineTo(x-r*.5,y);ctx.moveTo(x+r*.5,y);ctx.lineTo(x+r*1.6,y);ctx.moveTo(x,y-r*1.6);ctx.lineTo(x,y-r*.5);ctx.moveTo(x,y+r*.5);ctx.lineTo(x,y+r*1.6);ctx.stroke()}}
 
@@ -2256,11 +2393,11 @@ function chargeStart(kind){if(!SND.ctx||SND.muted)return;const a=SND.ctx,now=a.c
 function chargeStop(){if(!CHG.src)return;const now=SND.ctx.currentTime;for(const gn of [CHG.g,CHG.og])if(gn){gn.gain.cancelScheduledValues(now);gn.gain.setValueAtTime(gn.gain.value,now);gn.gain.exponentialRampToValueAtTime(.0001,now+.15)}CHG.src.stop(now+.2);for(const o of CHG.ext)o.stop(now+.2);CHG.src=null;CHG.og=null}
 const EVA={on:true,last:{},voice:null};
 // ---------------- radio: recorded lines (public/sfx/voice/manifest.json: {"key":["file.mp3",...]}) played through a radio chain
-const VOICE={files:{},buf:{},q:[],busy:false,last:{}};
+const VOICE={files:{},buf:{},q:[],busy:false,last:{},off:false};try{VOICE.off=localStorage.getItem('gok.radio')==='0'}catch(e){}
 fetch('sfx/voice/manifest.json').then(r=>r.ok?r.json():{}).then(m=>{VOICE.files=m||{}}).catch(()=>{});
 const EVAKEY={bm:'incoming_bm',hgv:'incoming_hgv',cm:'incoming_cruise',dr:'incoming_drones',ftr:'incoming_jet',war:'war_start'};
 function eva(txt,key,cool){const k=EVAKEY[key];if(k)voice(k)}
-function voice(key,t){if(!SND.ctx||SND.muted||G&&G.silent)return;const ks=[t?key+'_'+t:null,key].filter(k=>k&&VOICE.files[k]&&VOICE.files[k].length);if(!ks.length)return;const k=ks[0];
+function voice(key,t){if(!SND.ctx||SND.muted||VOICE.off||G&&G.silent)return;const ks=[t?key+'_'+t:null,key].filter(k=>k&&VOICE.files[k]&&VOICE.files[k].length);if(!ks.length)return;const k=ks[0];
   const now=SND.ctx.currentTime;if(now-(VOICE.last[key]??-99)<6)return;VOICE.last[key]=now;if(VOICE.q.length>2)VOICE.q.shift();VOICE.q.push(k);voiceNext()}
 function voiceNext(){if(VOICE.busy||!VOICE.q.length)return;const k=VOICE.q.shift(),L=VOICE.files[k],f=L[(Math.random()*L.length)|0];VOICE.busy=true;
   const go=buf=>{const a=SND.ctx,t=a.currentTime+.05;const src=a.createBufferSource();src.buffer=buf;
@@ -2296,63 +2433,72 @@ function blueprint(key,side){const id=key+(side||'');if(BP[id])return BP[id];con
     if(P.kv){x.fillStyle='rgba(255,210,122,.25)';x.fillRect(x0+L-nose*1.6,y0-D/2,nose*.8,D)}
     x.strokeStyle='rgba(191,231,245,.7)';x.lineWidth=1;x.beginPath();x.moveTo(x0,y0+D/2+26);x.lineTo(x0+L,y0+D/2+26);x.moveTo(x0,y0+D/2+20);x.lineTo(x0,y0+D/2+32);x.moveTo(x0+L,y0+D/2+20);x.lineTo(x0+L,y0+D/2+32);x.stroke();
     x.fillStyle='#bfe7f5';x.textAlign='center';x.fillText(`${String(P.L).replace('.',',')} m`,280,y0+D/2+44);x.textAlign='left';x.fillText(`Ø ${String(P.D).replace('.',',')} m`,x0+L+6>480?x0:x0+L+6,y0-D/2-8)}
-  x.fillStyle='#7fb8cc';x.font='700 12px "Archivo Cond",sans-serif';x.textAlign='left';x.fillText((nameOf(side||ME,key)+(SITE[key]&&PROF[key]?' · '+(natOf(side||ME).names['ICP_'+key]||'önleyici'):'')).toUpperCase(),10,16);x.textAlign='right';x.fillText('MENZİL · TEKNİK ÇİZİM',550,16);
+  x.fillStyle='#7fb8cc';x.font='700 12px "Archivo Cond",sans-serif';x.textAlign='left';x.fillText((nameOf(side||ME,key)+(SITE[key]&&PROF[key]?', '+(natOf(side||ME).names['ICP_'+key]||'önleyici'):'')).toUpperCase(),10,16);x.textAlign='right';x.fillText('MENZİL TEKNİK ÇİZİM',550,16);
   return BP[id]=c.toDataURL()}
 const ICON={};function icon(key){if(ICON[key])return ICON[key];const c=document.createElement('canvas');c.width=128;c.height=80;const x=c.getContext('2d');x.translate(64,40);
   if(SITE[key]){const k=Math.min(1.6,30/SITE[key].r);x.scale(k,k);drawSite(x,key,ME,{time:.5})}
   else{x.rotate(-.5);x.scale(2.6,2.6);const kind=MUN[key]?MUN[key].kind:{SEAD:'ftr',GLIDE:'ftr'}[key]||'bm';drawAirObj(x,{kind,boost:kind==='hgv',side:ME,bt:'LRAD'},0)}
   return ICON[key]=c.toDataURL()}
 function specHTML(key){const d=SITE[key]||MUN[key]||SORT[key];if(!d)return'';const sp=SPEC[key]||(MUN[key]?{Aile:MUN[MUN[key].cls]?MUN[MUN[key].cls].n:'',Hasar:String(MUN[key].cl?MUN[key].cl+' × '+MUN[key].dmg:MUN[key].dmg),'Etki yarıçapı':f1(MUN[key].r/KMU)+' km','Sapma (CEP)':(MUN[key].cep||6)*50+' m',...(MUN[key].dec?{'Sahte başlık':String(MUN[key].dec)}:{}),...(MUN[key].man?{Manevra:'son evre'}:{})}:{});const nm=SORT[key]?d.n:nameOf(ME,key);
-  return `<div class="spec"><h4>${esc(nm)}</h4><div class="m" style="margin:0">${esc(SITE[key]?SITE[key].role:MUN[key]?MUN[key].n:'uçak görevi')}${d.c?` · ${money(costOf(ME,key))}${MUN[key]?' / adet':''}`:''}${SITE[key]&&SITE[key].ic?` · önleyici ${money(SITE[key].ic)}`:''}</div>
-  ${PROF[key]||SITE[key]||(MUN[key]&&PROF[MUN[key].cls])?`<img src="${blueprint(key,ME)}" alt="">`:''}<dl>${Object.entries(sp).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl><div class="w"><b>Ne işe yarar:</b> ${esc(d.d||MDESC[key]||'')}</div></div>`}
+  return `<div class="spec"><h4>${esc(nm)}</h4><div class="m" style="margin:0">${esc(SITE[key]?SITE[key].role:MUN[key]?MUN[key].n:'uçak görevi')}${d.c?`, ${MUN[key]?'tanesi ':''}${money(costOf(ME,key))}`:''}${SITE[key]&&SITE[key].ic?`, önleyicisi ${money(SITE[key].ic)}`:''}</div>
+  ${PROF[key]||SITE[key]||(MUN[key]&&PROF[MUN[key].cls])?`<img src="${blueprint(key,ME)}" alt="">`:''}<dl>${Object.entries(sp).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>${(d.d||MDESC[key]||(MUN[key]&&MDESC[MUN[key].cls]))?`<div class="w"><b>Ne işe yarar:</b> ${esc(d.d||MDESC[key]||MDESC[MUN[key].cls])}</div>`:''}</div>`}
 const MDESC={DRN:'Ucuz ve yavaş; sürü halinde gelip pahalı önleyicileri tüketir. Korkut, lazer ve önleyici İHA en ekonomik cevaptır.',ARMD:'Yayın yapan radarı arar ve üstüne dalar. Radarı kapatırsan (Emisyon kapalı) hedefini kaybeder.',MALD:'Radarda gerçek seyir füzesi gibi görünür; savunmayı boşa ateş ettirir, arkasından gerçekleri gönder.',RCN:'Hedef bölgenin üstünde döner, gizli bataryaları ortaya çıkarır.',CM:'50 m irtifada, radar ufkunun altından gelir; ara noktayla savunmanın etrafından dolaştırılabilir. Son anda görülür.',BM:'Bulutların çok üstüne, 90 km irtifaya çıkar ve dik iner. Ara safhada sahte başlıklar bırakır; ancak üst katman ya da uzun menzil durdurur.',HGV:'35–45 km arasında süzülür: alçak savunmanın üstünde, atmosfer dışı önleyicinin altında kalır. En pahalı ve en zor durdurulan silah.'};
 
 // ================================================================ top bar
-let tab='D';
+let tab='K';
 function setView(v){if(v===VIEW)return;VIEW=v;try{localStorage.setItem('gok.view',v)}catch(e){}renderTop();updTop();if(typeof drawMinimap==='function')drawMinimap()}
 function renderTop(){
-  topEl.innerHTML=`<div class="brand">MENZİL<small>GÖK</small></div>${G?`<div class="clock" id="clk"></div><div class="score" id="scr"></div><div id="power" aria-label="Tarafların güç barometresi"></div>`:'<div style="margin-left:auto"></div>'}
-  <div class="top-r">${G&&G.phase==='prep'?(G.ready&&G.ready[ME]?'<button class="btn" disabled>Rakip bekleniyor</button>':'<button class="btn pri" data-t="go">Hazırım · başlat</button>'):''}${G?'<button class="btn" data-t="sat">Uydu iste · $15M</button>'+(G.net?'':'<button class="btn" data-t="pause">Duraklat</button><button class="btn'+(G.speed>1?' on':'')+'" data-t="speed">'+(G.speed>1?G.speed:2)+'×</button>')+'':''}${G&&G.phase!=='prep'?'':'<button class="btn ghost" data-t="how">Nasıl oynanır</button>'}${G?`<div class="vsw" role="group" aria-label="Görünüm"><button class="btn sm ${VIEW==='sat'?'on':''}" data-t="view" data-v="sat" title="Uydu görüntüsü (V)">Uydu</button><button class="btn sm ${VIEW==='tac'?'on':''}" data-t="view" data-v="tac" title="Taktik ekran (V)">Taktik</button></div>`:''}${G?`<button class="btn ${G.cov?'on':'ghost'}" data-t="cov" title="Bataryaların menzil çemberlerini göster">Menziller</button>`:''}<button class="btn ghost" data-t="mute">${SND.muted?'Sessiz':'Ses'}</button>${G?'<button class="btn ghost" data-t="quit">Çık</button>':''}</div>`}
+  topEl.innerHTML=`<div class="brand">Menzil<small>Gök</small></div>${G?`<div class="clock" id="clk"></div><div class="score" id="scr"></div><div id="power" aria-label="Tarafların güç barometresi"></div>`:'<div style="margin-left:auto"></div>'}
+  <div class="top-r">${G&&G.phase==='prep'?(G.ready&&G.ready[ME]?'<button class="btn" disabled>Rakip bekleniyor</button>':'<button class="btn pri" data-t="go">Hazırım</button>'):''}${G?'<button class="btn" data-t="sat">Uydu iste</button>'+(G.net?'':'<button class="btn" data-t="pause">Duraklat</button><button class="btn'+(G.speed>1?' on':'')+'" data-t="speed">'+(G.speed>1?G.speed:2)+'×</button>')+'':''}${G&&G.phase!=='prep'?'':'<button class="btn ghost" data-t="how">Nasıl oynanır</button>'}${G?`<div class="vsw" role="group" aria-label="Görünüm"><button class="btn sm ${VIEW==='sat'?'on':''}" data-t="view" data-v="sat" title="Uydu görüntüsü (V)">Uydu</button><button class="btn sm ${VIEW==='tac'?'on':''}" data-t="view" data-v="tac" title="Taktik ekran (V)">Taktik</button></div>`:''}${G?`<button class="btn ${G.cov?'on':'ghost'}" data-t="cov" title="Bataryaların menzil çemberlerini göster">Menziller</button>`:''}<button class="btn ghost" data-t="mute" aria-pressed="${!SND.muted}">${SND.muted?'Ses kapalı':'Ses'}</button><button class="btn ghost" data-t="radio" aria-pressed="${!VOICE.off}" title="Telsiz anonslarını aç ya da kapat">${VOICE.off?'Telsiz kapalı':'Telsiz'}</button>${G?'<button class="btn ghost" data-t="quit">Çık</button>':''}</div>`;if(G)try{updTop()}catch(e){}}
 function updTop(){if(!G)return;renderPower();const c=$('#clk'),s=$('#scr');const nk=nightK(),W=G.wx;
-  if(c)c.innerHTML=(G.watch?'<span class="ph">TEKRAR</span>':'')+(G.phase==='prep'?`${G.watch?'':'<span class="ph">HAZIRLIK</span>'}${mmss(G.prepT)}`:`${mmss(G.time)}<small>/ ${mmss(GAME_T)}</small>`);
-  const n=x=>G.score[x].dmg;if(s)s.innerHTML=`<small style="opacity:.6;font-weight:500;margin-right:6px">verilen hasar</small>${G.sides.map(x=>`<span class="${x}"${G.out[x]?' style="opacity:.4;text-decoration:line-through"':''}>${natOf(x).n} ${money(n(x))}</span>`).join(' · ')}`;
+  if(c)c.innerHTML=(G.watch?'<span class="ph">Tekrar</span>':'')+(G.phase==='prep'?`${G.watch?'':'<span class="ph">Hazırlık</span>'}${mmss(G.prepT)}`:`${mmss(G.time)}<small>/ ${mmss(GAME_T)}</small>`);
+  const n=x=>G.score[x].dmg;if(s)s.innerHTML=`<small style="opacity:.6;font-weight:500;margin-right:8px">Verdirilen hasar</small>${G.sides.map(x=>`<span class="${x}"${G.out[x]?' style="opacity:.4;text-decoration:line-through"':''}>${natOf(x).n} ${money(n(x))}</span>`).join('<i class="sp"></i>')}`;
   const pb=topEl.querySelector('[data-t="pause"]');if(pb){pb.classList.toggle('on',G.paused);pb.textContent=G.paused?'Devam':'Duraklat'}const sb=topEl.querySelector('[data-t="speed"]');if(sb)sb.classList.toggle('on',G.speed===2);
-  $('#wx').textContent=`${{clear:'Açık',cloudy:'Bulutlu',overcast:'Kapalı'}[W.state]} · bulut %${Math.round(W.cover*100)} · rüzgâr ${Math.round(hyp(W.wind.x,W.wind.y)*3)} km/sa · ${nk>.5?'gece':nk>.1?'alacakaranlık':'gündüz'}`}
+  $('#wx').textContent=`${{clear:'Açık hava',cloudy:'Bulutlu',overcast:'Kapalı hava'}[W.state]}, bulut %${Math.round(W.cover*100)}, rüzgâr ${Math.round(hyp(W.wind.x,W.wind.y)*3)} km/sa, ${nk>.5?'gece':nk>.1?'alacakaranlık':'gündüz'}`}
 topEl.addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;audioInit();const k=b.dataset.t;
   if(k==='power'&&G){G.powerSide=G.powerSide===b.dataset.side?null:b.dataset.side;renderPower();return}if(k==='sat'&&G){beginSatellite();return}
   if(k==='go'&&G){issue('go');return}if((k==='pause'||k==='speed')&&G&&G.net){hint('Çevrimiçi maçta duraklatma ve hız yok.',1);return}if(k==='pause'&&G)G.paused=!G.paused;else if(k==='speed'&&G){G.speed=G.watch?(G.speed>=4?1:G.speed*2):G.speed===2?1:2;renderTop()}else if(k==='con'&&G){toggleCon()}else if(k==='cov'&&G){G.cov=!G.cov;renderTop()}else if(k==='view'){setView(b.dataset.v)}
-  else if(k==='eva'){EVA.on=!EVA.on;lsSet('gok.eva',EVA.on?'1':'0');if(EVA.on)eva('Sesli uyarılar açık','evaon',1);renderTop()}else if(k==='mute'){setMute(!SND.muted);renderTop()}else if(k==='how'){ovBack=null;openHowto(0)}else if(k==='quit')intro();updTop()});
+  else if(k==='eva'){EVA.on=!EVA.on;lsSet('gok.eva',EVA.on?'1':'0');if(EVA.on)eva('Sesli uyarılar açık','evaon',1);renderTop()}else if(k==='mute'){setMute(!SND.muted);renderTop()}else if(k==='radio'){VOICE.off=!VOICE.off;lsSet('gok.radio',VOICE.off?'0':'1');if(VOICE.off)VOICE.q.length=0;renderTop()}else if(k==='how'){ovBack=null;openHowto(0)}else if(k==='quit')intro();updTop()});
 
 // ================================================================ side panel
-const DSECT=[['Sensör','görmeden vuramazsın',['RAD']],['1 · Yakın katman','0–5 km: dron, seyir, bomba',['CIWS','LASER','IDR']],['2 · Kısa ve orta menzil','0–20 km irtifa',['SHORAD','MRAD']],['3 · Uzun menzil ve üst katman','balistik ve hipersonik',['LRAD','UPPER']],['Elektronik harp ve aldatma','',['EW','DEC']]];
-function buildSide(){side.innerHTML=`<div class="money"><b id="cash">$0</b><small id="inc"></small></div><div class="mmwrap"><canvas id="mm"></canvas></div>
-  <div class="sideh">İNŞA</div><div class="tabs"><button class="btn" data-tab="D">Savunma</button><button class="btn" data-tab="A">Rampalar</button><button class="btn" data-tab="I">Analiz</button><button class="btn" data-tab="L">Kayıt</button></div>
+const DSECT=[['Gözetleme','Görmediğin tehdidi vuramazsın.',['RAD']],['Yakın savunma','Dron, seyir füzesi ve bombayı son kilometrelerde durdurur.',['CIWS','LASER','IDR']],['Orta menzil','Uçak, seyir füzesi ve dron; 20 km irtifaya kadar.',['SHORAD','MRAD']],['Balistik savunma','Balistik ve hipersonik füzeye karşı.',['LRAD','UPPER']],['Karıştırma ve aldatma','',['EW','DEC']],['Saldırı rampaları','Füze ve İHA atmak için.',['TEL','DLN']]];
+function buildSide(){side.innerHTML=`<div class="money"><b id="cash">$0</b><small id="inc"></small></div><div class="prod" id="prod"></div><div class="mmwrap"><canvas id="mm"></canvas></div>
+  <nav class="tabs" aria-label="Komuta">${[['K','Kur'],['D','Savunma'],['A','Saldırı'],['L','Kayıt']].map(([k,n])=>`<button class="btn" data-tab="${k}">${n}</button>`).join('')}</nav>
   <div class="tabdesc" id="tabdesc"></div><div class="build" id="build"></div><div class="selp" id="selp"></div>`;
   mm=$('#mm');mmc=mm.getContext('2d');resize();mm.addEventListener('pointerdown',mmClick);mm.addEventListener('pointermove',e=>{if(e.buttons)mmClick(e)});renderSide();renderSel()}
+// production meter under the cash: how many launcher missiles the factories can hand over right now
+function updProd(){const el=$('#prod');if(!el||!G)return;const p=G.prod[ME]||0,r=prodRate(ME)*60;el.innerHTML=`<span>Füze üretimi</span><i><b style="width:${Math.round(p/PROD_CAP*100)}%"></b></i><em>${Math.floor(p)} hazır, dakikada ${Math.round(r)}</em>`}
+
 function mmClick(e){const r=mm.getBoundingClientRect();const wx=(e.clientX-r.left)/r.width*MW,wy=(e.clientY-r.top)/r.height*MH;camTw=null;cam.x=wx-((VPAD.l+CW-VPAD.r)/2-CW/2)/cam.z;cam.y=wy-((CH-VPAD.b)/2-CH/2)/cam.z;camClamp()}
 function card(key,opts={}){const d=SITE[key]||MUN[key]||SORT[key];const c=opts.cost!=null?opts.cost:costOf(ME,key);const off=opts.off;
   const ph=P7[key]?v7(P7[key][P7[key].length>1&&/rad/.test(P7[key][0][0])?1:0][0]):null;
-  return `<button class="card-b ${off?'off':''} ${mode&&mode.t===key?'on':''} ${ph?'ph':''}" data-k="${key}" data-kind="${opts.kind||'site'}">${ph?`<img src="img/${ph}.webp" alt="" loading="lazy">`:''}<b>${esc(SORT[key]?d.n:nameOf(ME,key))}</b><span>${esc(SITE[key]?SITE[key].role:'')}</span><em>${opts.ct||money(c)}</em>${opts.k!=null&&opts.k!==''?`<i>×${opts.k}</i>`:''}</button>`}
+  return `<button class="card-b ${off?'off':''} ${mode&&mode.t===key?'on':''} ${ph?'ph':''}" data-k="${key}" data-kind="${opts.kind||'site'}">${ph?`<img src="img/${ph}.webp" alt="" loading="lazy">`:''}<b>${esc(SORT[key]?d.n:nameOf(ME,key))}</b><span>${esc(SITE[key]?SITE[key].role:'')}</span><em>${opts.ct||money(c)}</em>${opts.k!=null&&opts.k!==''?`<i>${opts.k} kurulu</i>`:''}</button>`}
 const sect=(n,e)=>`<div class="sect">${n}${e?`<em>${e}</em>`:''}</div>`;
 let sideSig='';
-function renderSide(force){const el=$('#build');if(!el||!G)return;const sig=[tab,mode&&mode.t,G.phase,...Object.keys(SITE).map(k=>G.cash[ME]<costOf(ME,k)?0:1),...['TEL','DLN','RAD','MRAD','LRAD','UPPER','SHORAD','CIWS','LASER','IDR','EW','DEC'].map(k=>sites(ME,k).length),...G.air4[ME].map(a=>a.st),tab==='I'||tab==='L'?Math.floor(G.time/(tab==='L'?1:2)):0,sites(ME).map(s=>s.mode).join('')].join('|');if(!force&&sig===sideSig)return;sideSig=sig;let h='';
-  if(tab==='D'){for(const [n,e,ks] of DSECT){h+=sect(n,e);for(const k of ks)h+=card(k,{off:G.cash[ME]<costOf(ME,k)})}
-    h+=`<div class="sect">Ateş kuralı<em>tüm bataryalar</em></div><div style="grid-column:1/-1;display:flex;gap:4px;flex-wrap:wrap">${[['auto','Otomatik'],['sel','Seçici'],['off','Sessiz']].map(([m,n])=>`<button class="btn sm ${sites(ME).every(s=>!SITE[s.t].rng||s.mode===m)&&sites(ME).some(s=>SITE[s.t].rng)?'on':''}" data-doc="${m}">${n}</button>`).join('')}</div>`}
-  else if(tab==='A'){h+=sect('Rampalar','füze atmak için gerekli');for(const k of ['TEL','DLN'])h+=card(k,{off:G.cash[ME]<costOf(ME,k),k:sites(ME,k).length||''});
-    h+=`<div class="note">Füze ayrı satın alınmaz, atışta ödenir. 1 rampa = 1 füze, ${SITE.TEL.rl} sn dolum.</div>`;
-    const ab=assets(ME).find(a=>a.t==='AIRB');h+=sect('Hava üssü',ab?'':'yıkıldı');if(ab)h+=`<div class="note mono">${G.air4[ME].map((a,i)=>`UÇAK ${i+1}  ${({ready:'HAZIR',sortie:'GÖREVDE',rearm:`DOLUM ${Math.ceil(a.t)} SN`,lost:'KAYIP'})[a.st]}`).join('<br>')}</div>`}
-  else if(tab==='L'){const L=G.orders||[];h+=sect('Talimatlar',L.length?L.length+' emir':'');h+=L.length?L.map(o=>{const pend=Math.max(0,o.n-o.hit-o.down-o.fail-(o.arr-o.hit));const seg=(n,c)=>n?`<i class="${c}" style="flex:${n}"></i>`:'';return `<div class="lg-row ${o.done?'':'live'}" data-lg="${o.id}"><div class="lg-h"><s>${mmss(o.t)}</s><b>${o.n||'?'}× ${esc(nameOf(ME,o.k))}</b><span>→ ${esc(o.lbl)}</span></div><div class="lg-bar">${seg(o.hit,'h')}${seg(o.arr-o.hit,'m')}${seg(o.down,'d')}${seg(o.fail,'f')}${seg(pend,'p')}</div><div class="lg-t">${o.done?'':'<em>havada</em> · '}${o.hit} isabet · ${o.down} düşürüldü${o.arr-o.hit?' · '+(o.arr-o.hit)+' boşa':''}${o.fail?' · '+o.fail+' arıza':''} · hasar <b>${money(o.dmg)}</b> / maliyet ${money(o.cost)}${o.killed?' · <b class="k">yıkıldı</b>':''}</div></div>`}).join(''):'<div class="note">Henüz atış emri yok. Verdiğin her emir burada izlenir: kaçı vurdu, kaçı düşürüldü, ne kadar hasar verdi.</div>'}
-  else{const gaps=defGaps(),ops=G.phase==='war'?strikeOps():[];G.anal={gaps,ops};const chip=(g,k)=>`<i class="${g.miss.includes(k)?'no':'ok'}">${({bm:'BAL',cm:'SEY',dr:'İHA',rad:'RAD'})[k]}</i>`;
-    const defH=sect('Savunma açıkları',gaps.length?gaps.length+' tesis':'yok')+(gaps.length?gaps.slice(0,6).map((g,i)=>{const D=ASSET_DEF[g.a.t];return `<div class="an-row"><div><b>${esc(g.a.nm)}</b><em>${money(D.v*g.a.hp/g.a.max)} · ${money(D.inc)}/sn gelir</em><span class="an-ch">${LAYERS.map(([k])=>chip(g,k)).join('')}</span></div><button class="btn sm" data-an="fix" data-i="${i}">Kapat</button></div>`}).join(''):'<div class="note">Bütün tesisler dört katmanda da kapsanıyor.</div>');
-    const atkH=sect('Saldırı fırsatları',G.phase==='war'?'etki / maliyet':'harekâtta açılır')+(ops.length?ops.slice(0,5).map((op,i)=>`<div class="an-row"><div><b>${esc(op.a.nm)}</b><em class="w">${op.n}× ${esc(nameOf(ME,op.k))} · ${money(op.cost)}</em><em>${op.kill?'yıkılır':'%'+Math.round(op.dmg/op.a.max*100)+' hasar'} · −${money(op.inc)}/dk gelir · geçiş %${Math.round(op.p*100)}</em>${op.risk.length?`<em class="rk">yolda: ${esc(op.risk.slice(0,3).join(', '))}</em>`:''}</div><button class="btn sm pri" data-an="tgt" data-i="${i}">Hedefe al</button></div>`).join(''):`<div class="note">${G.phase==='war'?'Hazır rampa yok ya da hedef görünmüyor.':'Hazırlık bitince silah, hedef ve kesilecek gelir burada hesaplanır.'}</div>`);
-    h+=G.phase==='war'?atkH+defH:defH+atkH;
-    h+=sect('Özet','');const I=G.icp[ME],E=G.sides.filter(x=>x!==ME).reduce((a,x)=>({n:a.n+G.icp[x].n,hit:a.hit+G.icp[x].hit,cost:a.cost+G.icp[x].cost}),{n:0,hit:0,cost:0});h+=`<div style="grid-column:1/-1;font-size:13px;line-height:1.6;color:#cfd4d6">
-    <b style="font:700 15px var(--cond)">Hava savunma</b><br>Önleyici atışı: ${I.n} · isabet: ${I.hit} (${I.n?Math.round(I.hit/I.n*100):0}%) · harcama ${money(I.cost)}<br>
-    <b style="font:700 15px var(--cond)">Rakip savunma</b><br>Atış: ${E.n} · isabet: ${E.hit} · harcama ${money(E.cost)}<br>
-    <b style="font:700 15px var(--cond)">Hasar</b><br>Verdirilen: ${money(G.score[ME].dmg)} · uğranılan: ${money(G.suf[ME])}<br>Sivil (enkaz): ${money(G.sides.reduce((a,x)=>a+G.score[x].civ,0))}<br>
-    <b style="font:700 15px var(--cond)">Bilinen düşman tesisi</b><br>${[...G.ghost[ME].values()].filter(g=>{const e=ent(g.id);return e&&e.alive}).map(g=>`${nameOf(gS(g),g.t)} (${g.src})`).join(', ')||'yok — keşif İHA gönder ya da uydu geçişini bekle'}</div>`}
-  el.innerHTML=h;$('#tabdesc').textContent={D:'seç → kendi toprağına tıkla',A:'saldırı için rampa',I:'otomatik değerlendirme · 2 sn',L:'verdiğin emirler ve sonuçları'}[tab];
-  side.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab))}
+function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')tab='A';const sig=[tab,mode&&mode.t,G.phase,...Object.keys(SITE).map(k=>G.cash[ME]<costOf(ME,k)?0:1),...['TEL','DLN','RAD','MRAD','LRAD','UPPER','SHORAD','CIWS','LASER','IDR','EW','DEC'].map(k=>sites(ME,k).length),...G.air4[ME].map(a=>a.st),tab!=='K'?Math.floor(G.time/(tab==='L'?1:2)):0,sites(ME).map(s=>s.mode).join('')].join('|');if(!force&&sig===sideSig)return;sideSig=sig;let h='';
+  if(tab==='K'){for(const [n,e,ks] of DSECT){h+=sect(n,e);for(const k of ks)h+=card(k,{off:G.cash[ME]<costOf(ME,k),k:sites(ME,k).length||''})}}
+  else if(tab==='D'){const gaps=defGaps();G.anal={...(G.anal||{}),gaps};const all=sites(ME).filter(s=>SITE[s.t].rng&&!SITE[s.t].ew);
+    const doc=all.length&&all.every(s=>s.mode===all[0].mode)?all[0].mode:null;
+    h+=sect('Ateş kuralı','bütün bataryalar için');
+    h+=`<div class="doc">${[['auto','Otomatik','Menzile giren her tehdide ateş eder.'],['sel','Seçici','Boşa düşecek füzeyi ve ucuz dronu pahalı önleyiciyle vurmaz.'],['off','Sessiz','Radarlar kapanır, kimse ateş etmez. Yerini ele vermez.']].map(([m,n,d])=>`<button class="${doc===m?'on':''}" data-doc="${m}"><b>${n}</b><span>${d}</span></button>`).join('')}</div>`;
+    const chip=(g,k)=>`<i class="${g.miss.includes(k)?'no':'ok'}">${({bm:'Balistik',cm:'Seyir',dr:'İHA',rad:'Radar'})[k]}</i>`;
+    h+=sect('Korumasız tesisler',gaps.length?`${gaps.length} tesiste açık var`:'');
+    h+=gaps.length?gaps.slice(0,6).map((g,i)=>{const D=ASSET_DEF[g.a.t];return `<div class="an-row"><div><b>${esc(g.a.nm)}</b><em>${money(D.inc)}/sn gelir getiriyor</em><span class="an-ch">${LAYERS.map(([k])=>chip(g,k)).join('')}</span></div><button class="btn sm" data-an="fix" data-i="${i}">Kapat</button></div>`}).join(''):'<div class="note">Bütün tesisler dört katmanda da kapsanıyor.</div>';
+    h+=sect('Bataryaların',all.length?`${all.length} batarya`:'');
+    h+=all.length?all.slice(0,14).map(s=>{const d=SITE[s.t];const st=s.bt>0?`kuruluyor, ${Math.ceil(s.bt)} sn`:s.empT>G.time?'EMP ile sustu':s.mode==='off'?'sessizde':d.mag&&d.mag<999?`şarjör ${s.mag}/${d.mag}`:'hazır';return `<button class="bat ${G.sel===s.id?'on':''}" data-bat="${s.id}"><b>${esc(nameOf(ME,s.t))}</b><span>${st}</span><em>${s.kills||0} vuruş</em></button>`}).join(''):'<div class="note">Henüz batarya yok. Kur sekmesinden başla.</div>';
+    h+=`<div class="side-act"><button class="btn" data-sopen="def">Elle önleme konsolu</button></div>`}
+  else if(tab==='A'){const ops=G.phase==='war'?strikeOps():[];G.anal={...(G.anal||{}),ops};
+    const tel=sites(ME,'TEL'),dln=sites(ME,'DLN'),ab=assets(ME).find(a=>a.t==='AIRB');
+    const rd=l=>l.filter(e=>e.bt<=0&&e.rl<=0&&!(e.empT>G.time)).length;
+    h+=sect('Elindeki güç','');
+    h+=`<div class="stat"><span>Füze rampası</span><b>${tel.length?`${rd(tel)} hazır, ${tel.length} toplam`:'yok'}</b></div><div class="stat"><span>İHA rampası</span><b>${dln.length?`${rd(dln)} hazır, ${dln.length} toplam`:'yok'}</b></div><div class="stat"><span>Savaş uçağı</span><b>${ab?`${G.air4[ME].filter(a=>a.st==='ready').length} hazır`:'hava üssü yıkıldı'}</b></div><div class="stat"><span>Füze üretimi</span><b>${Math.floor(G.prod[ME])} hazır, dakikada ${Math.round(prodRate(ME)*60)}</b></div>`;
+    if(!tel.length&&!dln.length)h+='<div class="note">Saldırmak için rampa gerekir. Kur sekmesinin en altında.</div>';
+    h+=sect('Önerilen saldırılar',G.phase==='war'?'kesilen gelire göre sıralı':'');
+    h+=ops.length?ops.slice(0,5).map((op,i)=>`<div class="an-row"><div><b>${esc(op.a.nm)}</b><em class="w">${op.n} ${esc(nameOf(ME,op.k))}, ${money(op.cost)}</em><em>${op.kill?'Tesis yıkılır':'Yüzde '+Math.round(op.dmg/op.a.max*100)+' hasar'}, rakip dakikada ${money(op.inc)} kaybeder. Geçme şansı %${Math.round(op.p*100)}.</em>${op.risk.length?`<em class="rk">Yolda: ${esc(op.risk.slice(0,3).join(', '))}</em>`:''}</div><button class="btn sm pri" data-an="tgt" data-i="${i}">Hedefe al</button></div>`).join(''):`<div class="note">${G.phase==='war'?'Hazır rampa yok ya da bilinen hedef yok.':'Harekât başlayınca burada hangi silahla neyi vurmanın en çok kazandırdığı çıkar.'}</div>`;
+    h+=`<div class="side-act"><button class="btn pri" data-sopen="atk">Ateş konsolunu aç</button></div>`}
+  else if(tab==='L'){const L=G.orders||[];h+=sect('Verdiğin emirler',L.length?L.length+' emir':'');h+=L.length?L.map(o=>{const pend=Math.max(0,o.n-o.hit-o.down-o.fail-(o.arr-o.hit));const seg=(n,c)=>n?`<i class="${c}" style="flex:${n}"></i>`:'';return `<div class="lg-row ${o.done?'':'live'}" data-lg="${o.id}"><div class="lg-h"><s>${mmss(o.t)}</s><b>${o.n||'?'} ${esc(nameOf(ME,o.k))}</b><span>${esc(o.lbl)}</span></div><div class="lg-bar">${seg(o.hit,'h')}${seg(o.arr-o.hit,'m')}${seg(o.down,'d')}${seg(o.fail,'f')}${seg(pend,'p')}</div><div class="lg-t">${o.done?'':'<em>Havada.</em> '}${o.hit} isabet, ${o.down} düşürüldü${o.arr-o.hit?', '+(o.arr-o.hit)+' boşa':''}${o.fail?', '+o.fail+' arıza':''}. Hasar <b>${money(o.dmg)}</b>, maliyet ${money(o.cost)}.${o.killed?' <b class="k">Tesis yıkıldı.</b>':''}</div></div>`}).join(''):'<div class="note">Henüz atış emri yok. Verdiğin her emir burada izlenir: kaçı vurdu, kaçı düşürüldü, ne kadar hasar verdi.</div>'}
+  el.innerHTML=h;$('#tabdesc').textContent={K:'Kartı seç, sonra haritada kendi tarafında bir yere tıkla.',D:'',A:'',L:''}[tab]||'';
+  side.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));updProd()}
 let infoKey=null;
 
 
@@ -2418,9 +2564,9 @@ function altNote(h){const L=[...new Set(sites(ME).filter(e=>e.bt<=0&&SITE[e.t].r
 const rangeOn=k=>!!RG.on[k]||!!G.cov&&!['RAD','SWEEP','DENS'].includes(k);
 function rangeCount(k,ts){return k==='ENEMY'?[...G.ghost[ME].values()].filter(g=>SITE[g.t]?.rng&&(g.side||gS(g))!==ME).length:sites(ME).filter(e=>ts.includes(e.t)).length}
 function buildRng(){const el=$('#rng');if(!el||!G)return;const h=RALT[RG.ai];el.className=RG.min?'min':'';
-  el.innerHTML=`<div class="rh"><span>MENZİL</span>${RG.min?'':'<span class="rb"><button data-rg="all">Hepsi</button><button data-rg="none">Hiçbiri</button></span>'}<button data-rg="min" aria-label="Paneli daralt">${RG.min?'AÇ':'—'}</button></div>`+
-    RGROUP.map(([k,n,ts,c])=>{const cnt=rangeCount(k,ts);return `<button class="rl${cnt&&rangeOn(k)?' on':''}" title="${esc(n)}${cnt?'':(k==='ENEMY'?' · bilgi yok':' · kurulu değil')}" data-rg="${k}" aria-pressed="${!!cnt&&rangeOn(k)}" style="--c:${c}"><i></i><span>${n}</span><small>${cnt||(k==='ENEMY'?'bilgi yok':'yok')}</small></button>`}).join('')+
-    (RG.on.DENS?`<div class="lg"><span>KORUYAN</span><i class="d1"></i>1<i class="d2"></i>2<i class="d3"></i>3<i class="d4"></i>4+</div>`:'')+`<div class="alt"><div class="av"><span>HEDEF İRTİFA</span><b>${altTxt(h)}</b></div><input type="range" min="0" max="${RALT.length-1}" step="1" value="${RG.ai}" aria-label="Hedef irtifası"><div class="ad">${altNote(h)}</div></div><div class="summary"></div>`;updateRangeSummary()}
+  el.innerHTML=`<div class="rh"><span>Menzil</span>${RG.min?'':'<span class="rb"><button data-rg="all">Hepsi</button><button data-rg="none">Hiçbiri</button></span>'}<button data-rg="min" aria-label="Paneli daralt">${RG.min?'Aç':'Kapat'}</button></div>`+
+    RGROUP.map(([k,n,ts,c])=>{const cnt=rangeCount(k,ts);return `<button class="rl${cnt&&rangeOn(k)?' on':''}" title="${esc(n)}${cnt?'':(k==='ENEMY'?': bilgi yok':': kurulu değil')}" data-rg="${k}" aria-pressed="${!!cnt&&rangeOn(k)}" style="--c:${c}"><i></i><span>${n}</span><small>${cnt||(k==='ENEMY'?'bilgi yok':'yok')}</small></button>`}).join('')+
+    (RG.on.DENS?`<div class="lg"><span>KORUYAN</span><i class="d1"></i>1<i class="d2"></i>2<i class="d3"></i>3<i class="d4"></i>4+</div>`:'')+`<div class="alt"><div class="av"><span>Hedef irtifası</span><b>${altTxt(h)}</b></div><input type="range" min="0" max="${RALT.length-1}" step="1" value="${RG.ai}" aria-label="Hedef irtifası"><div class="ad">${altNote(h)}</div></div><div class="summary"></div>`;updateRangeSummary()}
 let rngSig='';function updRng(){if(!G)return;const sig=!!G.cov+'|'+G.sides.join(',')+'|'+RGROUP.map(([k,,ts])=>rangeCount(k,ts)).join(',');if(sig!==rngSig){rngSig=sig;buildRng()}}
 document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#fitbtn')){fitAll();return}});
 document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('#rng [data-rg]');if(!b||!G)return;const k=b.dataset.rg;
@@ -2434,7 +2580,7 @@ function radarCircles(h){return sites(ME).filter(e=>RADTYPES.includes(e.t)&&e.bt
 function unionArea(circles){if(!circles.length)return 0;const y0=Math.max(0,Math.min(...circles.map(c=>c.y-c.r))),y1=Math.min(MH,Math.max(...circles.map(c=>c.y+c.r)));if(y1<=y0)return 0;const dy=(y1-y0)/512;let area=0;
   for(let i=0;i<512;i++){const y=y0+(i+.5)*dy,spans=[];for(const c of circles){const v=c.r*c.r-(y-c.y)**2;if(v<=0)continue;const d=Math.sqrt(v),lo=Math.max(0,c.x-d),hi=Math.min(MW,c.x+d);if(hi>lo)spans.push([lo,hi])}spans.sort((a,b)=>a[0]-b[0]);let lo=0,hi=0;for(const a of spans){if(a[0]>hi){area+=(hi-lo)*dy;lo=a[0];hi=a[1]}else hi=Math.max(hi,a[1])}area+=(hi-lo)*dy}return area/(KMU*KMU)}
 function updateRangeSummary(sig){if(!G)return;const h=RALT[RG.ai],key=RG.ai+'|'+(sig??rangeSiteSignature());if(rangeSummary.game!==G||rangeSummary.key!==key){rangeSummary.game=G;rangeSummary.key=key;rangeSummary.area=unionArea(radarCircles(h));rangeSummary.value=powerDefense(ME,assets(ME),sites(ME),h).value;const ad=$('#rng .ad');if(ad)ad.textContent=altNote(h)}
-  const el=$('#rng .summary');if(el){const text=`${altTxt(h)} irtifada: radar görüşü ≈ ${f1(rangeSummary.area/1000)} bin km² · korunan tesis %${Math.round(rangeSummary.value)}`;if(el.textContent!==text)el.textContent=text;el.title='Harita içindeki birleşik radar alanı; koruma tesis değeriyle ağırlıklı İHA/seyir/balistik ortalamasıdır.'}}
+  const el=$('#rng .summary');if(el){const text=`${altTxt(h)} irtifada: radar görüşü ≈ ${f1(rangeSummary.area/1000)} bin km², korunan tesis %${Math.round(rangeSummary.value)}`;if(el.textContent!==text)el.textContent=text;el.title='Harita içindeki birleşik radar alanı; koruma tesis değeriyle ağırlıklı İHA/seyir/balistik ortalamasıdır.'}}
 // Visible boundary arcs only: overlaps have no internal dashed seams.
 function exposedArcs(c,circles,index){const tau=Math.PI*2,blocked=[];for(let j=0;j<circles.length;j++){if(j===index)continue;const b=circles[j],dx=b.x-c.x,dy=b.y-c.y,d=hyp(dx,dy);
     if(d+c.r<=b.r+1e-7){if(d>1e-7||b.r>c.r+1e-7||j<index)return [];continue}if(d>=c.r+b.r||d+b.r<=c.r||d<1e-7)continue;
@@ -2476,7 +2622,7 @@ function paintDensity(out,h){const k=3,w=Math.ceil(CW/k),hh=Math.ceil(CH/k);cons
 function densAt(wx,wy,h){let n=0,r=0,en=0;for(const e of sites(ME)){if(e.bt>0||e.mode==='off')continue;const d=SITE[e.t];if(d.rng&&!d.ew){const R=reachAt(ME,e.t,h);if(R>0&&hyp(e.x-wx,e.y-wy)<R)n++}}
   for(const c of radarCircles(h))if(hyp(c.x-wx,c.y-wy)<c.r)r++;for(const g of G.ghost[ME].values()){const gs=g.side||gS(g);if(gs===ME||!SITE[g.t]?.rng||SITE[g.t].ew)continue;const R=reachAt(gs,g.t,h);if(R>0&&hyp(g.x-wx,g.y-wy)<R)en++}return{n,r,en}}
 function updDensTip(){const el=$('#dens-tip');if(!el)return;if(!G||!RG.on.DENS||!hover||mDown){el.hidden=true;return}const h=RALT[RG.ai],q=densAt(hover.x,hover.y,h);
-  if(!q.n&&!q.r&&!q.en){el.hidden=true;return}el.hidden=false;el.textContent=`${altTxt(h)} · ${q.n?'×'+q.n+' önleyici':'önleyici yok'} · ${q.r} radar${q.en?' · düşman ×'+q.en:''}`;el.style.left=Math.min(CW-220,hover.sx+16)+'px';el.style.top=(hover.sy+18)+'px'}
+  if(!q.n&&!q.r&&!q.en){el.hidden=true;return}el.hidden=false;el.textContent=`${altTxt(h)}: ${q.n?q.n+' önleyici':'önleyici yok'}, ${q.r} radar${q.en?', '+q.en+' düşman bataryası':''}`;el.style.left=Math.min(CW-220,hover.sx+16)+'px';el.style.top=(hover.sy+18)+'px'}
 function drawRangeLayer(){if(!G)return;updRng();const sig=rangeSiteSignature();updateRangeSummary(sig);
   const key=[CW,CH,DPR,cam.x,cam.y,cam.z,RG.ai,!!G.cov,VIEW,RGROUP.filter(g=>g[0]!=='SWEEP').map(g=>RG.on[g[0]]).join(','),sig].join('|');
   if(rangeCache.game!==G||rangeCache.key!==key){rangeCache.game=G;rangeCache.key=key;rangeCache.builds++;
@@ -2484,12 +2630,12 @@ function drawRangeLayer(){if(!G)return;updRng();const sig=rangeSiteSignature();u
     const out=rangeCache.canvas.getContext('2d'),mask=rangeCache.mask.getContext('2d');out.setTransform(DPR,0,0,DPR,0,0);mask.setTransform(DPR,0,0,DPR,0,0);out.clearRect(0,0,CW,CH);
     const h=RALT[RG.ai],lift=VIEW==='tac'?0:LIFT(h)*cam.z;if(RG.on.DENS)paintDensity(out,h);for(const [k,,ts,color] of RGROUP){if(k==='SWEEP'||k==='ENEMY'||k==='DENS'||!(RG.on[k]||(G.cov&&k!=='RAD')))continue;
       const circles=[],blind=[];if(k==='RAD')circles.push(...radarCircles(h));else for(const e of sites(ME)){if(!ts.includes(e.t)||e.bt>0)continue;const R=reachAt(e.side,e.t,h);
-        if(R&&e.mode!=='off')circles.push({x:e.x,y:e.y,r:R,t:e.t,side:e.side});else blind.push({x:e.x,y:e.y,r:rngOf(e.side,e.t),label:R?'sessiz':`${altTxt(h)} · kör`})}paintRangeGroup(out,mask,circles,blind,color,lift)}
-    if(RG.on.ENEMY||G.cov)for(const s of G.sides){if(s===ME)continue;const circles=[],blind=[];for(const g of G.ghost[ME].values()){if((g.side||gS(g))!==s||!SITE[g.t]?.rng)continue;const R=reachAt(s,g.t,h);(R?circles:blind).push({x:g.x,y:g.y,r:R||rngOf(s,g.t),label:`${altTxt(h)} · kör · tahmini`})}paintRangeGroup(out,mask,circles,blind,SCOL[s],lift)}}
+        if(R&&e.mode!=='off')circles.push({x:e.x,y:e.y,r:R,t:e.t,side:e.side});else blind.push({x:e.x,y:e.y,r:rngOf(e.side,e.t),label:R?'sessiz':`${altTxt(h)}: kör`})}paintRangeGroup(out,mask,circles,blind,color,lift)}
+    if(RG.on.ENEMY||G.cov)for(const s of G.sides){if(s===ME)continue;const circles=[],blind=[];for(const g of G.ghost[ME].values()){if((g.side||gS(g))!==s||!SITE[g.t]?.rng)continue;const R=reachAt(s,g.t,h);(R?circles:blind).push({x:g.x,y:g.y,r:R||rngOf(s,g.t),label:`${altTxt(h)}: kör (tahmini)`})}paintRangeGroup(out,mask,circles,blind,SCOL[s],lift)}}
   ctx.save();ctx.setTransform(DPR,0,0,DPR,0,0);ctx.drawImage(rangeCache.canvas,SHX,SHY,CW,CH);ctx.restore()}
 function drawPlacementRange(x,y,t){const d=SITE[t];if(!d.rng&&!d.sens)return;const h=RALT[RG.ai],R=reachAt(ME,t,h),r=R||rngOf(ME,t),color=(groupOf(t)||RGROUP[0])[3];
   ctx.save();ctx.setLineDash([px(7),px(5)]);ctx.strokeStyle=`rgba(${color},${R?.85:.3})`;ctx.lineWidth=px(1.4);ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(R){ctx.fillStyle=`rgba(${color},.1)`;ctx.fill()}ctx.stroke();ctx.setLineDash([]);
-  mono(`${altTxt(h)} · ${R?f1(R/KMU)+' km':'kör'}`,x,y-r-px(8),`rgba(${color},.95)`,11,'center');ctx.restore()}
+  mono(`${altTxt(h)}: ${R?f1(R/KMU)+' km':'kör'}`,x,y-r-px(8),`rgba(${color},.95)`,11,'center');ctx.restore()}
 // ================================================================ quick actions: click an enemy, choose what to do right there
 const qaEl=document.getElementById('qa');let QA=null;
 function qaClose(){qaEl.hidden=true;QA=null}
@@ -2508,13 +2654,13 @@ function strikeEst(k,e){const M=MUN[k];if(!M)return null;const unit=costOf(ME,k)
   return{k,M,unit,have,N,nNow,nCap,exp,p,waves,tAll,costKill,buy,why,eta:fl?Math.round(fl)+' sn':'',reason:r.slice(0,2).join(', ')||'en düşük toplam maliyet'}}
 function qaRender(){if(!QA||!G||mapBusy()){qaClose();return}let head='',opts=[];const war=G.phase==='war';
   if(QA.kind==='trk'&&airById(QA.ref)&&airById(QA.ref).side===ME){const o=airById(QA.ref);if(!o.alive){qaClose();return}const ip=impactPt(o)||{x:o.tx,y:o.ty};
-    head=`<b style="color:#bfeef5">${esc(trkName(o))}</b><span>${f1(o.z)} km · ${Math.ceil(etaOf(o))} sn</span>`;
-    opts.push({id:'info',ok:false,b:'Kendi silahın',em:'',i:`hedef: ${ip&&ip.x!=null?esc(tgtLabel(ip.x,ip.y)):'—'} · irtifa ${f1(o.z)} km`});
+    head=`<b style="color:#bfeef5">${esc(trkName(o))}</b><span>${f1(o.z)} km, ${Math.ceil(etaOf(o))} sn</span>`;
+    opts.push({id:'info',ok:false,b:'Kendi silahın',em:'',i:`Hedefi ${ip&&ip.x!=null?esc(tgtLabel(ip.x,ip.y)):'belli değil'}, irtifa ${f1(o.z)} km`});
     opts.push({id:'follow',ok:true,b:G.follow===o.id?'Takibi bırak':'Kamerayla takip et',em:'',i:'kamera bu silahı izler; sürükleyince bırakır'})}
-  else if(QA.kind==='trk'){const o=airById(QA.ref);if(!o||!o.alive){qaClose();return}head=`<b>${esc(trkName(o))}</b><span>${f1(o.z)} km · ${Math.ceil(etaOf(o))} sn</span>`;
-    const cands=sites(ME).filter(s=>{const d=SITE[s.t];return d.rng&&!d.ew&&s.bt<=0&&(PK[s.t]||{})[o.kind]}).map(s=>{const d=SITE[s.t],dist=hyp(o.x-s.x,o.y-s.y),inR=dist<=rngOf(ME,s.t),inA=o.z>=d.a0&&o.z<=d.a1;return{s,d,dist,ok:inR&&inA&&s.mag>0,why:s.mag<=0?'şarjör boş':!inR?`menzil dışı · ${f1((dist-rngOf(ME,s.t))/KMU)} km uzak`:!inA?`irtifa zarfı dışı`:'',pk:pkOf(s,o)}}).sort((a,b)=>(b.ok-a.ok)||(b.pk-a.pk)).slice(0,4);
+  else if(QA.kind==='trk'){const o=airById(QA.ref);if(!o||!o.alive){qaClose();return}head=`<b>${esc(trkName(o))}</b><span>${f1(o.z)} km, ${Math.ceil(etaOf(o))} sn</span>`;
+    const cands=sites(ME).filter(s=>{const d=SITE[s.t];return d.rng&&!d.ew&&s.bt<=0&&(PK[s.t]||{})[o.kind]}).map(s=>{const d=SITE[s.t],dist=hyp(o.x-s.x,o.y-s.y),inR=dist<=rngOf(ME,s.t),inA=o.z>=d.a0&&o.z<=d.a1;return{s,d,dist,ok:inR&&inA&&s.mag>0,why:s.mag<=0?'şarjör boş':!inR?`menzil dışında, ${f1((dist-rngOf(ME,s.t))/KMU)} km uzak`:!inA?`irtifa zarfı dışı`:'',pk:pkOf(s,o)}}).sort((a,b)=>(b.ok-a.ok)||(b.pk-a.pk)).slice(0,4);
     for(const c of cands){const n=c.d.gun||c.d.laser?1:Math.min(2,c.s.mag);const cost=c.d.gun||c.d.laser?c.d.ic:c.d.ic*n;
-      opts.push({id:'eng:'+c.s.id,ok:c.ok,b:`${nameOf(ME,c.s.t)} ile önle`,em:money(cost),i:c.ok?`${c.d.gun?'top atışı':c.d.laser?'lazer':n+' önleyici'} · isabet ≈ %${Math.round(c.pk*100)} · ${f1(c.dist/KMU)} km`:c.why})}
+      opts.push({id:'eng:'+c.s.id,ok:c.ok,b:`${nameOf(ME,c.s.t)} ile önle`,em:money(cost),i:c.ok?`${c.d.gun?'top atışı':c.d.laser?'lazer':n+' önleyici'}, isabet şansı %${Math.round(c.pk*100)}, ${f1(c.dist/KMU)} km`:c.why})}
     if(!cands.length)opts.push({id:'none',ok:false,b:'Bu tehdide karşı batarya yok',em:'',i:`${KNAME[o.kind]||'hedef'} için uygun sistem kurmalısın`});
     opts.push({id:'follow',ok:true,b:G.follow===o.id?'Takibi bırak':'Kamerayla takip et',em:'',i:'kamera bu izi izler'});opts.push({id:'con',ok:true,b:'Önleme konsolunu aç',em:'',i:'tüm bataryalar ve ayrıntılı plan'})}
   else{const e=ent(QA.ref);if(!e||!e.alive){qaClose();return}const nm=e.cat==='asset'?e.nm:nameOf(e.side,e.t);head=`<b>${esc(nm)}</b>${G.quad?`<span style="color:${SHEX[e.side]}">${esc(natOf(e.side).n)}</span>`:''}<span>${f1(hyp(e.x-HQPOS[ME].x,e.y-HQPOS[ME].y)/KMU)} km</span>`;
@@ -2524,54 +2670,56 @@ function qaRender(){if(!QA||!G||mapBusy()){qaClose();return}let head='',opts=[];
     if(best){const r=[];if(best.tAll<=Math.min(...ok.map(x=>x.tAll))+1)r.push('en hızlı sonuç');if(best.costKill<=Math.min(...ok.map(x=>x.costKill))*1.001)r.push('en ucuz yok etme');if(best.p>=Math.max(...ok.map(x=>x.p))-.001)r.push('savunmayı en iyi delen');if(best.waves===1)r.push('tek salvoda biter');if(!best.buy)r.push('stokta var');best.reason=r.slice(0,2).join(', ')||'hız, maliyet ve isabet dengesi en iyi'}
     if(best&&best.costKill>val*3)opts.push({id:'wait',ok:true,rec:1,b:'Şimdilik vurma',em:'',i:`Yok etmek ≈${money(best.costKill)}, hedefin değeri ${money(val)}. Füzeyi daha değerli bir hedefe sakla.`});
     QA.n=QA.n||{};if(best)est.sort((a,b)=>(b===best)-(a===best));for(const x of est){const isB=best===x&&!(best.costKill>val*3);const nm=nameOf(ME,x.k);const n=clamp(QA.n[x.k]??x.nNow,1,Math.max(1,x.nCap));const dm=Math.min(e.hp,x.exp*n),kill=dm>=e.hp*.97;
-      const res=!isFinite(x.N)?'bilinen savunma neredeyse hepsini düşürür':kill?`<b class="kill">yok eder</b>`:`≈ %${Math.round(dm/e.max*100)} hasar${isFinite(x.N)?` · yok etmek için ${x.N}`:''}`;
-      const meta=`geçiş ≈%${Math.round(x.p*100)} · tanesi ${money(x.unit)} · stok ${x.have}${x.eta?' · varış '+x.eta:''}${x.N>x.nCap&&isFinite(x.N)?` · rampa bu salvoda en çok ${x.nCap}`:''}`;
-      opts.push({id:`atk:${x.k}:${n}`,stk:x.k,n,cap:x.nCap,ok:x.why==='',rec:isB,b:nm,em:money(x.unit*n),res,i:x.why?x.why:(isB?`<b>Öneri:</b> ${x.reason} · `:'')+meta})}
-    const rdy=G.air4[ME].filter(a=>a.st==='ready').length;opts.push({id:'air:GLIDE',ok:war&&rdy>0,b:'Uçakla süzülen bomba',em:money(.5),i:!war?'savaş başlamadı':rdy?`${rdy} uçak hazır · 60 km açıktan atar`:'hazır uçak yok'});
+      const res=!isFinite(x.N)?'bilinen savunma neredeyse hepsini düşürür':kill?`<b class="kill">yok eder</b>`:`yaklaşık %${Math.round(dm/e.max*100)} hasar${isFinite(x.N)?`, yok etmek için ${x.N} gerekir`:''}`;
+      const meta=`Geçme şansı %${Math.round(x.p*100)}. Tanesi ${money(x.unit)}, stokta ${x.have}.${x.eta?' Varış '+x.eta+'.':''}${x.N>x.nCap&&isFinite(x.N)?` Bu salvoda en çok ${x.nCap} rampa hazır.`:''}`;
+      opts.push({id:`atk:${x.k}:${n}`,stk:x.k,n,cap:x.nCap,ok:x.why==='',rec:isB,b:nm,em:money(x.unit*n),res,i:x.why?x.why:(isB?`<b>Öneri:</b> ${x.reason}. `:'')+meta})}
+    const rdy=G.air4[ME].filter(a=>a.st==='ready').length;opts.push({id:'air:GLIDE',ok:war&&rdy>0,b:'Uçakla süzülen bomba',em:money(.5),i:!war?'savaş başlamadı':rdy?`${rdy} uçak hazır, 60 km açıktan atar`:'hazır uçak yok'});
     opts.push({id:'con',ok:true,b:'Saldırı konsolunda planla',em:'',i:'birden çok silah, zamanlama, ara nokta'})}
   const iTxt=o=>o.i.includes('<b>')||o.i.includes('<br>')?o.i:esc(o.i);
-  qaEl.innerHTML=`<header>${head}</header>${opts.map(o=>o.stk?`<div class="o sk${o.rec?' rec':''}${o.ok?'':' dis'}">${o.rec?'<s>ÖNERİLEN</s>':''}<b>${esc(o.b)}</b><span class="step"><button data-qn="${o.stk}:-1" ${o.n<=1?'disabled':''} aria-label="Bir azalt">−</button><u>${o.n}</u><button data-qn="${o.stk}:1" ${o.n>=o.cap?'disabled':''} aria-label="Bir artır">+</button></span><span class="res">${o.res}</span><em>toplam ${o.em}</em><i>${iTxt(o)}</i><button class="fire" data-qa="${o.id}" ${o.ok?'':'disabled'}>${o.n} × fırlat</button></div>`:`<button class="o${o.rec?' rec':''}" data-qa="${o.id}" ${o.ok?'':'disabled'}>${o.rec?'<s>ÖNERİLEN</s>':''}<b>${esc(o.b)}</b><em>${o.em}</em><i>${iTxt(o)}</i></button>`).join('')}<div class="ft">Esc ya da boş yere tıkla: kapat</div>`;
+  qaEl.innerHTML=`<header>${head}</header>${opts.map(o=>o.stk?`<div class="o sk${o.rec?' rec':''}${o.ok?'':' dis'}">${o.rec?'<s>Önerilen</s>':''}<b>${esc(o.b)}</b><span class="step"><button data-qn="${o.stk}:-1" ${o.n<=1?'disabled':''} aria-label="Bir azalt">−</button><u>${o.n}</u><button data-qn="${o.stk}:1" ${o.n>=o.cap?'disabled':''} aria-label="Bir artır">+</button></span><span class="res">${o.res}</span><em>toplam ${o.em}</em><i>${iTxt(o)}</i><button class="fire" data-qa="${o.id}" ${o.ok?'':'disabled'}>${o.n} tane fırlat</button></div>`:`<button class="o${o.rec?' rec':''}" data-qa="${o.id}" ${o.ok?'':'disabled'}>${o.rec?'<s>Önerilen</s>':''}<b>${esc(o.b)}</b><em>${o.em}</em><i>${iTxt(o)}</i></button>`).join('')}<div class="ft">Kapatmak için Esc ya da boş bir yere tıkla.</div>`;
   qaEl.hidden=false;const r=stage.getBoundingClientRect(),w=qaEl.offsetWidth,h=qaEl.offsetHeight;let x=QA.sx+18,y=QA.sy-20;if(x+w>r.width-8)x=QA.sx-w-18;if(y+h>r.height-(conEl.hidden?8:conEl.offsetHeight+8))y=Math.max(8,r.height-(conEl.hidden?8:conEl.offsetHeight+8)-h);qaEl.style.left=Math.max(8,x)+'px';qaEl.style.top=Math.max(8,y)+'px'}
 qaEl.addEventListener('click',ev=>{const q=ev.target.closest('[data-qn]');if(q&&QA){const [k,d]=q.dataset.qn.split(':');const cur=+qaEl.querySelector(`[data-qn="${k}:1"]`).parentNode.querySelector('u').textContent;QA.n=QA.n||{};QA.n[k]=Math.max(1,cur+(+d));sfx('beep',null,null,d>0?820:620);qaRender();return}const b=ev.target.closest('[data-qa]');if(!b||b.disabled||!QA)return;audioInit();const [a,x,y]=b.dataset.qa.split(':');
   if(a==='con'){const m=QA.kind==='trk'?'def':'atk';if(m==='atk'){const e=ent(QA.ref);if(e){openCon('atk');G.con.tgt={x:e.x,y:e.y,lbl:tgtLabel(e.x,e.y)};G.con.wp=[]}}else{G.selTrk=QA.ref;openCon('def')}renderCon();qaClose();return}
-  if(a==='eng'){const o=airById(QA.ref),s=ent(+x);const r=s&&o?issue('engage',s.id,o.id):'Batarya yok.';if(r)toast(r,'E');else{toast(`<b>Önleme</b>${esc(nameOf(ME,s.t))} → ${esc(trkName(o))}`,'W',true);sfx('beep',null,null,900)}qaClose();return}
-  if(a==='atk'){const e=ent(QA.ref),k=x,n=+y;const have=G.stock[ME][k]||0;if(have<n){const r=issue('buy',ME,k,n-have);if(r){toast(r,'E');return}}const r=issue('launch',ME,k,n,e.x,e.y,[]);if(r){toast(r,'E');return}toast(`<b>Fırlatıldı</b>${n} × ${esc(nameOf(ME,k))} → ${esc(e.cat==='asset'?e.nm:nameOf(e.side,e.t))}`,'W',true);qaClose();return}
+  if(a==='eng'){const o=airById(QA.ref),s=ent(+x);const r=s&&o?issue('engage',s.id,o.id):'Batarya yok.';if(r)toast(r,'E');else{toast(`<b>Önleme</b>${esc(nameOf(ME,s.t))}, ${esc(trkName(o))} için ateşlendi.`,'W',true);sfx('beep',null,null,900)}qaClose();return}
+  if(a==='atk'){const e=ent(QA.ref),k=x,n=+y;const have=G.stock[ME][k]||0;if(have<n){const r=issue('buy',ME,k,n-have);if(r){toast(r,'E');return}}const r=issue('launch',ME,k,n,e.x,e.y,[]);if(r){toast(r,'E');return}toast(`<b>Fırlatıldı</b>${n} ${esc(nameOf(ME,k))}, hedef ${esc(e.cat==='asset'?e.nm:nameOf(e.side,e.t))}.`,'W',true);qaClose();return}
   if(a==='wait'){qaClose();return}
   if(a==='follow'){G.follow=G.follow===QA.ref?null:QA.ref;qaRender();return}
-  if(a==='air'){const e=ent(QA.ref);const r=issue('sortie',ME,x,e.x,e.y);if(r)toast(r,'E');else toast(`<b>Uçak kalktı</b>süzülen bomba → ${esc(e.cat==='asset'?e.nm:nameOf(e.side,e.t))}`,'W');qaClose()}});
+  if(a==='air'){const e=ent(QA.ref);const r=issue('sortie',ME,x,e.x,e.y);if(r)toast(r,'E');else toast(`<b>Uçak kalktı</b>Süzülen bomba, hedef ${esc(e.cat==='asset'?e.nm:nameOf(e.side,e.t))}.`,'W');qaClose()}});
 // ================================================================ info card
 const icEl=document.getElementById('icard');const CARDIMG={MRAD:'c4a',LRAD:'c5a',UPPER:'c6a',DEC:'c12'};let icKey=null;
 function cardImg(e){if(e.cat==='asset')return piecesOf(e)[0]?piecesOf(e)[0][0]:null;return CARDIMG[e.t]||(COMP[e.t]&&COMP[e.t][0][0])}
-const ASSET_ROLE={HQ:'komuta ve kontrol',CITY:'yerleşim · sivil',PWR:'elektrik üretimi',REFN:'yakıt üretimi',AIRB:'savaş uçakları',FAB:'savunma sanayii',DEPO:'mühimmat',FUEL:'yakıt stoku',COMM:'iletişim ağı',MIL:'kara birlikleri'};
+const ASSET_ROLE={HQ:'komuta ve kontrol',CITY:'sivil yerleşim',PWR:'elektrik üretimi',REFN:'yakıt üretimi',AIRB:'savaş uçakları',FAB:'savunma sanayii',DEPO:'mühimmat',FUEL:'yakıt stoku',COMM:'iletişim ağı',MIL:'kara birlikleri'};
 function renderCard(){if(!G||mapBusy()||G.infoRequest!=='ent:'+G.sel){icEl.hidden=true;icKey=null;return}const e=G.sel&&ent(G.sel);if(!e||(!e.alive&&!e.ruin)){if(!icEl.hidden){icEl.hidden=true;icKey=null}return}
   const own=e.side===ME,k=cardImg(e),site=e.cat==='site',d=site?SITE[e.t]:ASSET_DEF[e.t];const key=e.id+':'+(e.alive?1:0);
-  const nm=site?nameOf(e.side,e.t):e.nm,sub=site?(d.n+' · '+d.role):(d.n+' · '+ASSET_ROLE[e.t]);
+  const nm=site?nameOf(e.side,e.t):e.nm,sub=site?(d.n+', '+d.role):(d.n+', '+ASSET_ROLE[e.t]);
   const f=Math.max(0,e.hp/e.max),hc=f>.6?'#7fe0a0':f>.3?'#e6c35a':'#e2725b';
   const rows=[];if(site){if(d.rng){rows.push(['Menzil',f1(rngOf(e.side,e.t)/KMU)+' km']);if(d.a1!=null)rows.push(['İrtifa',f1(d.a0)+'–'+d.a1+' km'])}
     const sp=SPEC[e.t]||{};for(const [a,b] of Object.entries(sp).slice(0,5))if(!rows.some(r=>r[0]===a))rows.push([a,b]);
     if(own){if(d.mag&&d.mag<999)rows.push(['Önleyici',e.mag+' / '+d.mag]);rows.push(['Vuruş',String(e.kills)]);rows.push(['Değer',money(costOf(ME,e.t))])}}
   else{rows.push(['Değer',money(d.v)]);rows.push(['Gelir',money(d.inc*f)+' / sn']);if(e.t==='AIRB')rows.push(['Uçak','4']);rows.push(['Alan','≈ '+f1(PADW[k]/1000)+' km'])}
-  let note='';if(!own&&site){const g=G.ghost[ME].get(e.id);if(g)note=`<div class="nt">Tespit: <b>${esc(g.src)}</b> · ${Math.round(G.time-g.at)} sn önce. Yeri değişmiş olabilir.</div>`}
+  let note='';if(!own&&site){const g=G.ghost[ME].get(e.id);if(g)note=`<div class="nt">Tespit: <b>${esc(g.src)}</b>, ${Math.round(G.time-g.at)} sn önce. Yeri değişmiş olabilir.</div>`}
   else if(own&&site&&d.rng&&!d.ew)note=`<div class="nt">Mod: <b>${{auto:'Otomatik',sel:'Seçici',off:'Sessiz'}[e.mode]||e.mode}</b>. Ayarlar sağ panelde.</div>`;
   if(e.burn&&e.alive)note+=`<div class="nt"><b style="color:#ffb070">Yanıyor.</b> Gelir düşüyor.</div>`;
   const st=!e.alive?'İmha edildi':e.bt>0?'Kuruluyor':f<.35?'Ağır hasarlı':f<.99?'Hasarlı':'Sağlam';
   if(icKey!==key)icEl.innerHTML=`<button class="x" data-ic="x" aria-label="Kartı kapat">×</button><div class="ph${e.alive?'':' ruin'}">${k?`<img src="img/${k}.webp" alt="">`:''}<span class="st"></span></div><div class="bd"></div>`;
-  const stEl=icEl.querySelector('.st');const satSeen=!own&&G.ghost[ME].get(e.id)?.satAt;stEl.textContent=satSeen!=null&&satSeen!==false?'UYDU · T+'+mmss(satSeen):st;stEl.style.color=e.alive?hc:'#9aa3a8';
-  icEl.querySelector('.bd').innerHTML=`<div class="ey ${e.side}">${own?'Kendi':'Düşman'} · ${site?(d.off?'saldırı':d.rng?'hava savunma':'destek'):'tesis'}</div><h3>${esc(nm)}<small>${esc(sub)}</small></h3>
+  const stEl=icEl.querySelector('.st');const satSeen=!own&&G.ghost[ME].get(e.id)?.satAt;stEl.textContent=satSeen!=null&&satSeen!==false?'Uydu görüntüsü, '+mmss(satSeen):st;stEl.style.color=e.alive?hc:'#9aa3a8';
+  icEl.querySelector('.bd').innerHTML=`<div class="ey ${e.side}">${site?(d.off?'Saldırı':d.rng?'Hava savunma':'Destek'):'Tesis'}, ${own?'bizim':'düşman'}</div><h3>${esc(nm)}<small>${esc(sub)}</small></h3>
    <div class="hp"><i><b style="width:${f*100}%;background:${hc}"></b></i><span>${Math.round(e.hp)}/${e.max}</span></div><dl>${rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>${note}`;
   if(icEl.hidden){icEl.hidden=false;icEl.classList.remove('sw')}else if(icKey!==key&&icKey&&icKey.split(':')[0]!==String(e.id)){icEl.classList.remove('sw');void icEl.offsetWidth;icEl.classList.add('sw')}icKey=key}
 icEl.addEventListener('click',e=>{if(e.target.closest('[data-ic="x"]')&&G){closeInfo()}});
 function renderSel(){renderCard();const el=$('#selp');if(!el||!G)return;if(infoKey){el.innerHTML=specHTML(infoKey);return}
   const tr=G.selTrk&&airById(G.selTrk);if(tr&&tr.alive&&G.trk[ME].has(tr.id)){const sp=hyp(tr.vx||0,tr.vy||0,(tr.vz||0)*KMU)*50/8/340;const ip=impactPt(tr);const hit=ip&&G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);
-    el.innerHTML=`<h4 style="color:#ff8a7e">${KNAME[tr.kind==='decoy'?'bm':tr.kind]}</h4><div class="m">İrtifa ${f1(tr.z)} km · hız ≈ Mach ${f1(sp)} · varış ${Math.ceil(etaOf(tr))} sn${hit?` · hedef: <b style="color:#fff">${hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)}</b>`:ip?' · boş araziye düşecek':''}${tr.eng?` · ${tr.eng} önleyici yolda`:''}</div><div class="acts"><button class="btn sm pri" data-sa="engage">Elle önle · konsol</button></div>`;return}
+    el.innerHTML=`<h4 style="color:#ff8a7e">${KNAME[tr.kind==='decoy'?'bm':tr.kind]}</h4><div class="m">İrtifa ${f1(tr.z)} km, hız yaklaşık Mach ${f1(sp)}, ${Math.ceil(etaOf(tr))} saniyede varır${hit?`. Hedef <b style="color:#fff">${hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)}</b>`:ip?'. Boş araziye düşecek':''}${tr.eng?`. ${tr.eng} önleyici yolda`:''}.</div><div class="acts"><button class="btn sm pri" data-sa="engage">Elle önle</button></div>`;return}
   const e=G.sel&&ent(G.sel);if(!e||!e.alive){el.innerHTML=`<h4>Seçim yok</h4><div class="m">Kendi bataryana ya da tesisine tıklarsan bilgisi burada çıkar. Kartların üstüne gelince teknik çizimi görürsün.</div>`;return}
-  if(e.cat==='asset'){el.innerHTML=`<h4>${esc(e.nm)}</h4><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div><div class="m">${Math.round(e.hp)}/${e.max} · gelir ${money(ASSET_DEF[e.t].inc*e.hp/e.max)}/sn${e.t==='AIRB'?' · 4 uçak':''}</div>`;return}
+  if(e.cat==='asset'){el.innerHTML=`<h4>${esc(e.nm)}</h4><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div><div class="m">Dayanıklılık ${Math.round(e.hp)}/${e.max}, gelir ${money(ASSET_DEF[e.t].inc*e.hp/e.max)}/sn${e.t==='AIRB'?', 4 uçak':''}.</div>`;return}
   const d=SITE[e.t];const acts=[];
   if(d.rng&&!d.ew)acts.push(...[['auto','Otomatik'],['sel','Seçici'],['off','Sessiz']].map(([m,n])=>`<button class="btn sm ${e.mode===m?'on':''}" data-sm="${m}">${n}</button>`));
   if(e.t==='RAD'||e.t==='EW')acts.push(`<button class="btn sm ${e.emit?'on':''}" data-sa="emit">${e.emit?'Yayında':'Sessiz'}</button>`);
   acts.push(`<button class="btn sm ghost" data-sa="sell">Sat (${money(costOf(ME,e.t)*.5)})</button>`);
-  el.innerHTML=`<h4>${esc(nameOf(ME,e.t))}</h4><div class="m" style="margin:0">${esc(d.role)}</div><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div>${d.mag&&d.mag<999?`<div class="bar mg"><i style="width:${e.mag/d.mag*100}%"></i></div>`:''}<div class="m">${d.mag&&d.mag<999?`Önleyici ${e.mag}/${d.mag} · `:''}${d.rl&&d.mag?`dolum ${d.rl} sn · `:''}${d.off?`${e.rl>0?'dolum '+Math.ceil(e.rl)+' sn':'hazır'} · `:''}vuruş ${e.kills} · harcama ${money(e.spent)}${e.bt>0?' · kuruluyor':''}${e.mode==='sel'?' · <b style="color:#7fe0a0">Seçici:</b> boş araziye düşecekleri ve ucuz dronları pahalı füzeyle vurmaz':''}</div><div class="acts">${acts.join('')}</div>`}
+  el.innerHTML=`<h4>${esc(nameOf(ME,e.t))}</h4><div class="m" style="margin:0">${esc(d.role)}</div><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div>${d.mag&&d.mag<999?`<div class="bar mg"><i style="width:${e.mag/d.mag*100}%"></i></div>`:''}<div class="m">${d.mag&&d.mag<999?`Önleyici ${e.mag}/${d.mag}, `:''}${d.rl&&d.mag?`dolum ${d.rl} sn, `:''}${d.off?`${e.rl>0?'dolumda, '+Math.ceil(e.rl)+' sn':'hazır'}, `:''}${e.kills} vuruş, harcama ${money(e.spent)}${e.bt>0?', kuruluyor':''}.${e.mode==='sel'?' <b style="color:#7fe0a0">Seçici:</b> boş araziye düşecekleri ve ucuz dronları pahalı füzeyle vurmaz':''}</div><div class="acts">${acts.join('')}</div>`}
 side.addEventListener('click',e=>{if(!G)return;audioInit();const tb=e.target.closest('[data-tab]');if(tb){tab=tb.dataset.tab;renderSide(true);return}
+  const so=e.target.closest('[data-sopen]');if(so){openCon(so.dataset.sopen);return}
+  const bt=e.target.closest('[data-bat]');if(bt){const s=ent(+bt.dataset.bat);if(s){G.sel=s.id;G.selTrk=null;camGo(s.x,s.y,Math.max(cam.z,.35));renderSel();renderSide(true)}return}
   const dc=e.target.closest('[data-doc]');if(dc){issue('mode',sites(ME).filter(s=>SITE[s.t].rng&&!SITE[s.t].ew).map(s=>s.id),dc.dataset.doc);sfx('beep');renderSide(true);renderSel();return}
   const sm=e.target.closest('[data-sm]');if(sm){const s=ent(G.sel);if(s){issue('mode',[s.id],sm.dataset.sm);sfx('beep');renderSel()}return}
   const sa=e.target.closest('[data-sa]');if(sa){const k=sa.dataset.sa;const s=ent(G.sel);if(k==='emit'&&s){issue('emit',s.id,!s.emit)}else if(k==='sell'&&s){const r=issue('sell',ME,s.id);if(r)hint(r,1);else{G.sel=null;sfx('ok')}}else if(k==='engage'){openCon('def')}renderSel();return}
@@ -2582,20 +2730,21 @@ const specPop=document.createElement('div');specPop.id='specpop';specPop.hidden=
 function showPop(key,el,where){if(!G||!key)return;if(popKey!==key){popKey=key;specPop.innerHTML=specHTML(key)}specPop.hidden=false;const r=el.getBoundingClientRect(),h=specPop.offsetHeight,w=specPop.offsetWidth;
   if(where==='left'){specPop.style.left=Math.max(8,r.left-w-12)+'px';specPop.style.top=clamp(r.top-40,8,innerHeight-h-8)+'px'}else{specPop.style.left=clamp(r.left,8,innerWidth-w-8)+'px';specPop.style.top=Math.max(8,r.top-h-10)+'px'}}
 function hidePop(){specPop.hidden=true;popKey=null}
-document.addEventListener('pointerover',e=>{const t=e.target.closest&&e.target.closest('.card-b,.wcard');if(!t){if(!specPop.hidden)hidePop();return}const k=t.dataset.k||t.dataset.w;if(t.classList.contains('wcard')&&SORT[k]){hidePop();return}showPop(k,t,t.classList.contains('card-b')?'left':'up')});
+document.addEventListener('pointerdown',e=>{if(!WPOP)return;if(specPop.contains(e.target)||(e.target.closest&&e.target.closest('#cA [data-w]')))return;weaponPop(null)},true);
+document.addEventListener('pointerover',e=>{if(WPOP)return;const t=e.target.closest&&e.target.closest('.card-b,.wcard');if(!t){if(!specPop.hidden)hidePop();return}const k=t.dataset.k||t.dataset.w;if(t.classList.contains('wcard')&&SORT[k]){hidePop();return}showPop(k,t,t.classList.contains('card-b')?'left':'up')});
 
 // ================================================================ launch console
 const CW_KEYS=['BM','HGV','CM','DRN','ARMD','MALD','RCN','SEAD','GLIDE'];
 const FCS={armed:false,hold:0,holding:false,firedAt:0};
 function toggleCon(){if(conEl.hidden)openCon(G.con.mode);else{conEl.hidden=true;if(mode?.k==='target'){mode=null;hint('')}stage.style.setProperty('--conH','0px')}renderTop()}
 function openCon(m){G.con.mode=m||G.con.mode;if(G.con.mode==='def'&&mode?.k==='target')mode=null;conEl.hidden=false;stage.style.setProperty('--conH',CONH+'px');buildCon();renderTop()}
-const CONH=186;
+const CONH=196;
 function buildCon(){conEl.style.setProperty('--conH',CONH+'px');conEl.style.height=CONH+'px';
-  conEl.innerHTML=`<div class="col cA" id="cA"></div><div class="col cB" id="cB"></div><div class="col cP" id="cP"></div><div class="fc" id="cC">
-   <div class="armw"><button class="arm" id="armb" aria-label="Emniyet kapağı"><span class="tog"></span><span class="cover"></span></button><small id="armt">EMNİYET</small></div>
-   <div class="fbw"><div class="well"><button class="fbtn" id="fbtn" disabled><span>ATEŞ</span><em>BASILI TUT</em></button></div></div>
-   <div class="fstat" id="fstat">hedef seç</div><h6 class="fch">4 · Ateş</h6>
-   <div class="gcs" id="gcs"><dl id="gcsd"></dl><button class="gcs-b" id="gcsb" disabled>GÖREVİ YÜKLE</button><small id="gcss"></small></div></div>`;
+  conEl.innerHTML=`<div class="col cA" id="cA"></div><div class="col cP" id="cP"></div><div class="col cB" id="cB" hidden></div><div class="fc" id="cC">
+   <div class="armw"><button class="arm" id="armb" aria-label="Emniyet kapağı"><span class="tog"></span><span class="cover"></span></button><small id="armt">Emniyette</small></div>
+   <div class="fbw"><div class="well"><button class="fbtn" id="fbtn" disabled><span>ATEŞ</span><em>basılı tut</em></button></div></div>
+   <div class="fstat" id="fstat">hedef seç</div>
+   <div class="gcs" id="gcs"><dl id="gcsd"></dl><button class="gcs-b" id="gcsb" disabled>Görevi yükle</button><small id="gcss"></small></div></div>`;
   $('#gcsb').addEventListener('click',()=>{audioInit();gcsPress()});
   $('#armb').addEventListener('click',()=>{audioInit();setArm(!FCS.armed)});
   const fb=$('#fbtn');fb.addEventListener('pointerdown',e=>{e.preventDefault();holdStart()});for(const ev of ['pointerup','pointerleave','pointercancel'])fb.addEventListener(ev,()=>holdEnd());
@@ -2609,49 +2758,48 @@ function conReady(){const C=G.con;if(G.phase!=='war')return 'savaş başlamadı'
   if(C.mode==='def'){const t=G.selTrk&&airById(G.selTrk);if(!t||!t.alive)return 'tehdit seç';const b=bestBattery(t);return b?'':'menzilde uygun batarya yok'}
   const items=itemsNow();if(!items.length)return 'haritada hedef seç';
   const tel=items.filter(p=>!isAir(p.w)&&MUN[p.w].from==='TEL').reduce((a,p)=>a+p.n,0),dln=items.some(p=>!isAir(p.w)&&MUN[p.w].from==='DLN'),air=items.filter(p=>isAir(p.w)).length;
-  if(tel&&!sites(ME,'TEL').length)return 'füze rampası yok · sağda Rampalar';if(dln&&!sites(ME,'DLN').length)return 'İHA rampası yok · sağda Rampalar';
+  if(tel&&!sites(ME,'TEL').length)return 'füze rampası yok, Kur sekmesinden kur';if(dln&&!sites(ME,'DLN').length)return 'İHA rampası yok, Kur sekmesinden kur';
   if(tel>launchersFor(ME,'BM').length)return launchersFor(ME,'BM').length?`${tel} füze için ${launchersFor(ME,'BM').length} rampa hazır`:'rampalar dolumda';
   if(dln&&!sites(ME,'DLN').some(e=>e.bt<=0))return 'İHA rampası kuruluyor';
   if(air&&(G.air4[ME].filter(a=>a.st==='ready').length<air||!assets(ME).some(a=>a.t==='AIRB')))return 'hazır uçak yok';
   if(planCost(items)>G.cash[ME]+1e-6)return 'kasa yetersiz';return ''}
 function bestBattery(t){let best=null,bs=-1;for(const s of sites(ME)){const d=SITE[s.t];if(!d.rng||d.ew||s.mag<=0||s.bt>0)continue;if(!(PK[s.t]||{})[t.kind])continue;if(t.z<d.a0||t.z>d.a1)continue;if(hyp(t.x-s.x,t.y-s.y)>rngOf(ME,s.t))continue;const v=pkOf(s,t)-d.ic*.01;if(v>bs){bs=v;best=s}}return best}
 const KILLERS={balloon:['LRAD'],bm:['UPPER','LRAD'],hgv:['LRAD','UPPER'],cruise:['MRAD','LRAD','SHORAD','CIWS'],drone:['CIWS','LASER','IDR','SHORAD','MRAD'],armd:['CIWS','LASER','IDR','SHORAD'],mald:['MRAD','SHORAD','CIWS'],jam:['MRAD','LRAD','SHORAD'],recon:['MRAD','SHORAD','IDR']};
-function wFacts(k){if(isAir(k))return SORT[k].d;const M=MUN[k],f=[];if(M.dec)f.push(`${M.dec} sahte başlık`);if(M.man)f.push('son evrede manevra');if(M.cl)f.push(`misket ×${M.cl}`);if(M.pen)f.push('sığınak delici');if(M.rcs&&M.rcs<.2)f.push('gizli: radar geç görür');if(M.kind==='cruise'&&M.spd>150)f.push('süpersonik');if(M.kind==='jam')f.push('45 sn hedef üstünde döner, 26 km içindeki radarları körleştirir');if(M.kind==='armd')f.push('yayın yapan radara dalar');if(M.kind==='mald')f.push('radarda seyir füzesi gibi görünür, önleyici çeker');if(M.kind==='recon')f.push('20 km çevredeki bataryaları gösterir');if(M.emp)f.push('6 km içindeki radar ve rampaları 30 sn susturur');if(M.graf)f.push('santral/rafineriyi 60 sn karartır, gelir −%80');if(M.mother)f.push(`yolun yarısında ${M.mother} kamikaze İHA bırakır`);if(M.kind==='balloon')f.push('30 km irtifada 2 dk asılı kalır, 40 km çevreyi görür; yalnızca uzun menzilli HS vurabilir');if(M.proto)f.unshift('PROTOTİP · %12 arıza');
-  return f.join(' · ')}
+function wFacts(k){if(isAir(k))return SORT[k].d;const M=MUN[k],f=[];if(M.dec)f.push(`${M.dec} sahte başlık`);if(M.man)f.push('son evrede manevra');if(M.cl)f.push(`misket ×${M.cl}`);if(M.pen)f.push('sığınak delici');if(M.rcs&&M.rcs<.2)f.push('gizli: radar geç görür');if(M.kind==='cruise'&&M.spd>150)f.push('süpersonik');if(M.kind==='jam')f.push('45 sn hedef üstünde döner, 26 km içindeki radarları körleştirir');if(M.kind==='armd')f.push('yayın yapan radara dalar');if(M.kind==='mald')f.push('radarda seyir füzesi gibi görünür, önleyici çeker');if(M.kind==='recon')f.push('20 km çevredeki bataryaları gösterir');if(M.emp)f.push('6 km içindeki radar ve rampaları 30 sn susturur');if(M.graf)f.push('santral/rafineriyi 60 sn karartır, gelir −%80');if(M.mother)f.push(`yolun yarısında ${M.mother} kamikaze İHA bırakır`);if(M.kind==='balloon')f.push('30 km irtifada 2 dk asılı kalır, 40 km çevreyi görür; yalnızca uzun menzilli HS vurabilir');if(M.proto)f.unshift('prototip, %12 arıza ihtimali');
+  return f.join(', ')}
 function weaponCards(cls){const C=G.con;let keys;if(cls==='AIR')keys=['SEAD','GLIDE'];else if(cls==='X')keys=[...CUSTOM];else keys=VAR[cls].map(v=>v[0]);
   let h=keys.map(k=>{let ok,ready;if(isAir(k)){const n=G.air4[ME].filter(a=>a.st==='ready').length;ok=n>0;ready=`${n} uçak`}else{const M=MUN[k],tot=sites(ME,M.from).length,rd=launchersFor(ME,k).length;ok=tot>0;ready=!tot?'rampa yok':rd?`${rd} hazır`:'dolumda'}
     const M=MUN[k];return `<button class="wrow ${C.w===k?'on':''} ${ok?'':'off'}" data-w="${k}"><b>${esc(isAir(k)?SORT[k].n:M.custom?M.n:nameOf(ME,k))}</b><span>${M&&M.proto?'<s class="pt">PROTOTİP</s>':''}${esc(isAir(k)?'uçak':M.custom?'özel':M.proto?'':M.role)}</span><em>${isAir(k)?'$0,5M':money(costOf(ME,k))}</em><i class="${ok?'':'bad'}">${ready}</i>${M&&M.custom?`<u data-ed="${k}">düzenle</u>`:''}</button>`}).join('');
   if(cls==='X')h+=`<button class="wrow new" data-ed="new"><b>+ Yeni tasarım</b><span>harp başlığı, motor, güdüm, beka</span></button>`;return h}
 function setH(el,h){if(!el||el.__h===h)return;const keep=[...el.querySelectorAll('[data-keep]')].map(e=>[e.dataset.keep,e.scrollLeft,e.scrollTop]);el.innerHTML=h;el.__h=h;for(const [k,l,t] of keep){const e=el.querySelector(`[data-keep="${k}"]`);if(e){e.scrollLeft=l;e.scrollTop=t}}}
-function renderCon(){if(conEl.hidden||!G)return;const C=G.con,A=$('#cA'),B=$('#cB'),P=$('#cP');if(!A)return;
-  const md=`<span class="md"><button class="${C.mode==='atk'?'onr':''}" data-cm="atk">SALDIRI</button><button class="${C.mode==='def'?'on':''}" data-cm="def">ÖNLEME</button></span>`;
+// weapon details: opens beside the list when a weapon is picked, closes on a second click, Esc or a click elsewhere
+let WPOP=null;
+function weaponPop(k,anchor){if(!k||!anchor){hidePop();WPOP=null;return}WPOP=k;let h;
+  if(isAir(k))h=`<div class="spec"><h4>${esc(SORT[k].n)}</h4><div class="m">Uçak görevi, ${money(.5)}</div><div class="w">${esc(SORT[k].d)}</div><div class="w">Hava üssünde 4 uçak var. Görevden dönen uçak 45 saniye dolum yapar.</div></div>`;
+  else{const M=MUN[k],st=wStats(k),kl=(KILLERS[M.kind]||[]).map(t=>nameOf(FOE(),t)),fx=wFacts(k);
+    h=specHTML(k).replace(/<\/div>$/,'')+`<div class="bars">${st.map(([l,v])=>`<div class="br"><span>${l}</span><i><b style="width:${Math.round(v*100)}%"></b></i></div>`).join('')}</div>${fx?`<div class="w">${esc(fx)}.</div>`:''}<div class="w kill">Rakipte durdurabilen: ${esc(kl.join(', ')||'yok')}.</div></div>`}
+  specPop.innerHTML=h;popKey='w:'+k;specPop.hidden=false;const c=$('#cA').getBoundingClientRect(),hh=specPop.offsetHeight;
+  specPop.style.left=Math.max(8,c.left+8)+'px';specPop.style.top=Math.max(8,conEl.getBoundingClientRect().top-hh-8)+'px'}
+function renderCon(){if(conEl.hidden||!G)return;const C=G.con,A=$('#cA'),P=$('#cP');if(!A)return;
+  const md=`<span class="md" role="tablist"><button class="${C.mode==='atk'?'onr':''}" data-cm="atk">Saldırı</button><button class="${C.mode==='def'?'on':''}" data-cm="def">Önleme</button></span>`;
   conEl.classList.toggle('def',C.mode==='def');
   if(C.mode==='atk'){C.cls=C.cls||'BM';
-    setH(A,`<h6>1 · Silah${md}</h6><div class="ctabs">${WCLASS.map(([k,n])=>`<button class="${C.cls===k?'on':''}" data-cls="${k}">${n}</button>`).join('')}</div><div class="wlist" data-keep="wl">${weaponCards(C.cls)}</div>`);
-    // 2 · weapon sheet
-    const k=C.w;let sh='';
-    if(isAir(k))sh=`<div class="wt"><b>${esc(SORT[k].n)}</b></div><div class="facts">${esc(SORT[k].d)}</div><div class="kill">Uçak 4 tanedir, görevden dönünce 45 sn dolum yapar. $0,5M.</div>`;
-    else{const M=MUN[k],st=wStats(k),kl=(KILLERS[M.kind]||[]).map(t=>nameOf(FOE(),t));
-      sh=`<div class="wt"><b>${esc(M.custom?M.n:nameOf(ME,k))}</b><span>${esc(M.custom?'özel tasarım':M.role)} · ${money(costOf(ME,k))}</span></div>
-      <div class="bars">${st.map(([l,v])=>`<div class="br"><span>${l}</span><i><b style="width:${Math.round(v*100)}%"></b></i></div>`).join('')}</div>
-      <div class="facts">${esc(wFacts(k))||'&nbsp;'}</div><div class="kill">Rakipte durdurabilen: ${esc(kl.join(', '))}</div>
-      <div class="row"><span class="lb">Adet</span><span class="qty"><button data-q="-1">−</button><b>${C.n}</b><button data-q="1">+</button></span><span class="cost">${money(costOf(ME,k)*C.n)}</span></div>`}
-    setH(B,`<h6>2 · Özellikler</h6>${sh}`);
-    // 3 · target & plan
+    setH(A,`<div class="chead">${md}<div class="ctabs">${WCLASS.map(([k,n])=>`<button class="${C.cls===k?'on':''}" data-cls="${k}">${n}</button>`).join('')}</div></div><div class="wlist" data-keep="wl">${weaponCards(C.cls)}</div>`);
+    const k=C.w,M=MUN[k];
+    const qty=isAir(k)?`<b class="wn">${esc(SORT[k].n)}</b><span class="tc">${money(.5)}</span>`:`<b class="wn">${esc(M.custom?M.n:nameOf(ME,k))}</b><span class="qty"><button data-q="-1" aria-label="Azalt">−</button><b>${C.n}</b><button data-q="1" aria-label="Artır">+</button></span><span class="tc">toplam ${money(costOf(ME,k)*C.n)}</span>`;
     const t=C.tgt;let info;
-    if(!t)info='<b>Haritada düşman tarafına tıkla: hedef orası olur.</b> Sarı çemberin içindeki her şey hasar alır. Analiz panelindeki önerilerden de tek tıkla hedef alabilirsin.';
-    else{const M=MUN[k];const L=M?launchersFor(ME,k)[0]||sites(ME,M.from)[0]:assets(ME).find(a=>a.t==='AIRB');const o=L||HQPOS[ME];const d=hyp(t.x-o.x,t.y-o.y);const ft=M?flightTime(ME,k,o.x,o.y,t.x,t.y,C.wp):d/110;const risk=riskOf(k,o,t,C.wp);
-      info=`<b>${esc(t.lbl)}</b> · ${f1(d/KMU)} km · ${Math.ceil(ft)} sn <button class="lnk" data-p="clrt">sil</button><br>${risk.length?`<span class="risk">Yolda: ${esc(risk.join(', '))}</span>`:'<span class="ok">Yolda bilinen savunma yok</span>'}`}
+    if(!t)info='Haritada rakip tarafına tıkla, orası hedef olur. Sarı çemberin içindeki her şey hasar alır. Saldırı sekmesindeki önerilerden de tek tıkla hedef alabilirsin.';
+    else{const L=M?launchersFor(ME,k)[0]||sites(ME,M.from)[0]:assets(ME).find(a=>a.t==='AIRB');const o=L||HQPOS[ME];const d=hyp(t.x-o.x,t.y-o.y);const ft=M?flightTime(ME,k,o.x,o.y,t.x,t.y,C.wp):d/110;const risk=riskOf(k,o,t,C.wp);
+      info=`<b>${esc(t.lbl)}</b>, ${f1(d/KMU)} km, ${Math.ceil(ft)} saniyede varır. <button class="lnk" data-p="clrt">Hedefi kaldır</button><br>${risk.length?`<span class="risk">Yolda: ${esc(risk.join(', '))}</span>`:'<span class="ok">Yolda bilinen savunma yok.</span>'}`}
     const pk=C.pkg;let ph='';
-    if(pk.length){const mxAt=Math.max(...pk.map(p=>p.at),1);ph=`<div class="plan">${pk.map((p,i)=>`<div class="pi"><span class="n">${i+1}</span><span class="w">${p.n}× ${esc(wName(p.w))}</span><span class="t">${esc(p.lbl)}</span><span class="at"><button data-at="${i}" data-d="-5">−</button>${p.at?'+'+p.at:'0'} sn<button data-at="${i}" data-d="5">+</button></span><button class="x" data-rm="${i}">×</button></div>`).join('')}</div>
-      <div class="tl">${pk.map((p,i)=>`<span style="left:${4+p.at/mxAt*88}%" title="${esc(wName(p.w))}">${i+1}</span>`).join('')}</div><div class="pt">Plan: ${pk.length} kalem · ${money(planCost(pk))} · numaralar hedefe varış sırası</div>`}
-    setH(P,`<h6>3 · Hedef ve plan</h6><button class="btn tgtb ${mode?.k==='target'?'on':''} ${C.tgt?'':'need'}" data-p="target"><span>⌖</span>${mode?.k==='target'?'Hedef seçimini bitir':C.tgt?'Hedefi değiştir':'Hedef seç'}<kbd>T</kbd></button><div class="tinfo">${info}</div><div class="row pb"><button class="btn sm" data-p="add" title="Bu silahı ve hedefi plana ekle; sonra başka silah ve hedef ekleyip hepsini tek ATEŞ'le gönder">+ Plana ekle</button><button class="btn sm pri" data-p="blind" title="Hedefin çevresindeki radarları önce karıştırıcı ve anti-radar İHA ile kör eder, aldatıcılarla önleyicileri boşa çeker, ana silahı 12 sn sonra indirir">Kör et + vur</button>${pk.length?'<button class="btn sm ghost" data-p="clr">Planı sil</button>':''}</div>${ph}`)}
-  else{const L=[...G.air].filter(o=>o.alive&&o.side!==ME&&G.trk[ME].has(o.id)&&o.kind!=='icp').sort((a,b)=>etaOf(a)-etaOf(b)).slice(0,8);
-    setH(A,`<h6>Gelen tehdit · elle önle${md}</h6><div class="wsel" data-keep="tl">${L.map(o=>`<button class="wcard ${G.selTrk===o.id?'on':''}" data-trk="${o.id}"><span class="st">${Math.ceil(etaOf(o))}s</span><img src="${icon(o.k&&MUN[o.k]?o.k:({drone:'DRN',armd:'ARMD',mald:'MALD',recon:'RCN',cruise:'CM',bm:'BM',decoy:'BM',hgv:'HGV',ftr:'SEAD',glide:'GLIDE',arm:'MALD',jam:'JAM'}[o.kind]))}" alt=""><b>${esc(trkName(o))}</b><i>${f1(o.z)} km · ${o.eng?o.eng+' önleyici':'angajmansız'}</i></button>`).join('')||'<span class="muted" style="font-size:13px">İzlenen tehdit yok.</span>'}</div>`);
-    const t=G.selTrk&&airById(G.selTrk);let info='Bataryaların zaten otomatik ateş eder. Burası istediğin tehdide <b>elle</b> önleyici göndermek için: listeden ya da haritadan bir tehdit seç; konsol en uygun bataryayı bulur, ATEŞ iki önleyici gönderir.';
+    if(pk.length){const mxAt=Math.max(...pk.map(p=>p.at),1);ph=`<div class="plan">${pk.map((p,i)=>`<div class="pi"><span class="n">${i+1}</span><span class="w">${p.n} ${esc(wName(p.w))}</span><span class="t">${esc(p.lbl)}</span><span class="at"><button data-at="${i}" data-d="-5" aria-label="Erkene al">−</button>${p.at?'+'+p.at:'0'} sn<button data-at="${i}" data-d="5" aria-label="Geciktir">+</button></span><button class="x" data-rm="${i}" aria-label="Çıkar">×</button></div>`).join('')}</div><div class="pt">Planda ${pk.length} kalem, toplam ${money(planCost(pk))}. Numaralar varış sırası.</div>`}
+    setH(P,`<div class="qrow">${qty}</div><div class="trow"><button class="btn tgtb ${mode?.k==='target'?'on':''} ${C.tgt?'':'need'}" data-p="target">${mode?.k==='target'?'Hedef seçimini bitir':C.tgt?'Hedefi değiştir':'Hedef seç'}<kbd>T</kbd></button><button class="btn sm" data-p="add" title="Bu silahı ve hedefi plana ekle; sonra başka silah ve hedef ekleyip hepsini tek atışla gönder">Plana ekle</button><button class="btn sm" data-p="blind" title="Önce karıştırıcı ve anti-radar İHA ile hedefin radarlarını kör eder, aldatıcılarla önleyicileri boşa çeker, ana silahı 12 saniye sonra indirir">Kör et, sonra vur</button>${pk.length?'<button class="btn sm ghost" data-p="clr">Planı sil</button>':''}</div><div class="tinfo">${info}</div>${ph}`)}
+  else{if(WPOP)weaponPop(null);const L=[...G.air].filter(o=>o.alive&&o.side!==ME&&G.trk[ME].has(o.id)&&o.kind!=='icp').sort((a,b)=>etaOf(a)-etaOf(b)).slice(0,8);
+    setH(A,`<div class="chead">${md}<span class="cnote">Gelen tehditler, en yakını üstte</span></div><div class="wsel" data-keep="tl">${L.map(o=>`<button class="wcard ${G.selTrk===o.id?'on':''}" data-trk="${o.id}"><span class="st">${Math.ceil(etaOf(o))} sn</span><img src="${icon(o.k&&MUN[o.k]?o.k:({drone:'DRN',armd:'ARMD',mald:'MALD',recon:'RCN',cruise:'CM',bm:'BM',decoy:'BM',hgv:'HGV',ftr:'SEAD',glide:'GLIDE',arm:'MALD',jam:'JAM'}[o.kind]))}" alt=""><b>${esc(trkName(o))}</b><i>${f1(o.z)} km${o.eng?', '+o.eng+' önleyici yolda':''}</i></button>`).join('')||'<p class="cnote">Şu an izlenen tehdit yok.</p>'}</div>`);
+    const t=G.selTrk&&airById(G.selTrk);let info='Bataryaların menzile gireni zaten kendisi vurur. Burası, istediğin bir tehdide <b>elle</b> önleyici göndermek için: listeden ya da haritadan bir tehdit seç; en uygun batarya bulunur, ateşte iki önleyici gider.';
     if(t&&t.alive){const b=bestBattery(t);const all=sites(ME).filter(s=>SITE[s.t].rng&&!SITE[s.t].ew&&(PK[s.t]||{})[t.kind]);
-      info=`<b>${esc(trkName(t))}</b> · ${f1(t.z)} km irtifa · ${Math.ceil(etaOf(t))} sn<br>${b?`En uygun: <b>${esc(nameOf(ME,b.t))}</b> · isabet ≈ %${Math.round(pkOf(b,t)*100)} · önleyici ${money(SITE[b.t].ic)} × 2`:`<span class="risk">Uygun batarya yok.</span> ${all.length?all.map(s=>{const d=SITE[s.t];return t.z<d.a0||t.z>d.a1?`${nameOf(ME,s.t)}: irtifa dışı`:hyp(t.x-s.x,t.y-s.y)>rngOf(ME,s.t)?`${nameOf(ME,s.t)}: menzil dışı`:s.mag<=0?`${nameOf(ME,s.t)}: şarjör boş`:''}).filter(Boolean).slice(0,3).join(' · '):'Bu tehdide etkili bataryan yok.'}`}`}
-    B.innerHTML=`<h6>Önleme hesabı</h6><div class="tinfo">${info}</div><canvas id="prof"></canvas>`;B.__h=null;setH(P,'');drawProfile()}
+      info=`<b>${esc(trkName(t))}</b>, ${f1(t.z)} km irtifada, ${Math.ceil(etaOf(t))} saniye sonra düşecek.<br>${b?`En uygun batarya <b>${esc(nameOf(ME,b.t))}</b>, isabet şansı yüzde ${Math.round(pkOf(b,t)*100)}. İki önleyici, tanesi ${money(SITE[b.t].ic)}.`:`<span class="risk">Uygun batarya yok.</span> ${all.length?all.map(s=>{const d=SITE[s.t];return t.z<d.a0||t.z>d.a1?`${nameOf(ME,s.t)} bu irtifaya erişemez`:hyp(t.x-s.x,t.y-s.y)>rngOf(ME,s.t)?`${nameOf(ME,s.t)} menzil dışında`:s.mag<=0?`${nameOf(ME,s.t)} şarjörü boş`:''}).filter(Boolean).slice(0,3).join('. '):'Bu tehdide etkili bataryan yok.'}`}`}
+    P.innerHTML=`<div class="tinfo">${info}</div><canvas id="prof"></canvas>`;P.__h=null;drawProfile()}
   updFire()}
 function trkName(o){const k=o.k&&MUN[o.k]?o.k:null;if(o.kind==='icp')return 'önleyici';if(o.kind==='ftr')return natOf(o.side).names.FTR||'Savaş uçağı';if(o.kind==='arm')return 'Anti-radar füze';if(o.kind==='glide')return 'Süzülen bomba';return k?nameOf(o.side,k):KNAME[o.kind]||o.kind}
 // "blind then strike": jammer + anti-radar on known emitters + decoys, then the main weapon
@@ -2664,13 +2812,13 @@ function blindPlan(){const C=G.con;if(!C.tgt){hint('Önce haritada ana hedefi i�
   hint(hasD?`Plan hazır: önce karıştırıcı${em.length?` ve ${em.length} radara anti-radar İHA`:''}, 6 sn sonra aldatıcılar, 12 sn sonra ${wName(main)}. Sürelerle oynayabilirsin. Emniyeti kaldır, ATEŞ.`:'İHA rampan yok: karıştırıcı ve aldatıcı atamıyorum. Sağda Rampalar sekmesinden İHA rampası kur.',!hasD);renderCon()}
 conEl.addEventListener('click',e=>{if(!G)return;audioInit();const C=G.con;const m=e.target.closest('[data-cm]');if(m){C.mode=m.dataset.cm;if(mode?.k==='target')mode=null;setArm(false);renderCon();return}
   const ed=e.target.closest('[data-ed]');if(ed){openDesigner(ed.dataset.ed==='new'?null:ed.dataset.ed);return}
-  const cl=e.target.closest('[data-cls]');if(cl){C.cls=cl.dataset.cls;const first=C.cls==='AIR'?'SEAD':C.cls==='X'?CUSTOM[0]:(VAR[C.cls].find(v=>v[0]===C.cls)||VAR[C.cls][0])[0];if(first){C.w=first;TUT.ev.w=C.w;C.n=defN(first)}setArm(false);renderCon();return}
-  const w=e.target.closest('[data-w]');if(w){C.w=w.dataset.w;TUT.ev.w=C.w;C.n=defN(C.w);setArm(false);renderCon();return}
+  const cl=e.target.closest('[data-cls]');if(cl){weaponPop(null);C.cls=cl.dataset.cls;const first=C.cls==='AIR'?'SEAD':C.cls==='X'?CUSTOM[0]:(VAR[C.cls].find(v=>v[0]===C.cls)||VAR[C.cls][0])[0];if(first){C.w=first;TUT.ev.w=C.w;C.n=defN(first)}setArm(false);renderCon();return}
+  const w=e.target.closest('[data-w]');if(w){const k=w.dataset.w;const same=C.w===k&&WPOP===k;C.w=k;TUT.ev.w=C.w;if(!same)C.n=defN(C.w);setArm(false);renderCon();const row=$('#cA [data-w="'+k+'"]');weaponPop(same?null:k,row);return}
   const tk=e.target.closest('[data-trk]');if(tk){G.selTrk=+tk.dataset.trk;renderCon();renderSel();return}
   const q=e.target.closest('[data-q]');if(q){const mx=isAir(C.w)?1:MUN[C.w].from==='TEL'?8:12;C.n=clamp(C.n+(+q.dataset.q),1,mx);renderCon();return}
   const at=e.target.closest('[data-at]');if(at){const p=C.pkg[+at.dataset.at];if(p)p.at=clamp(p.at+(+at.dataset.d),0,60);renderCon();return}
   const rm=e.target.closest('[data-rm]');if(rm){C.pkg.splice(+rm.dataset.rm,1);renderCon();return}
-  const p=e.target.closest('[data-p]');if(p){const k=p.dataset.p;if(k==='target'){mode=mode?.k==='target'?null:{k:'target'};closeInfo();qaClose();hint(mode?'Saldırı hedefini işaretle · Shift: ara nokta · Esc: bitir':'');renderCon();return}if(k==='clrt'){C.tgt=null;C.wp=[];setArm(false)}else if(k==='clr')C.pkg=[];else if(k==='blind'){blindPlan();return}else if(k==='add'){if(!C.tgt){hint('Önce haritada hedef seç.',1);return}const last=C.pkg.length?Math.max(...C.pkg.map(x=>x.at)):0;C.pkg.push({w:C.w,n:C.n,x:C.tgt.x,y:C.tgt.y,wp:C.wp.slice(),lbl:C.tgt.lbl,at:C.pkg.length?last+5:0});C.wp=[];sfx('beep');hint('Plana eklendi. Başka silah ya da hedef seçip ekle; numaralar hedefe varış sırası. Hepsi tek ATEŞ ile gider.')}renderCon();return}});
+  const p=e.target.closest('[data-p]');if(p){const k=p.dataset.p;if(k==='target'){mode=mode?.k==='target'?null:{k:'target'};closeInfo();qaClose();hint(mode?'Haritada hedefi işaretle. Shift ile ara nokta eklersin, Esc ile bitirirsin.':'');renderCon();return}if(k==='clrt'){C.tgt=null;C.wp=[];setArm(false)}else if(k==='clr')C.pkg=[];else if(k==='blind'){blindPlan();return}else if(k==='add'){if(!C.tgt){hint('Önce haritada hedef seç.',1);return}const last=C.pkg.length?Math.max(...C.pkg.map(x=>x.at)):0;C.pkg.push({w:C.w,n:C.n,x:C.tgt.x,y:C.tgt.y,wp:C.wp.slice(),lbl:C.tgt.lbl,at:C.pkg.length?last+5:0});C.wp=[];sfx('beep');hint('Plana eklendi. Başka silah ya da hedef seçip ekle; numaralar hedefe varış sırası. Hepsi tek ATEŞ ile gider.')}renderCon();return}});
 // ---------------- weapon workshop
 let DZ=null;
 function openDesigner(id){const base=id&&MUN[id]?MUN[id].design:{cls:'BM',head:'S',eng:'B',gd:'G',sv:'N',name:''};DZ={id,d:{...base}};drawDesigner()}
@@ -2678,7 +2826,7 @@ function drawDesigner(){const d=DZ.d,M=designStats(d);const tmp='__DZ';MUN[tmp]=
   const seg=(key,opts,lbl,help)=>`<div class="dz-r"><span class="lb">${lbl}</span><div class="seg">${Object.entries(opts).map(([k,v])=>`<button class="${d[key]===k?'on':''}" data-dz="${key}" data-v="${k}">${Array.isArray(v)?v[0]:v}</button>`).join('')}</div><em>${help}</em></div>`;
   overlayHTML(`<div class="card wide dz"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Silah tasarım atölyesi</h2><button class="btn" data-dzx="close">Kapat</button></div>
    <p class="muted" style="margin:6px 0 14px">Bir gövde seç, parçalarını değiştir; özellikler ve fiyat anında değişir. Kaydettiğin silah konsolda <b>Özel</b> sekmesinde çıkar.</p>
-   <div class="dz-g"><div>${seg('cls',DESIGN.cls,'Gövde','uçuş biçimi')}${seg('head',DESIGN.head,'Harp başlığı','misket geniş alana dağılır · delici tesise ağır vurur')}${seg('eng',DESIGN.eng,'Motor','hızlı: kısa uçuş, pahalı · ekonomik: yavaş, ucuz')}${seg('gd',DESIGN.gd,'Güdüm','isabeti belirler')}${seg('sv',DESIGN.sv,'Beka','savunmayı aşma yolu')}
+   <div class="dz-g"><div>${seg('cls',DESIGN.cls,'Gövde','uçuş biçimi')}${seg('head',DESIGN.head,'Harp başlığı','misket geniş alana dağılır, delici tesise ağır vurur')}${seg('eng',DESIGN.eng,'Motor','hızlı motor kısa uçar ama pahalı; ekonomik motor yavaş ama ucuz')}${seg('gd',DESIGN.gd,'Güdüm','isabeti belirler')}${seg('sv',DESIGN.sv,'Beka','savunmayı aşma yolu')}
      <div class="dz-r"><span class="lb">Ad</span><input id="dzn" maxlength="22" value="${esc(d.name||'')}" placeholder="ör. Yıldırım-1"></div></div>
    <div class="dz-s"><img src="${blueprint(d.cls,ME)}" alt=""><div class="bars big">${st.map(([l,v])=>`<div class="br"><span>${l}</span><i><b style="width:${Math.round(v*100)}%"></b></i><em>${Math.round(v*100)}</em></div>`).join('')}</div>
      <div class="dz-k"><span>Hasar</span><b>${M.cl?M.cl+' × '+M.dmg:M.dmg}</b><span>Etki yarıçapı</span><b>${f1(M.r/KMU)} km</b><span>Sapma (CEP)</span><b>${M.cep*50} m</b><span>Fiyat</span><b class="pr">${money(M.c)}</b></div></div></div>
@@ -2700,15 +2848,15 @@ function drawProfile(){const c=$('#prof');if(!c)return;const r=c.getBoundingClie
   const pts=[];for(let i=0;i<=60;i++){const s=i/60;let z;if(kind==='bm')z=s<.12?90*.42*DM.pow(s/.12,1.5):90*(1-(((s-.5)/.5)*((s-.5)/.5)));else if(kind==='hgv')z=s<.15?45*DM.pow(s/.15,1.3):s<.85?45-12*((s-.15)/.7):33*DM.pow(1-(s-.85)/.15,1.6);else if(kind==='cruise')z=s>.93?.3:.05;else if(kind==='drone'||kind==='armd')z=.7;else if(kind==='mald')z=.35;else if(kind==='recon')z=3.5;else z=8;pts.push([8+s*(W-56),zy(Math.max(0,z))])}
   // enemy envelopes over target end (known)
   if(C.mode==='atk'){for(const g of G.ghost[ME].values()){const d=SITE[g.t];if(!d||!d.a1)continue;const e=ent(g.id);if(!e||!e.alive)continue;x.fillStyle='rgba(226,114,91,.13)';x.fillRect(W*.55,zy(d.a1),W*.4,zy(d.a0)-zy(d.a1));x.fillStyle='#ff8a7e';x.fillText(nameOf(gS(g),g.t),W*.56,zy(d.a1)+10)}}
-  else{const t=G.selTrk&&airById(G.selTrk);if(t){for(const s of sites(ME)){const d=SITE[s.t];if(!d.a1)continue;x.fillStyle='rgba(159,208,220,.12)';x.fillRect(W*.1,zy(d.a1),W*.8,zy(d.a0)-zy(d.a1))}x.fillStyle='#ffd27a';x.beginPath();x.arc(W*.5,zy(t.z),4,0,7);x.fill();x.fillText(`${KNAME[t.kind==='decoy'?'bm':t.kind]} · ${f1(t.z)} km`,W*.5+8,zy(t.z)+4)}}
+  else{const t=G.selTrk&&airById(G.selTrk);if(t){for(const s of sites(ME)){const d=SITE[s.t];if(!d.a1)continue;x.fillStyle='rgba(159,208,220,.12)';x.fillRect(W*.1,zy(d.a1),W*.8,zy(d.a0)-zy(d.a1))}x.fillStyle='#ffd27a';x.beginPath();x.arc(W*.5,zy(t.z),4,0,7);x.fill();x.fillText(`${KNAME[t.kind==='decoy'?'bm':t.kind]}, ${f1(t.z)} km`,W*.5+8,zy(t.z)+4)}}
   if(C.mode==='atk'&&kind){x.strokeStyle='#ffd27a';x.lineWidth=1.8;x.beginPath();pts.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.stroke();x.fillStyle='#ffd27a';x.fillText(KNAME[kind]||'',10,12)}
   else if(C.mode==='atk'&&SORT[C.w]){x.strokeStyle='#ffd27a';x.beginPath();x.moveTo(8,zy(0));x.lineTo(W*.25,zy(8));x.lineTo(W*.6,zy(8));x.stroke();x.setLineDash([3,3]);x.beginPath();x.moveTo(W*.6,zy(8));x.lineTo(W-48,zy(0));x.stroke();x.setLineDash([]);x.fillStyle='#ffd27a';x.fillText('uçak açıktan atar',10,12)}}
 function setArm(v){if(!G)return;const b=$('#armb');if(!b)return;const why=conReady();if(v&&why){hint(`Ateşe hazır değil: ${why}.`,1);sfx('beep',null,null,240);return}FCS.armed=v;b.classList.toggle('open',v);sfx(v?'clunk':'beep',null,null,v?0:300);
   if(v&&G.con.mode==='atk'&&MUN[G.con.w]&&MUN[G.con.w].from==='TEL'){const L=launchersFor(ME,G.con.w);for(const l of L.slice(0,G.con.n)){l.erect=1;l.fireT=G.time}}
   if(!v){for(const l of sites(ME,'TEL'))if(l.rl<=0)l.erect=0}updFire()}
 function updFire(){updGcs();const fb=$('#fbtn');if(!fb)return;const why=conReady();const ok=FCS.armed&&!why;fb.disabled=!ok&&!FCS.holding;fb.classList.toggle('ready',ok&&!FCS.holding);const st=$('#fstat'),at=$('#armt');
-  if(at){at.textContent=FCS.armed?'SİLAH HAZIR':'EMNİYET';at.classList.toggle('hot',FCS.armed)}
-  if(st){st.textContent=FCS.holding?'BASILI TUT…':why?why:!FCS.armed?'emniyet kapağını kaldır':G.con.mode==='atk'?`${SORT[G.con.w]?SORT[G.con.w].n:G.con.n+'× '+nameOf(ME,G.con.w)} hazır`:'önleyici hazır';st.classList.toggle('hot',ok)}}
+  if(at){at.textContent=FCS.armed?'Silah hazır':'Emniyette';at.classList.toggle('hot',FCS.armed)}
+  if(st){st.textContent=FCS.holding?'Basılı tut…':why?why:!FCS.armed?'emniyet kapağını kaldır':G.con.mode==='atk'?`${SORT[G.con.w]?SORT[G.con.w].n:G.con.n+' '+nameOf(ME,G.con.w)} hazır`:'önleyici hazır';st.classList.toggle('hot',ok)}}
 function holdStart(){if(!FCS.armed||conReady()||FCS.holding)return;FCS.holding=true;FCS.hold=0;$('#fbtn').classList.add('press');chargeStart(G.con.mode==='def'?'def':MUN[G.con.w]?MUN[G.con.w].kind:'bm');try{navigator.vibrate&&navigator.vibrate([20,40,20,40,20])}catch(e){}}
 function holdEnd(){if(!FCS.holding)return;FCS.holding=false;$('#fbtn').classList.remove('press');chargeStop();if(FCS.hold<1){FCS.hold=0;setRing(0);sfx('beep',null,null,220);hint('Ateşleme iptal: düğmeyi sonuna kadar bastırıp tut.')}updFire()}
 function setRing(k){const b=$('#fbtn');if(b)b.style.setProperty('--p',k.toFixed(3))}
@@ -2720,14 +2868,14 @@ function gcsKey(){return JSON.stringify(itemsNow().map(p=>[p.w,p.n,Math.round(p.
 function updGcs(){const cc=$('#cC');if(!cc||!G)return;const on=gcsOn();cc.classList.toggle('gcs-on',on);if(!on){GCS.stage=0;return}
   const C=G.con,it=itemsNow(),why=conReady(),key=gcsKey();if(GCS.stage&&key!==GCS.key)GCS.stage=0;
   const w=it[0]?.w||C.w,M=MUN[w],tot=sites(ME,'DLN').length,rd=sites(ME,'DLN').filter(e=>e.bt<=0&&e.rl<=0&&!(e.empT>G.time)).length;const n=it.reduce((a,p)=>a+p.n,0)||C.n;
-  let eta='—',route='—',ew='—';if(it.length){const p=it[0],l=launchersFor(ME,p.w)[0]||sites(ME,'DLN')[0]||HQPOS[ME];eta=Math.ceil(flightTime(ME,p.w,l.x,l.y,p.x,p.y,p.wp))+' sn';route=(p.wp&&p.wp.length)?`${p.wp.length} ara nokta`:'düz';
+  let eta='yok',route='yok',ew='yok';if(it.length){const p=it[0],l=launchersFor(ME,p.w)[0]||sites(ME,'DLN')[0]||HQPOS[ME];eta=Math.ceil(flightTime(ME,p.w,l.x,l.y,p.x,p.y,p.wp))+' sn';route=(p.wp&&p.wp.length)?`${p.wp.length} ara nokta`:'düz';
     const ews=[...G.ghost[ME].values()].filter(g=>g.t==='EW'&&hyp(g.x-p.x,g.y-p.y)<rngOf(gS(g),'EW')+60);ew=M&&['drone','armd'].includes(M.kind)?(ews.length?'yüksek':'bilinen yok'):'etkisiz'}
-  const rows=[['Rampa',`${rd}/${tot} hazır`,!tot||!rd],['Görev',`${n} × ${M?nameOf(ME,w):'—'}`],['Varış',eta],['Rota',route],['EH riski',ew,ew==='yüksek']];
+  const rows=[['Rampa',`${rd}/${tot} hazır`,!tot||!rd],['Görev',`${n} ${M?nameOf(ME,w):''}`],['Varış',eta],['Rota',route],['EH riski',ew,ew==='yüksek']];
   setH($('#gcsd'),rows.map(([a,b,bad])=>`<dt>${a}</dt><dd class="${bad?'bad':''}">${esc(String(b))}</dd>`).join(''));
-  const b=$('#gcsb'),st=$('#gcss');if(G.time<GCS.done){b.disabled=true;b.textContent=GCS.doneTxt;b.className='gcs-b ok';st.textContent='görev havada';return}
-  b.disabled=!!why;b.className='gcs-b'+(GCS.stage?' go':'');b.textContent=GCS.stage?'KALKIŞ':'GÖREVİ YÜKLE';st.textContent=why?why:GCS.stage?'rota ve adet kilitli · Enter: kalkış · Esc: iptal':'Enter: görevi yükle';st.classList.toggle('bad',!!why&&/rampa|kasa/.test(why))}
+  const b=$('#gcsb'),st=$('#gcss');if(G.time<GCS.done){b.disabled=true;b.textContent=GCS.doneTxt;b.className='gcs-b ok';st.textContent='Görev havada';return}
+  b.disabled=!!why;b.className='gcs-b'+(GCS.stage?' go':'');b.textContent=GCS.stage?'Kalkış':'Görevi yükle';st.textContent=why?why:GCS.stage?'Rota ve adet kilitlendi. Enter kalkış, Esc iptal.':'Enter ile görevi yüklersin.';st.classList.toggle('bad',!!why&&/rampa|kasa/.test(why))}
 function gcsPress(){if(!G||!gcsOn()||conReady())return;if(!GCS.stage){GCS.stage=1;GCS.key=gcsKey();sfx('beep',null,null,660);updGcs();return}gcsLaunch()}
-function gcsLaunch(){if(!G||!gcsOn()||conReady())return'';const n=itemsNow().reduce((a,p)=>a+p.n,0);GCS.stage=0;GCS.done=G.time+2.2;GCS.doneTxt=`KALKTI · ${n}/${n}`;doFire(true);sfx('beep',null,null,880);updGcs();return ''}
+function gcsLaunch(){if(!G||!gcsOn()||conReady())return'';const n=itemsNow().reduce((a,p)=>a+p.n,0);GCS.stage=0;GCS.done=G.time+2.2;GCS.doneTxt=`Kalktı (${n}/${n})`;doFire(true);sfx('beep',null,null,880);updGcs();return ''}
 function doFire(quiet){const C=G.con;let msg='';
   if(C.mode==='def'){const t=airById(G.selTrk);const b=t&&bestBattery(t);if(b)msg=issue('engage',b.id,t.id);else msg='Uygun batarya yok.'}
   else{const items=itemsNow().map(p=>({...p}));
@@ -2766,21 +2914,21 @@ const LNAME={bm:'balistik',cm:'seyir füzesi',dr:'İHA',rad:'erken uyarı'};
 const gapText=g=>g.miss.map(m=>LNAME[m]).join(', ');
 function advCompute(){const L=[],W=ME,cash=G.cash[ME],has=t=>sites(W,t).length;const push=a=>{if(a&&!(G.advS.snz[a.id]>clk()))L.push(a)};
   const place=(t,near)=>()=>{const p=advSpot(t,near);if(!p){hint('Uygun yer bulunamadı; kartı seçip elle yerleştir.',1);return}const r=issue('build',W,t,p.x,p.y);if(typeof r==='string'&&r)hint(r,1)};
-  const act=(t,near,lbl)=>cash>=costOf(W,t)?[{l:lbl||`${nameOf(W,t)} kur · ${money(costOf(W,t))}`,fn:place(t,near)}]:[];
+  const act=(t,near,lbl)=>cash>=costOf(W,t)?[{l:lbl||`${nameOf(W,t)} kur (${money(costOf(W,t))})`,fn:place(t,near)}]:[];
   if(!has('RAD'))push({id:'rad',pri:95,kind:'acil',t:'Arama radarın yok',x:'Bataryaların kendi kısa radarlarıyla yetinir; seyir füzesini 10–20 km\'de, balistiği geç görürsün.',why:'Radar 250 km\'ye kadar iz verir. Alçak uçanı yine de ancak ufkun berisinde görür: bu yüzden ikinci radarı öne kurmak işe yarar.',acts:act('RAD',HQPOS[ME])});
   const gaps=defGaps();for(const g of gaps.slice(0,2)){const D=ASSET_DEF[g.a.t],t=g.miss.includes('bm')?'LRAD':g.miss.includes('cm')?'MRAD':g.miss.includes('dr')?'CIWS':'RAD';
-    push({id:'gap-'+g.a.id+g.miss.join(''),pri:(G.phase==='prep'?84:g.miss.includes('bm')&&G.time>90?72:64)-(gaps.indexOf(g)*3),kind:G.phase!=='prep'&&g.miss.includes('bm')?'acil':'oneri',t:`${g.a.nm}: ${gapText(g)} savunması yok`,x:`${money(D.v*g.a.hp/g.a.max)} değerinde, saniyede ${money(D.inc)} gelir getiriyor. En gerekli katman: ${nameOf(W,t)}.`,why:'Analiz: tesis başına hangi tehdide karşı hangi katmanın kapsadığını hesaplar. Ayrıntı sağ paneldeki Analiz sekmesinde.',acts:cash>=costOf(W,t)?[{l:`${nameOf(W,t)} kur · ${money(costOf(W,t))}`,fn:()=>fixGap(g)}]:[]})}
+    push({id:'gap-'+g.a.id+g.miss.join(''),pri:(G.phase==='prep'?84:g.miss.includes('bm')&&G.time>90?72:64)-(gaps.indexOf(g)*3),kind:G.phase!=='prep'&&g.miss.includes('bm')?'acil':'oneri',t:`${g.a.nm}: ${gapText(g)} savunması yok`,x:`${money(D.v*g.a.hp/g.a.max)} değerinde, saniyede ${money(D.inc)} gelir getiriyor. En gerekli katman: ${nameOf(W,t)}.`,why:'Analiz: tesis başına hangi tehdide karşı hangi katmanın kapsadığını hesaplar. Ayrıntı sağ paneldeki Analiz sekmesinde.',acts:cash>=costOf(W,t)?[{l:`${nameOf(W,t)} kur (${money(costOf(W,t))})`,fn:()=>fixGap(g)}]:[]})}
   if(G.phase==='prep'){if(!has('TEL'))push({id:'tel',pri:60,kind:'oneri',t:'Saldırı için füze rampası',x:'Rampa olmadan seyir, balistik ve hipersonik füze atamazsın.',why:'Rampaları üssün arkasına, hava savunmanın içine koy: ateş eden rampa izini belli eder.',acts:act('TEL',HQPOS[ME])});
     if(!has('DLN'))push({id:'dln',pri:58,kind:'oneri',t:'İHA rampası',x:'Kamikaze İHA sürüsü rakibin pahalı önleyicilerini tüketir.',why:'Ucuz dronlar önce gider, rakip onlara füze harcarken arkadan gelen seyir füzesi geçer.',acts:act('DLN',HQPOS[ME])});
     push({id:'go',pri:cash<60?88:30,kind:'oneri',t:cash<60?'Hazırlık tamam gibi':'Hazır olduğunda başlat',x:`Kalan bütçe ${money(cash)}, süre ${mmss(G.prepT)}.`,why:'Savaşta gelir tesislerinden gelir: şehirler, rafineri, santral. Onları korumak hem para hem puandır.',acts:[{l:'Savaşı başlat',fn:()=>issue('go')}]})}
   else{
     const inc=[...G.air].filter(o=>o.alive&&o.side!==ME&&G.trk[ME].has(o.id)&&HEAVY.has(o.kind));for(const o of inc.slice(0,1)){const ip=impactPt(o);const hit=ip&&G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);const cover=sites(W).some(s=>['LRAD','UPPER'].includes(s.t)&&ip&&hyp(s.x-ip.x,s.y-ip.y)<rngOf(W,s.t));
-      if(hit&&!cover)push({id:'inc'+o.id,pri:92,kind:'acil',t:`${KNAME[o.kind==='decoy'?'bm':o.kind]} → ${hit.cat==='asset'?hit.nm:nameOf(W,hit.t)}`,x:`${Math.ceil(etaOf(o))} sn sonra düşecek ve orayı koruyan uzun menzil HS yok.`,why:'Bu atış için yapılabilecek bir şey kalmadı; bir sonrakine hazırlan. Balistik füzeyi ancak uzun menzil ya da üst katman HS durdurur.',acts:act('LRAD',hit)})}
+      if(hit&&!cover)push({id:'inc'+o.id,pri:92,kind:'acil',t:`${KNAME[o.kind==='decoy'?'bm':o.kind]} geliyor: ${hit.cat==='asset'?hit.nm:nameOf(W,hit.t)}`,x:`${Math.ceil(etaOf(o))} sn sonra düşecek ve orayı koruyan uzun menzil HS yok.`,why:'Bu atış için yapılabilecek bir şey kalmadı; bir sonrakine hazırlan. Balistik füzeyi ancak uzun menzil ya da üst katman HS durdurur.',acts:act('LRAD',hit)})}
     const low=sites(W).filter(s=>SITE[s.t].mag>0&&SITE[s.t].mag<999&&s.mag<=SITE[s.t].mag*.25&&SITE[s.t].ic>=1&&s.mode==='auto');if(low.length)push({id:'mag',pri:74,kind:'acil',t:`${nameOf(W,low[0].t)} şarjörü bitiyor`,x:`${low[0].mag}/${SITE[low[0].t].mag} önleyici kaldı. Otomatik kuralda ucuz dronlara pahalı füze harcıyor olabilir.`,why:'Seçici kural boş araziye düşeceklere ve dronlara ateş etmez; asıl tehdide füze saklar.',acts:[{l:'Seçici kurala al',fn:()=>{issue('mode',sites(W).filter(s=>SITE[s.t].ic>=1).map(s=>s.id),'sel');renderSide()}}]});
     const kn=[...G.ghost[ME].values()].filter(g=>{const e=ent(g.id);return e&&e.alive});const rad=kn.find(g=>['LRAD','UPPER','RAD','MRAD'].includes(g.t));
     if(rad&&G.air4[ME].some(a=>a.st==='ready'))push({id:'sead',pri:60,kind:'firsat',t:`Düşman ${nameOf(gS(rad),rad.t)} yeri biliniyor`,x:'SEAD görevi radarını vurursa o bataryanın füzeleri kör kalır; arkasından gelen saldırının yolu açılır.',why:'Önce gözü kör et, sonra vur: modern hava harekâtının ilk kuralı.',acts:[{l:'SEAD için konsolu aç',fn:()=>{openCon('atk');G.con.w='SEAD';G.con.n=1;G.con.tgt={x:rad.x,y:rad.y,lbl:nameOf(gS(rad),rad.t)};renderCon()}}]});
-    if(!kn.length&&G.time>60)push({id:'rcn',pri:52,kind:'oneri',t:'Rakibin hava savunmasını görmüyorsun',x:`Keşif İHA gönder ya da uydu geçişini bekle (${G.sat.t} sn).`,why:'Bilinmeyen bataryanın içine füze göndermek para yakmaktır. Rakip radarını açtıkça elektronik dinleme de yerini verir.',acts:launchersFor(W,'RCN').length&&cash>=costOf(W,'RCN')?[{l:`Keşif İHA uçur · ${money(costOf(W,'RCN'))}`,fn:()=>{const a=foeAssets().find(a=>a.t==='HQ')||FOEPT(ME);if(!(G.stock[ME].RCN>0))issue('buy',W,'RCN',1);const r=issue('launch',W,'RCN',1,a.x-200,a.y+200,[]);if(r)hint(r,1)}}]:act('DLN',HQPOS[ME])});
-    const ops=strikeOps();for(const op of ops.slice(0,2))if(cash>=op.cost&&G.time>20)push({id:'op-'+op.a.id+op.k,pri:58-ops.indexOf(op)*3,kind:'firsat',t:`${op.n}× ${nameOf(W,op.k)} → ${op.a.nm}`,x:`${op.kill?'Tesis yıkılır':'≈ %'+Math.round(op.dmg/op.a.max*100)+' hasar'} · dakikada ${money(op.inc)} gelir kesilir · maliyet ${money(op.cost)}${op.risk.length?' · yolda: '+op.risk.slice(0,2).join(', '):' · bilinen savunma yok'}.`,why:`Analiz: her düşman tesisi için elindeki her silahı dener; bilinen bataryalara göre geçme olasılığı %${Math.round(op.p*100)}. Puan = (yıkılan değer + kesilen gelir) / maliyet.`,acts:[{l:'Hedefe al',fn:()=>aimAt(op)}]})
+    if(!kn.length&&G.time>60)push({id:'rcn',pri:52,kind:'oneri',t:'Rakibin hava savunmasını görmüyorsun',x:`Keşif İHA gönder ya da uydu geçişini bekle (${G.sat.t} sn).`,why:'Bilinmeyen bataryanın içine füze göndermek para yakmaktır. Rakip radarını açtıkça elektronik dinleme de yerini verir.',acts:launchersFor(W,'RCN').length&&cash>=costOf(W,'RCN')?[{l:`Keşif İHA uçur (${money(costOf(W,'RCN'))})`,fn:()=>{const a=foeAssets().find(a=>a.t==='HQ')||FOEPT(ME);if(!(G.stock[ME].RCN>0))issue('buy',W,'RCN',1);const r=issue('launch',W,'RCN',1,a.x-200,a.y+200,[]);if(r)hint(r,1)}}]:act('DLN',HQPOS[ME])});
+    const ops=strikeOps();for(const op of ops.slice(0,2))if(cash>=op.cost&&G.time>20)push({id:'op-'+op.a.id+op.k,pri:58-ops.indexOf(op)*3,kind:'firsat',t:`${op.a.nm}: ${op.n} ${nameOf(W,op.k)}`,x:`${op.kill?'Tesis yıkılır':'Yaklaşık %'+Math.round(op.dmg/op.a.max*100)+' hasar'}, rakip dakikada ${money(op.inc)} gelir kaybeder. Maliyeti ${money(op.cost)}. ${op.risk.length?'Yolda '+op.risk.slice(0,2).join(', ')+' var.':'Yolda bilinen savunma yok.'}`,why:`Analiz: her düşman tesisi için elindeki her silahı dener; bilinen bataryalara göre geçme olasılığı %${Math.round(op.p*100)}. Puan = (yıkılan değer + kesilen gelir) / maliyet.`,acts:[{l:'Hedefe al',fn:()=>aimAt(op)}]})
     if(cash>250)push({id:'cash',pri:44,kind:'oneri',t:'Para boşta',x:`Kasada ${money(cash)} var.`,why:'Harcanmayan para ne savunur ne vurur.',acts:[]})}
   return L}
 const clk=()=>G.phase==='prep'?-G.prepT:G.time;
@@ -2791,7 +2939,7 @@ function advRender(force){const el=$('#adv'),S=G.advS,a=S.obj,L=S.list;el.hidden
   el.className='adv '+(a?a.kind:'');if(!a){el.innerHTML='<div class="ab"><div class="ah"><span class="tg">Harekât subayı</span><h4>Gökyüzü sakin</h4></div><p>Yeni bir tehdit yok. Savunmanı güçlendir ya da saldırı paketi hazırla.</p></div>';return}
   const i=L.indexOf(a);el.innerHTML=`<div class="ab"><div class="ah"><span class="tg">${({acil:'Acil',firsat:'Fırsat',oneri:'Öneri'})[a.kind]||'Öneri'}</span><h4>${a.t}</h4><span class="nv">${L.length>1?`<button data-av="p">‹</button>${i+1}/${L.length}<button data-av="n">›</button>`:''}</span></div><p title="${a.why?esc(a.why.replace(/<[^>]+>/g,'')):''}">${a.x}</p></div><div class="acts">${a.acts.map((x,j)=>`<button class="btn sm ${j?'':'pri'}" data-av="do" data-i="${j}">${x.l}</button>`).join('')}<button class="btn sm ghost" data-av="later">Sonra</button></div>`}
 document.addEventListener('click',e=>{const r=e.target.closest&&e.target.closest('[data-lg]');if(r&&G){const o=ordOf(+r.dataset.lg);if(o)camGo(o.x,o.y,Math.max(cam.z,.4));return}});
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-an]');if(!b||!G||!G.anal)return;audioInit();const i=+b.dataset.i;if(b.dataset.an==='tgt'&&G.anal.ops[i])aimAt(G.anal.ops[i]);else if(b.dataset.an==='fix'&&G.anal.gaps[i])fixGap(G.anal.gaps[i]);sfx('beep')});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-an]');if(!b||!G||!G.anal)return;audioInit();const i=+b.dataset.i;const ops=G.anal.ops||[],gaps=G.anal.gaps||[];if(b.dataset.an==='tgt'&&ops[i])aimAt(ops[i]);else if(b.dataset.an==='fix'&&gaps[i])fixGap(gaps[i]);sfx('beep')});
 $('#adv').addEventListener('click',e=>{if(!G)return;const b=e.target.closest('[data-av]');if(!b)return;const S=G.advS,a=S.obj,L=S.list,k=b.dataset.av;audioInit();
   if(k==='p'||k==='n'){const i=L.indexOf(a);const n=L[(i+(k==='n'?1:-1)+L.length)%L.length];S.obj=n;S.cur=n.id;S.pin=clk()+20}else if(k==='later'&&a){S.snz[a.id]=clk()+45;S.obj=L.filter(x=>x!==a)[0]||null}else if(k==='do'&&a){a.acts[+b.dataset.i].fn();S.snz[a.id]=clk()+8;S.t=.3}sfx('beep');advRender(true)});
 function drawAdvWorld(){}
@@ -2801,17 +2949,17 @@ const coach=document.createElement('div');coach.id='coach';coach.hidden=true;doc
 function tutCard(k){return mode&&mode.t===k?null:`.card-b[data-k="${k}"]`}
 const TSTEPS=[
  {t:'Hoş geldin',x:'Bu oyunda iki iş var: <b>savunmak</b>, yani sana gelen füze ve dronları düşürmek; <b>vurmak</b>, yani rakibin tesislerine füze atmak.<br><br>Ekran üç parça:<br>• <b>Sağ panel</b>: haritaya bir şey kurarsın (radar, hava savunma, rampa).<br>• <b>Alttaki konsol</b>: füze atarsın.<br>• <b>Sağ üst kutu</b>: sana gelen tehditleri gösterir.<br><br>İki dakikada adım adım gidelim.',btn:'Başla'},
- {t:'1 · Radar kur',x:'Görmediğini vuramazsın. Sağdaki <b>radar</b> kartına tıkla, sonra haritada yanıp sönen halkaya tıkla.',el:()=>tutCard('RAD'),world:()=>mode&&mode.t==='RAD'?TUT.spot:null,enter:()=>{tab='D';renderSide(true);tutSpot('RAD')},done:()=>sites(ME,'RAD').length>0},
- {t:'2 · Hava savunma kur',x:'Orta menzil batarya seyir füzesini, dronu ve uçağı düşürür. <b>Orta menzil</b> kartına tıkla (adının altında "dikey atış" yazar), sonra halkaya koy.',el:()=>tutCard('MRAD'),world:()=>mode&&mode.t==='MRAD'?TUT.spot:null,enter:()=>tutSpot('MRAD'),done:()=>sites(ME,'MRAD').length>0},
- {t:'3 · Füze rampası kur',x:'Saldırmak için rampa gerekir. Paneldeki <b>Rampalar</b> sekmesine geç, <b>füze rampası</b> kartını seç, halkaya koy.',el:()=>tab!=='A'?'[data-tab="A"]':tutCard('TEL'),world:()=>mode&&mode.t==='TEL'?TUT.spot:null,enter:()=>tutSpot('TEL'),done:()=>sites(ME,'TEL').length>0},
- {t:'Hazırlık tamam',x:'Gerçek oyunda 2 dakikalık hazırlıkta istediğin kadar kurarsın, para bitene kadar. Şimdi savaşı başlat: üstteki <b>Hazırım · başlat</b>.',el:()=>'[data-t="go"]',done:()=>G.phase==='war',leave:()=>{G.ai.next=1e9}},
- {t:'4 · Silah seç',x:'Alttaki şerit <b>atış konsolu</b>. Soldan <b>balistik füzeyi</b> seç. Füzeyi ayrıca satın almazsın: ateşlediğin anda fiyatı kasandan düşer.',el:()=>'[data-w="BM"]',enter:()=>{G.con.w='DRN';G.con.n=6;G.con.tgt=null;TUT.ev.w=null;renderCon()},done:()=>TUT.ev.w==='BM'},
- {t:'5 · Hedefi işaretle',x:'Kamera düşman tarafına geçti; hedef seçimi açık. Haritada <b>yanıp sönen halkaya</b>, düşmanın rafinerisine tıkla. Tıkladığın nokta hedeftir: sarı çemberin içindeki her şey hasar alır, merkeze yakın olan daha çok.',world:()=>TUT.spot,enter:()=>{const r=foeAssets().find(a=>a.t==='REFN')||foeAssets()[0];TUT.spot={x:r.x,y:r.y,r:60};mode={k:'target'};closeInfo();qaClose();renderCon();cam.x=r.x-150;cam.y=r.y+80;cam.z=.75;camClamp()},done:()=>G.con.tgt&&G.con.w==='BM'&&hyp(G.con.tgt.x-TUT.spot.x,G.con.tgt.y-TUT.spot.y)<220,leave:()=>{mode=null;renderCon()}},
- {t:'6 · Emniyeti kaldır',x:'Kırmızı-siyah çizgili kapak emniyettir. Ona tıkla: kapak kalkar, rampan füzeyi dikine kaldırır.',el:()=>'#armb',done:()=>FCS.armed},
- {t:'7 · Ateş',x:'<b>ATEŞ</b> düğmesine bas ve bırakma. Düğme yuvasına iner; dibe değince füze kalkar. Erken bırakırsan iptal olur. (Klavyede Space de olur.)',el:()=>'#fbtn',enter:()=>{TUT.ev.fired=false},done:()=>TUT.ev.fired},
+ {t:'Radar kur',x:'Görmediğini vuramazsın. Sağdaki <b>radar</b> kartına tıkla, sonra haritada yanıp sönen halkaya tıkla.',el:()=>tutCard('RAD'),world:()=>mode&&mode.t==='RAD'?TUT.spot:null,enter:()=>{tab='K';renderSide(true);tutSpot('RAD')},done:()=>sites(ME,'RAD').length>0},
+ {t:'Hava savunma kur',x:'Orta menzil batarya seyir füzesini, dronu ve uçağı düşürür. <b>Orta menzil</b> başlığının altındaki ikinci karta tıkla (altında "seyir füzesi, uçak ve dron" yazar), sonra halkaya koy.',el:()=>tutCard('MRAD'),world:()=>mode&&mode.t==='MRAD'?TUT.spot:null,enter:()=>tutSpot('MRAD'),done:()=>sites(ME,'MRAD').length>0},
+ {t:'Füze rampası kur',x:'Saldırmak için rampa gerekir. <b>Kur</b> sekmesinde aşağı in, <b>Saldırı rampaları</b> altındaki <b>füze rampası</b> kartını seç, halkaya koy. Rampa 16 saniyede kurulur.',el:()=>tab!=='K'?'[data-tab="K"]':tutCard('TEL'),world:()=>mode&&mode.t==='TEL'?TUT.spot:null,enter:()=>tutSpot('TEL'),done:()=>sites(ME,'TEL').length>0},
+ {t:'Hazırlık tamam',x:'Gerçek oyunda 2 dakikalık hazırlıkta istediğin kadar kurarsın, para bitene kadar. Şimdi savaşı başlat: üstteki <b>Hazırım</b> düğmesine bas.',el:()=>'[data-t="go"]',done:()=>G.phase==='war',leave:()=>{G.ai.next=1e9}},
+ {t:'Silah seç',x:'Alttaki şerit <b>atış konsolu</b>. Soldan <b>balistik füzeyi</b> seç. Füzeyi ayrıca satın almazsın: ateşlediğin anda fiyatı kasandan düşer.',el:()=>'[data-w="BM"]',enter:()=>{G.con.w='DRN';G.con.n=6;G.con.tgt=null;TUT.ev.w=null;renderCon()},done:()=>TUT.ev.w==='BM'},
+ {t:'Hedefi işaretle',x:'Kamera düşman tarafına geçti; hedef seçimi açık. Haritada <b>yanıp sönen halkaya</b>, düşmanın rafinerisine tıkla. Tıkladığın nokta hedeftir: sarı çemberin içindeki her şey hasar alır, merkeze yakın olan daha çok.',world:()=>TUT.spot,enter:()=>{const r=foeAssets().find(a=>a.t==='REFN')||foeAssets()[0];TUT.spot={x:r.x,y:r.y,r:60};mode={k:'target'};closeInfo();qaClose();renderCon();cam.x=r.x-150;cam.y=r.y+80;cam.z=.75;camClamp()},done:()=>G.con.tgt&&G.con.w==='BM'&&hyp(G.con.tgt.x-TUT.spot.x,G.con.tgt.y-TUT.spot.y)<220,leave:()=>{mode=null;renderCon()}},
+ {t:'Emniyeti kaldır',x:'Kırmızı-siyah çizgili kapak emniyettir. Ona tıkla: kapak kalkar, rampan füzeyi dikine kaldırır.',el:()=>'#armb',done:()=>FCS.armed},
+ {t:'Ateş',x:'<b>ATEŞ</b> düğmesine bas ve bırakma. Düğme yuvasına iner; dibe değince füze kalkar. Erken bırakırsan iptal olur. (Klavyede Space de olur.)',el:()=>'#fbtn',enter:()=>{TUT.ev.fired=false},done:()=>TUT.ev.fired},
  {t:'Füzeni izle',x:'Balistik füze önce dikine kalkar, bulut katmanını delip 90 km\'ye çıkar, sonra hedefe dik iner. Yolda sahte başlıklar bırakır. Rakibin uzun menzil savunması onu yine de düşürebilir.<br><br>Mavi çember senin füzen. Düşünce sonucu sağda rapor olarak görürsün.',enter:()=>{TUT.t=0},tick:dt=>{const m=G.air.find(o=>o.alive&&o.side===ME&&o.kind==='bm');if(m){cam.z+=(.42-cam.z)*.03;cam.x+=(m.x-cam.x)*.06;cam.y+=(m.y-LIFT(m.z)*.6-cam.y)*.06;camClamp();TUT.t=0}else TUT.t+=dt},done:()=>TUT.t>3&&G.time>4},
- {t:'8 · Şimdi savunma',x:'Rakip sana 4 kamikaze İHA ve 1 seyir füzesi gönderdi. <b>Kırmızı elmaslar</b> onlar; sağ üstteki kutu kaç saniyede geleceklerini söylüyor.<br><br>Bataryaların menziline gireni <b>kendisi</b> vurur, senin bir şey yapman gerekmez. Bir elmasın üstüne gelirsen nereye düşeceğini görürsün.',enter:()=>{tutAttack();const h=assets(ME).find(a=>a.t==='HQ');cam.x=h.x+260;cam.y=h.y-260;cam.z=.6;camClamp()},done:()=>TUT.att.length>=5&&!TUT.att.some(o=>o&&o.alive)},
- {t:'Hazırsın',x:'Özet:<br>• <b>Sağ panel</b> = kur. Savunma bataryaları kendi kendine ateş eder; rampalar saldırı içindir.<br>• <b>Alt konsol</b> = vur: silah seç → Hedef seç → haritaya tıkla → emniyeti kaldır → ATEŞ\'e basılı tut.<br>• <b>Üst şerit</b> = danışman. Ne yapman gerektiğini söyler; düğmesine basarsan kendisi yapar.<br><br>Rakip artık gerçekten saldıracak. 15 dakika dayan, ondan çok hasar verdir. Komuta merkezin düşerse kaybedersin.',btn:'Oyuna devam',leave:()=>tutEnd()},
+ {t:'Şimdi savunma',x:'Rakip sana 4 kamikaze İHA ve 1 seyir füzesi gönderdi. <b>Kırmızı elmaslar</b> onlar; sağ üstteki kutu kaç saniyede geleceklerini söylüyor.<br><br>Bataryaların menziline gireni <b>kendisi</b> vurur, senin bir şey yapman gerekmez. Bir elmasın üstüne gelirsen nereye düşeceğini görürsün.',enter:()=>{tutAttack();const h=assets(ME).find(a=>a.t==='HQ');cam.x=h.x+260;cam.y=h.y-260;cam.z=.6;camClamp()},done:()=>TUT.att.length>=5&&!TUT.att.some(o=>o&&o.alive)},
+ {t:'Hazırsın',x:'Özet:<br>• <b>Sağ panel</b> = kur. Savunma bataryaları kendi kendine ateş eder; rampalar saldırı içindir.<br>• <b>Alt konsol</b> vurmak için: silahı seç, Hedef seç\'e bas, haritada hedefe tıkla, emniyeti kaldır, ATEŞ\'e basılı tut.<br>• <b>Üst şerit</b> = danışman. Ne yapman gerektiğini söyler; düğmesine basarsan kendisi yapar.<br><br>Rakip artık gerçekten saldıracak. 15 dakika dayan, ondan çok hasar verdir. Komuta merkezin düşerse kaybedersin.',btn:'Oyuna devam',leave:()=>tutEnd()},
 ];
 function tutSpot(t){const p=advSpot(t,t==='TEL'?HQPOS[ME]:assets(ME).find(a=>a.t==='HQ')||HQPOS[ME]);TUT.spot=p?{x:p.x,y:p.y,r:46}:null;if(p){cam.x=p.x+80;cam.y=p.y-60;cam.z=.7;camClamp()}}
 function tutAttack(){const h=assets(ME).find(a=>a.t==='HQ');const tg=assets(ME).filter(a=>a.t!=='HQ'&&hyp(a.x-h.x,a.y-h.y)<900);const dx=FOEPT(ME).x-h.x,dy=FOEPT(ME).y-h.y,d=hyp(dx,dy);const sx=h.x+dx/d*950,sy=h.y+dy/d*950;TUT.att=[];
@@ -2821,7 +2969,7 @@ function tutStart(){TUT.on=true;TUT.i=0;TUT.ev={};G.freezePrep=true;G.mode='tuto
 function tutEnter(){const st=TSTEPS[TUT.i];if(st.enter)st.enter();tutRender(true)}
 function tutNext(){const st=TSTEPS[TUT.i];if(st.leave)st.leave();if(!TUT.on)return;TUT.i++;if(TUT.i>=TSTEPS.length){tutEnd();return}sfx('ok');tutEnter()}
 function tutEnd(){TUT.on=false;coach.hidden=true;document.querySelectorAll('.tut-hl').forEach(e=>e.classList.remove('tut-hl'));if(G){G.freezePrep=false;if(G.ai.E&&G.ai.E.next>1e8)G.ai.E.next=40;G.mode='war'}lsSet('gok.tut','1')}
-function tutRender(force){const st=TSTEPS[TUT.i];const k=TUT.i+'';if(force||coach.dataset.k!==k){coach.dataset.k=k;coach.innerHTML=`<div class="ch"><span>Eğitim · ${TUT.i+1}/${TSTEPS.length}</span><button data-tu="skip">Eğitimi geç</button></div><h5>${st.t}</h5><p>${st.x}</p>${st.btn?`<div class="cta"><button class="btn pri" data-tu="next">${st.btn}</button></div>`:''}`;coach.hidden=false}}
+function tutRender(force){const st=TSTEPS[TUT.i];const k=TUT.i+'';if(force||coach.dataset.k!==k){coach.dataset.k=k;coach.innerHTML=`<div class="ch"><span>Eğitim, adım ${TUT.i+1}/${TSTEPS.length}</span><button data-tu="skip">Eğitimi geç</button></div><h5>${st.t}</h5><p>${st.x}</p>${st.btn?`<div class="cta"><button class="btn pri" data-tu="next">${st.btn}</button></div>`:''}`;coach.hidden=false}}
 coach.addEventListener('click',e=>{const b=e.target.closest('[data-tu]');if(!b)return;audioInit();if(b.dataset.tu==='skip'){tutEnd();toast('Eğitim kapatıldı. "Nasıl oynanır" içinden tekrar başlatabilirsin.','W')}else tutNext()});
 function tutTick(dt){if(!TUT.on||!G)return;if(!ov.hidden){coach.hidden=true;return}coach.hidden=false;const st=TSTEPS[TUT.i];if(st.tick)st.tick(dt);
   const sel=st.el?st.el():null;document.querySelectorAll('.tut-hl').forEach(e=>{if(!sel||!e.matches(sel))e.classList.remove('tut-hl')});const el=sel&&document.querySelector(sel);
@@ -2848,9 +2996,9 @@ function trkInfo(){const t=G&&G.selTrk&&airById(G.selTrk);if(!t||!t.alive||mapBu
   const gen=Object.entries(PK).filter(([ty,tab])=>tab[t.kind]).sort((a,b)=>b[1][t.kind]-a[1][t.kind]).map(([ty,tab])=>`${SITE[ty].n.replace(' HS','')} ${Math.round(tab[t.kind]*100)}%`);
   trkPop.innerHTML=`<div class="th"><b>${esc(trkName(t))}</b><span>${esc(KNAME[t.kind]||'')}</span><button data-tp="x">×</button></div>
    <dl><dt>Hız</dt><dd>Mach ${f1(Math.max(.1,sp))}</dd><dt>İrtifa</dt><dd>${f1(t.z)} km</dd><dt>Varış</dt><dd>${Math.ceil(etaOf(t))} sn</dd><dt>Hedef</dt><dd>${hit?esc(hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)):ip?'boş arazi':'belirsiz'}</dd>
-   ${M?`<dt>Harp başlığı</dt><dd>${M.cl?M.cl+' × ':''}${M.dmg} · ${f1(M.r/KMU)} km</dd>`:''}${M&&wFacts(t.k)?`<dt>Özellik</dt><dd>${esc(wFacts(t.k))}</dd>`:''}${t.eng?`<dt>Yolda</dt><dd>${t.eng} önleyici</dd>`:''}</dl>
+   ${M?`<dt>Harp başlığı</dt><dd>${M.cl?M.cl+' × ':''}${M.dmg}, ${f1(M.r/KMU)} km çap</dd>`:''}${M&&wFacts(t.k)?`<dt>Özellik</dt><dd>${esc(wFacts(t.k))}</dd>`:''}${t.eng?`<dt>Yolda</dt><dd>${t.eng} önleyici</dd>`:''}</dl>
    <h6>Senin bataryaların</h6><table>${rows.length?rows.map(r=>`<tr class="${r[4]}"><td>${esc(r[0])}${r[1]>1?' ×'+r[1]:''}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join(''):'<tr><td>Bataryan yok</td></tr>'}</table>
-   <div class="gen">Genel olarak durdurabilen: ${esc(gen.join(' · ')||'yok')}</div>
+   <div class="gen">Genel olarak durdurabilen: ${esc(gen.join(', ')||'yok')}</div>
    <div class="cta"><button class="btn sm pri" data-tp="eng">Elle önle</button></div>`;trkPop.hidden=false;placeTrkPop()}
 function placeTrkPop(){if(trkPop.hidden||!G)return;const t=G.selTrk&&airById(G.selTrk);if(!t||!t.alive){trkPop.hidden=true;return}const r=cv.getBoundingClientRect();const x=r.left+sX(t.x),y=r.top+sY(t.y-LIFT(t.z));const w=trkPop.offsetWidth,h=trkPop.offsetHeight;
   let L=x+26,T=y-h/2;if(L+w>r.right-8)L=x-w-26;trkPop.style.left=clamp(L,r.left+6,r.right-w-6)+'px';trkPop.style.top=clamp(T,r.top+6,r.bottom-h-6)+'px'}
@@ -2859,7 +3007,7 @@ trkPop.addEventListener('click',e=>{const b=e.target.closest('[data-tp]');if(!b)
 // ================================================================ threat HUD
 function updHUD(){const th=$('#threats');if(!G||G.phase!=='war'){th.hidden=true;return}const gr={};for(const o of G.air){if(!o.alive||o.side===ME||!G.trk[ME].has(o.id)||o.kind==='icp')continue;const k=G.quad?o.side+':'+trkName(o):trkName(o);const g=gr[k]=gr[k]||{n:0,eta:1e9,o:null,ign:0,kind:o.kind};g.n++;const e=etaOf(o);if(e<g.eta){g.eta=e;g.o=o}const ip=impactPt(o);if(ip&&!G.ents.some(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+90))g.ign++}
   const L=Object.entries(gr).sort((a,b)=>a[1].eta-b[1].eta);th.hidden=!L.length;if(!L.length)return;
-  th.innerHTML=`<h5><span>Gelen tehdit</span><span>${L.reduce((a,b)=>a+b[1].n,0)}</span></h5>`+L.slice(0,6).map(([k,g])=>{const ip=g.o&&impactPt(g.o);const hit=ip&&G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);return `<div${G.quad?` style="color:${SHEX[g.o.side]}"`:""} class="${HEAVY.has(g.kind)?'hv':''}"><span>${esc(G.quad?natOf(g.o.side).n+' · '+trkName(g.o):k)} <i class="kd"${G.quad?' style="color:inherit"':''}>${esc(KNAME[g.kind]||'')}</i>${g.n>1?' ×'+g.n:''}${hit?' → '+esc(hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)):''}${g.ign?` <span class="ig">(${g.ign} boşa)</span>`:''}</span><b${G.quad?' style="color:inherit"':''}>${f1(g.eta)} sn</b></div>`}).join('')}
+  th.innerHTML=`<h5><span>Gelen tehdit</span><span>${L.reduce((a,b)=>a+b[1].n,0)}</span></h5>`+L.slice(0,6).map(([k,g])=>{const ip=g.o&&impactPt(g.o);const hit=ip&&G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);return `<div${G.quad?` style="color:${SHEX[g.o.side]}"`:""} class="${HEAVY.has(g.kind)?'hv':''}"><span>${esc(G.quad?natOf(g.o.side).n+', '+trkName(g.o):k)} <i class="kd"${G.quad?' style="color:inherit"':''}>${esc(KNAME[g.kind]||'')}</i>${g.n>1?' ×'+g.n:''}${hit?', hedef '+esc(hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)):''}${g.ign?` <span class="ig">(${g.ign} boşa)</span>`:''}</span><b${G.quad?' style="color:inherit"':''}>${f1(g.eta)} sn</b></div>`}).join('')}
 
 // ================================================================ input
 function toW(e){const r=cv.getBoundingClientRect();const sx=e.clientX-r.left,sy=e.clientY-r.top;return{x:wX(sx),y:wY(sy),sx,sy}}
@@ -2867,7 +3015,7 @@ function pickTrack(w,R=34){let best=null,bd=1e9;for(const o of G.air){if(!o.aliv
 function pickEnt(w){let best=null,bd=1e9;for(const e of G.ents){if(!e.alive&&!e.ruin)continue;if(e.side!==ME&&e.cat==='site'&&!G.ghost[ME].has(e.id))continue;const r=Math.max(vr(e),px(16))+px(4);const d=hyp(e.x-w.x,e.y-w.y);if(d<r&&d<bd){bd=d;best=e}}return best}
 function tgtLabel(x,y){const e=G.ents.filter(e=>e.alive&&e.side!==ME&&(e.cat==='asset'||G.ghost[ME].has(e.id))).sort((a,b)=>hyp(a.x-x,a.y-y)-hyp(b.x-x,b.y-y))[0];if(e&&hyp(e.x-x,e.y-y)<e.r+40)return e.cat==='asset'?e.nm:nameOf(e.side,e.t);return `${(x/KMU)|0}/${(y/KMU)|0} km noktası`}
 const selectionLabel=document.createElement('div');selectionLabel.id='selection-label';selectionLabel.hidden=true;
-selectionLabel.innerHTML='<span></span><button type="button" aria-label="Seçimin bilgisini aç" title="Bilgi · I">ⓘ</button>';stage.appendChild(selectionLabel);
+selectionLabel.innerHTML='<span></span><button type="button" aria-label="Seçimin bilgisini aç" title="Bilgi (I)">ⓘ</button>';stage.appendChild(selectionLabel);
 const mapBusy=()=>!!mode&&['place','target','sat'].includes(mode.k);
 // with the attack console open and a weapon chosen, enemy ground is a target: one click aims there
 const autoTgt=()=>!!G&&!mode&&!conEl.hidden&&G.con.mode==='atk'&&!!G.con.w&&!G.over;
@@ -2923,26 +3071,26 @@ addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(!G||!
   if(k==='i'){e.preventDefault();requestInfo();return;}
   if(k===' '){e.preventDefault();if(!conEl.hidden&&FCS.armed){if(!e.repeat)holdStart()}else if(!TUT.on&&!G.net){G.paused=!G.paused;updTop()}return}
   if(k==='enter'&&!conEl.hidden&&gcsOn()){e.preventDefault();gcsPress();return}
-  if(k==='escape'){GCS.stage=0;mode=null;G.powerSide=null;renderPower();hint('');clearSelection();if(!conEl.hidden)renderCon();if(FCS.armed)setArm(false);renderSide();return}
-  if(k==='c'){G.cov=!G.cov;renderTop();return}if(k==='v'){setView(VIEW==='tac'?'sat':'tac');return}if(k==='f'){e.preventDefault();fitAll();return}if(k==='t'){e.preventDefault();if(conEl.hidden||G.con.mode!=='atk'){openCon('atk')}mode=mode?.k==='target'?null:{k:'target'};closeInfo();qaClose();hint(mode?'Saldırı hedefini işaretle · Shift: ara nokta · Esc: bitir':'');renderCon();return}if(k==='h'){camPrev=null;fitBtn();cam.x=HQPOS[ME].x+300*(ME==='E'?-1:1);cam.y=HQPOS[ME].y-250;camClamp();return}
+  if(k==='escape'){if(WPOP)weaponPop(null);GCS.stage=0;mode=null;G.powerSide=null;renderPower();hint('');clearSelection();if(!conEl.hidden)renderCon();if(FCS.armed)setArm(false);renderSide();return}
+  if(k==='c'){G.cov=!G.cov;renderTop();return}if(k==='v'){setView(VIEW==='tac'?'sat':'tac');return}if(k==='f'){e.preventDefault();fitAll();return}if(k==='t'){e.preventDefault();if(conEl.hidden||G.con.mode!=='atk'){openCon('atk')}mode=mode?.k==='target'?null:{k:'target'};closeInfo();qaClose();hint(mode?'Haritada hedefi işaretle. Shift ile ara nokta eklersin, Esc ile bitirirsin.':'');renderCon();return}if(k==='h'){camPrev=null;fitBtn();cam.x=HQPOS[ME].x+300*(ME==='E'?-1:1);cam.y=HQPOS[ME].y-250;camClamp();return}
   if(k==='a'&&!conEl.hidden){setArm(!FCS.armed);return}});
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys[k]=false;if(k===' '&&FCS.holding)holdEnd()});
 
 // ================================================================ overlays: intro, setup, howto, end
 let ovBack=null,SETUP=null,LAST=null,REPKEEP=null;let LASTREC=(()=>{try{return JSON.parse(lsGet('gok.lastrec')||'null')}catch(e){return null}})();
 function overlayHTML(html,ttl){ov.classList.toggle('ttl',!!ttl);ov.innerHTML=html;ov.hidden=false;ov.scrollTop=0;if(G&&!G.over)G.paused=true}
-function ttFrame(inner){return `<div class="tt"><div class="tt-bg"></div><div class="tt-rings">${[18,34,52,72].map(v=>`<i style="width:${v}vmax;height:${v}vmax"></i>`).join("")}</div><div class="tt-sweep"></div><div class="tt-shade"></div><div class="tt-top"><span><b>Menzil</b> · Gök</span><span>Saha ${(SETUP&&SETUP.mode==='ffa'?MAPS.quad:MAPS.duo).km} · ${(SETUP&&SETUP.mode==='ffa'?MAPS.quad:MAPS.duo).where}</span></div>${inner}<div class="tt-foot"><span>Kuzey ↑ · güneş GD, 20° · akşam</span><span>Hava savunma harekâtı</span></div></div>`}
+function ttFrame(inner){return `<div class="tt"><div class="tt-bg"></div><div class="tt-rings">${[18,34,52,72].map(v=>`<i style="width:${v}vmax;height:${v}vmax"></i>`).join("")}</div><div class="tt-sweep"></div><div class="tt-shade"></div><div class="tt-top"><span><b>Menzil</b> Gök</span><span>Saha ${(SETUP&&SETUP.mode==='ffa'?MAPS.quad:MAPS.duo).km}, ${(SETUP&&SETUP.mode==='ffa'?MAPS.quad:MAPS.duo).where}</span></div>${inner}<div class="tt-foot"><span>Kuzey yukarıda, güneş güneydoğuda, akşam</span><span>Hava savunma harekâtı</span></div></div>`}
 const natOf2=o=>`${(NAT[o.nat]||{}).n||o.nat} – ${o.mode==='ffa'?'dörtlü':(NAT[o.enat]||{}).n||''}`;
 function intro(){if(TUT.on)tutEnd();netLeave();ME='W';G=null;ovBack=null;renderTop();side.innerHTML='';conEl.hidden=true;$('#adv').hidden=true;$('#threats').hidden=true;const seen=lsGet('gok.tut');
-  const row=(o,t,d,pri)=>`<button class="${pri?'pri':''}" data-o="${o}">${t}<span>→</span><em>${d}</em></button>`;
-  overlayHTML(ttFrame(`<div class="tt-main"><h1>MENZİL</h1><p class="tt-sub">Gök · hava savunma</p><p class="tt-lead">İki kıyı, aradaki boğaz. Rakibin füzeleri boğazı geçecek; hangisini, neyle ve kaça durduracağına sen karar veriyorsun.</p>
-  <nav class="tt-nav">${seen?row('setup','Harekâta başla','2 dk hazırlık, 15 dk harekât',1)+row('tut','Eğitim','oynayarak, yaklaşık 2 dakika'):row('tut','Eğitimle başla','oynayarak, yaklaşık 2 dakika',1)+row('setup','Doğrudan harekât','2 dk hazırlık, 15 dk harekât')}${row('online','Arkadaşla oyna','oda kur ya da koda katıl · çevrimiçi 1’e 1')+row('ffa','Dörtlü harekât','4 ülke · herkes herkese · sona kalan kazanır')+(LASTREC?row('watch','Son maçı izle',`${natOf2(LASTREC.opts)} · ${mmss(LASTREC.ticks/60)}`):'')+row('how','Kurallar','silahlar, radar, menzil, irtifa')}</nav></div>`),1)}
+  const row=(o,t,d,pri)=>`<button class="${pri?'pri':''}" data-o="${o}">${t}<em>${d}</em></button>`;
+  overlayHTML(ttFrame(`<div class="tt-main"><h1>MENZİL</h1><p class="tt-sub">Gök, hava savunma</p><p class="tt-lead">İki kıyı, aradaki boğaz. Rakibin füzeleri boğazı geçecek; hangisini, neyle ve kaça durduracağına sen karar veriyorsun.</p>
+  <nav class="tt-nav">${seen?row('setup','Harekâta başla','2 dk hazırlık, 15 dk harekât',1)+row('tut','Eğitim','oynayarak, yaklaşık 2 dakika'):row('tut','Eğitimle başla','oynayarak, yaklaşık 2 dakika',1)+row('setup','Doğrudan harekât','2 dk hazırlık, 15 dk harekât')}${row('online','Arkadaşla oyna','çevrimiçi bire bir: oda kur ya da koda katıl')+row('ffa','Dörtlü harekât','dört ülke, herkes herkese; sona kalan kazanır')+(LASTREC?row('watch','Son maçı izle',`${natOf2(LASTREC.opts)}, ${mmss(LASTREC.ticks/60)}`):'')+row('how','Kurallar','silahlar, radar, menzil, irtifa')}</nav></div>`),1)}
 function drawSetup(){const S=SETUP,N=NAT[S.nat],sys=[['Üst katman','UPPER'],['Uzun menzil','LRAD'],['Orta menzil','MRAD'],['Yakın savunma','CIWS'],['Balistik','BM'],['Hipersonik','HGV']];
   overlayHTML(ttFrame(`<div class="ts"><div><h2>${S.mode==='ffa'?'Dörtlü harekât':'Harekât planı'}</h2><p class="lbl">Ülke</p><div class="ts-nat">${Object.entries(NAT).map(([k,n])=>`<button class="${S.nat===k?'on':''}" data-nat="${k}">${n.n}<small>${k}</small>${profBars(k)}</button>`).join('')}</div></div>
   <div class="ts-info"><p>${N.trait}</p><div class="ts-prof">${AXES.map(([a,n])=>`<span>${n}</span><i>${[1,2,3,4,5].map(j=>`<b class="${j<=NPROF[S.nat][a]?'on':''}"></b>`).join('')}</i>`).join('')}</div><dl class="ts-sys">${sys.map(([a,k])=>`<dt>${a}</dt><dd>${N.names[k]||(SITE[k]||MUN[k]||{}).n||'—'}</dd>`).join('')}</dl>
    <div><p class="lbl">Zorluk</p><div class="ts-seg">${Object.entries(DIFF).map(([k,d])=>`<button class="${S.diff===k?'on':''}" data-df="${k}">${d.n}</button>`).join('')}</div><p class="ts-note" style="margin:8px 0 0">${DIFF[S.diff].d}</p></div>
-   ${S.mode==='ffa'?`<div><p class="lbl">Rakipler</p><p class="ts-note" style="margin:4px 0 0">${Object.entries(NAT).filter(([k])=>k!==S.nat).map(([k,n])=>n.n).join(' · ')} arasından üçü, her biri bir köşede; hepsi bilgisayar.</p></div>`:`<div><p class="lbl">Rakip</p><div class="ts-seg"><button class="${S.enat==='rnd'?'on':''}" data-en="rnd">Rastgele</button>${Object.entries(NAT).filter(([k])=>k!==S.nat).map(([k,n])=>`<button class="${S.enat===k?'on':''}" data-en="${k}">${n.n}</button>`).join('')}</div></div>`}
-   <p class="ts-note">${S.mode==='ffa'?'Dört kıyı, ortada haç biçimli deniz. Bütçe $900M, 2 dakika hazırlık; sonra herkes istediğine saldırır. Komuta merkezi düşen çıkar, sona kalan kazanır (15 dk dolarsa en çok hasar verdiren).':'Bütçe $900M. Önce 2 dakika hazırlık; kimse ateş etmez. Sonra 15 dakika harekât.'}</p>
+   ${S.mode==='ffa'?`<div><p class="lbl">Rakipler</p><p class="ts-note" style="margin:4px 0 0">${Object.entries(NAT).filter(([k])=>k!==S.nat).map(([k,n])=>n.n).join(', ')} arasından üçü, her biri bir köşede; hepsi bilgisayar.</p></div>`:`<div><p class="lbl">Rakip</p><div class="ts-seg"><button class="${S.enat==='rnd'?'on':''}" data-en="rnd">Rastgele</button>${Object.entries(NAT).filter(([k])=>k!==S.nat).map(([k,n])=>`<button class="${S.enat===k?'on':''}" data-en="${k}">${n.n}</button>`).join('')}</div></div>`}
+   <p class="ts-note">${S.mode==='ffa'?'Dört kıyı, ortada haç biçimli deniz. Bütçe $900M, 2 dakika hazırlık; sonra herkes istediğine saldırır. Komuta merkezi düşen çıkar, sona kalan kazanır (15 dk dolarsa en çok hasar verdiren).':'Bütçe $900M. Önce 2 dakika hazırlık, kimse ateş etmez. Sonra 15 dakika harekât.'}</p>
    <div class="ts-go"><button class="go" data-o="go">Hazırlığa başla</button><button class="bk" data-o="menu">Geri</button></div></div></div>`),1)}
 // ================================================================ online (arkadaşla oyna)
 // Lockstep: the room server sends a turn every 100 ms (6 ticks) with the orders given in it; both browsers apply
@@ -3001,22 +3149,22 @@ function drawLobby(){const N=NET;if(G&&!G.over)return;
 function netLeave(){if(NET&&NET.ws){const w=NET.ws;NET.ws=null;try{w.close()}catch(e){}}NET=null}
 function startGame(m,opts,rec,online){if(!online)ME='W';if(rec){opts=rec.opts;m=rec.opts.mode}if(rec||online){if(!REPKEEP)REPKEEP=DESIGNS||[];loadCustom(opts.designs||[],true)}else{if(REPKEEP){loadCustom(REPKEEP,true);REPKEEP=null}const o=Object.keys(NAT).filter(k=>k!==opts.nat);if(!opts.enat||opts.enatSel==='rnd')opts.enat=o[(Math.random()*o.length)|0];if(m==='ffa')opts.enats=o.sort(()=>Math.random()-.5);opts.m=m;LAST=opts}
   ov.classList.add('ttl');ov.innerHTML=ttFrame('<div class="tt-main"><p class="tt-sub">Hava sahası yükleniyor</p></div>');ov.hidden=false;
-  const need=m==='ffa'?['m4','mat4']:['m0','mat'];let tries=0;const go=()=>{if(need.some(k=>!ready(k))&&tries++<150){setTimeout(go,100);return}newGame(m,opts);if(rec){G.replay={cmds:rec.cmds,i:0,end:rec.ticks};G.watch=true}if(online){G.net=true;G.speed=1}G.advS={t:0,list:[],obj:null,snz:{},al:{},pin:0,sig:''};cloudSprites();for(const k in BP)delete BP[k];tab='D';mode=null;cam.z=.7;cam.x=HQPOS[ME].x+420*(ME==='E'?-1:1);cam.y=HQPOS[ME].y-260;resize();camClamp();ov.hidden=true;sideSig='';renderTop();buildSide();openCon('atk');FCS.armed=false;
+  const need=m==='ffa'?['m4','mat4']:['m0','mat'];let tries=0;const go=()=>{if(need.some(k=>!ready(k))&&tries++<150){setTimeout(go,100);return}newGame(m,opts);if(rec){G.replay={cmds:rec.cmds,i:0,end:rec.ticks};G.watch=true}if(online){G.net=true;G.speed=1}G.advS={t:0,list:[],obj:null,snz:{},al:{},pin:0,sig:''};cloudSprites();for(const k in BP)delete BP[k];tab='K';mode=null;cam.z=.7;cam.x=HQPOS[ME].x+420*(ME==='E'?-1:1);cam.y=HQPOS[ME].y-260;resize();camClamp();ov.hidden=true;sideSig='';renderTop();buildSide();openCon('atk');FCS.armed=false;
     if(online){TUT.on=false;coach.hidden=true;toast(`<b>Çevrimiçi harekât</b>${natOf(ME).n} olarak ${natOf(G.sides.find(x=>x!==ME)).n}'ya karşı. 2 dakika hazırlık; ikiniz de "Hazırım" deyince başlar. Duraklatma yok.`,'W',true)}else if(rec){conEl.hidden=true;stage.style.setProperty('--conH','0px');$('#adv').hidden=true;TUT.on=false;coach.hidden=true;toast(`<b>Tekrar</b>${natOf(ME).n} – ${G.sides.slice(1).map(x=>natOf(x).n).join(', ')} maçı baştan oynatılıyor. Emir veremezsin; hızı üstteki 2× düğmesiyle 4×'e kadar çıkarabilirsin.`,'W',true)}else if(m==='tutorial')tutStart();else{TUT.on=false;coach.hidden=true;toast(G.quad?`<b>Hazırlık</b>${natOf(ME).n} sol alt köşede. Karşında ${G.sides.slice(1).map(x=>natOf(x).n).join(', ')}. 2 dakikan var; sonra herkes herkese saldırabilir.`:`<b>Hazırlık</b>${natOf(ME).n} olarak ${natOf(G.sides.find(x=>x!==ME)).n}'ya karşı. 2 dakikan var: radar, hava savunma, rampalar.`,'W',true)}sfx('radio')};setTimeout(go,40)}
 const HOWTO=[
- ['Oyunun mantığı','<p>İki ülke karşı karşıya. İki tarafın da şehirleri, rafinerisi, santrali, hava üssü ve komuta merkezi var. <b>Para bu tesislerden gelir</b>; hasar alan tesis daha az kazandırır.</p><p>Yaptığın iki iş var:</p><ul><li><b>Savunmak</b>: radar ve hava savunma bataryaları kurarsın. Bataryalar menzile giren tehdidi kendisi vurur.</li><li><b>Vurmak</b>: rampa kurar, atış konsolundan rakibin tesislerine füze ve İHA atarsın.</li></ul><p><b>Kazanmak</b>: 15 dakika sonunda rakibe daha çok hasar verdiren kazanır. Komuta merkezi yıkılan hemen kaybeder.</p><p>Başta 2 dakikalık hazırlık var: $900M bütçeyle kurarsın, kimse ateş etmez.</p>'],
- ['Ekran: ne nerede','<ul><li><b>Sağ panel · İNŞA</b>: haritaya kurduğun her şey. <i>Savunma</i> sekmesinde radar ve bataryalar, <i>Rampalar</i> sekmesinde füze ve İHA rampaları var. Karta tıkla, sonra haritada kendi toprağına tıkla.</li><li><b>Alt şerit · ATIŞ KONSOLU</b>: 1) silah seç, 2) haritada hedefe tıkla, 3) emniyet kapağını kaldır ve ATEŞ\'e basılı tut.</li><li><b>Sağ üst kutu</b>: sana gelen tehditler ve kaç saniyede geldikleri.</li><li><b>Üst şerit · danışman</b>: o an en önemli işi söyler; düğmesine basarsan kendisi yapar.</li><li><b>Mini harita</b> (sağ üst): tıkla, oraya gider.</li></ul>'],
- ['Silahlar ve para','<ul><li>Füzeyi ayrıca satın almazsın: ateşlediğin anda fiyatı kasandan düşer.</li><li>Her <b>füze rampası</b> bir füze atar, sonra dolum yapar. 3 rampa = aynı anda 3 füze.</li><li><b>İHA rampası</b> bir seferde 6 İHA uçurur.</li><li><b>Hava üssü</b> 4 uçakla SEAD (radar avı) ve süzülen bomba görevi yapar.</li><li><b>Balistik</b>: bulutların üstüne çıkar, dik iner; onu yalnız uzun menzil ve üst katman savunma durdurur. <b>Seyir</b>: 50 m\'den gelir, radar geç görür. <b>Hipersonik</b>: pahalı, durdurması en zor. <b>Kamikaze İHA</b>: ucuz ve yavaş; rakibin pahalı önleyicilerini tüketir.</li></ul>'],
- ['Silah seçimi ve tasarım','<ul><li>Konsolun solunda sınıflar var: <b>Balistik, Seyir, Hipersonik, Kamikaze İHA, Destek, Uçak, Özel</b>. Her sınıfta farklı modeller: kısa menzil, ağır başlık, manevralı, misketli, aldatıcılı, gizli, süpersonik…</li><li>Ortadaki çubuklar seçtiğin silahın <b>hasar, etki alanı, isabet, hız ve beka</b> (savunmayı aşma) değerlerini gösterir. Altında rakipte onu durdurabilecek sistemler yazar.</li><li><b>Özel → + Yeni tasarım</b>: gövde, harp başlığı, motor, güdüm ve beka seçip kendi silahını yaparsın. Fiyatı parçalara göre hesaplanır.</li></ul>'],
- ['Ortak harekât: kör et ve vur','<ul><li>Hedefi işaretledikten sonra <b>Kör et + vur</b>: oyun önce hedefin üstüne <b>karıştırıcı İHA</b> (26 km içindeki radarları körleştirir), bildiğin radarlara <b>anti-radar İHA</b>, 6 sn sonra <b>aldatıcılar</b>, 12 sn sonra ana silahını gönderen bir plan kurar.</li><li>İstersen elle de kurarsın: silah ve hedef seç, <b>+ Plana ekle</b>, başka silah ya da hedef seç, yine ekle. Her kalemin varış saniyesini −/+ ile ayarla. Tek ATEŞ hepsini, hedefe o sırayla varacak şekilde gönderir.</li><li>Haritada plan kalemleri numaralı sarı kutularla görünür.</li></ul>'],
- ['Hedef ve hasar','<ul><li>Konsolda silah seçiliyken haritada düşman tarafına tıkla: <b>tıkladığın nokta hedeftir</b>. Bir tesisin tam üstüne tıklamak zorunda değilsin.</li><li>Sarı çember patlama alanıdır. İçindeki her tesis ve batarya hasar alır; merkeze yakın olan daha çok.</li><li>Füze düşünce sonucu kısa bir raporla görürsün: neyi vurdu, ne kadar hasar verdi.</li><li>Rakibin hava savunmasını ancak radarını açınca (yaklaşık yer), ateş edince, keşif İHA\'sıyla ya da uydu geçişinde görürsün. Kırmızı halkalı işaretler bildiğin düşman bataryalarıdır.</li></ul>'],
- ['Hava savunma katmanları','<ul><li><b>Radar</b>: iz verir. Alçak uçanı ancak yaklaşınca görür.</li><li><b>Yakın katman</b> (top, lazer, önleyici İHA): dron ve seyir füzesi, son birkaç km. Ucuzdur.</li><li><b>Kısa ve orta menzil</b>: seyir füzesi, uçak, dron.</li><li><b>Uzun menzil</b>: balistik füzenin son evresi ve uçaklar.</li><li><b>Üst katman</b>: balistiği atmosferin dışında vurur; sahte başlıkları ayırt edemez.</li><li>Ateş kuralı: <i>Otomatik</i> her şeye ateş eder; <i>Seçici</i> boş araziye düşecek olana ve ucuz dronlara pahalı füze harcamaz.</li></ul>'],
- ['Kontroller','<ul><li>Haritayı kaydır: sol tuşla sürükle, ok tuşları ya da mini harita. Yakınlaş: fare tekerleği.</li><li><kbd>Space</kbd>: duraklat. Emniyet açıkken basılı tut: ateş.</li><li><kbd>A</kbd> emniyet kapağı, <kbd>C</kbd> menzil çemberleri, <kbd>H</kbd> üsse dön, <kbd>Esc</kbd> vazgeç.</li><li>Kartların üstüne gelince teknik çizim ve özellikler açılır.</li></ul><p><button class="btn pri" data-o="tut">Uygulamalı eğitimi başlat</button></p>'],
+ ['Oyunun mantığı','<p>İki ülke karşı karşıya. İkisinin de şehirleri, rafinerisi, santrali, fabrikası, hava üssü ve komuta merkezi var. <b>Para bu tesislerden gelir</b>; hasar alan tesis daha az kazandırır.</p><p>Üç işin var: <b>kurmak</b>, <b>savunmak</b> ve <b>vurmak</b>.</p><p><b>Kazanmak</b>: 15 dakikanın sonunda rakibe daha çok hasar verdiren kazanır. Komuta merkezi yıkılan o an kaybeder; ama merkez bir sığınaktır, normal başlıklar ona ancak çeyrek hasar verir. Onu tek başına yerle bir etmeye çalışmak uzun ve pahalı bir kumardır.</p><p>Başta 2 dakika hazırlık var: $900M ile kurarsın, kimse ateş etmez. İkiniz de hazır olunca harekât başlar.</p>'],
+ ['Ekran: ne nerede','<ul><li><b>Sağ panelde dört sekme var.</b> <i>Kur</i>: radar, bataryalar ve rampalar; karta tıkla, sonra haritada kendi tarafına tıkla, en yakın boş kurulum yerine kurulur. <i>Savunma</i>: ateş kuralı, korumasız tesisler ve bataryalarının durumu. <i>Saldırı</i>: rampaların, füze üretimin ve en çok kazandıran saldırı önerileri. <i>Kayıt</i>: verdiğin her emir ve sonucu.</li><li><b>Alttaki ateş konsolu</b>: soldan silahı seç, ortada adedi ayarla ve hedefi işaretle, sağda emniyeti kaldırıp ATEŞ\'e basılı tut.</li><li><b>Sağ üstteki kutu</b>: sana gelen tehditler ve kaç saniyede varacakları.</li><li><b>Üstteki danışman</b>: o an en önemli işi söyler; düğmesine basarsan kendisi yapar.</li></ul>'],
+ ['Para, üretim ve zaman','<ul><li>Füzenin parasını ateşlediğin anda ödersin; ayrıca stok almana gerek yok.</li><li>Ama rampadan atılan füzeler <b>fabrikadan</b> gelir: her an hazır olan sayı sınırlıdır (en çok 24) ve dakikada temel 4 füzeye, her sağlam fabrika için 4 füze daha eklenir. Rakibin fabrikasını vurmak, onun füze yağmurunu yavaşlatır.</li><li>Kurulum zaman alır: top 6 saniyede, uzun menzil batarya 22, üst katman 30 saniyede hazır olur. Rampa 16 saniye.</li><li>Her <b>füze rampası</b> bir füze atar, sonra 22 saniye dolum yapar. <b>İHA rampası</b> bir seferde 6 İHA uçurur. <b>Hava üssü</b> 4 uçakla radar avı ve süzülen bomba görevi yapar.</li><li>Balistik füze ateşlenince yanmalı motoru uzaydan görülür: <b>rampanın yeri rakibe belli olur</b>. Aynı yerden ısrarla atarsan karşı ateş yersin.</li></ul>'],
+ ['Silah seçimi ve tasarım','<ul><li>Konsolun solunda aileler var: Balistik, Seyir, Hipersonik, İHA, Destek, Uçak, Deneysel ve Özel. Her ailede farklı modeller: kısa menzil, ağır başlık, manevralı, misketli, aldatıcılı, gizli, süpersonik…</li><li>Bir silaha tıklayınca yanında ayrıntısı açılır: hasar, etki alanı, isabet, hız, savunmayı aşma ve rakipte onu kimin durdurabileceği. Aynı silaha bir daha tıklayınca kapanır.</li><li><b>Özel</b> ailesinde <b>Yeni tasarım</b> ile gövde, harp başlığı, motor, güdüm ve beka seçip kendi silahını yaparsın. Fiyatı parçalara göre hesaplanır.</li></ul>'],
+ ['Ortak harekât: kör et, sonra vur','<ul><li>Hedefi işaretledikten sonra <b>Kör et, sonra vur</b>: önce hedefin üstüne <b>karıştırıcı İHA</b> (26 km içindeki radarları körleştirir), bildiğin radarlara <b>anti-radar İHA</b>, 6 saniye sonra <b>aldatıcılar</b>, 12 saniye sonra ana silahın gider.</li><li>Elle de kurabilirsin: silah ve hedef seç, <b>Plana ekle</b>, başka silah ya da hedef seç, yine ekle. Her kalemin varış saniyesini −/+ ile ayarla. Tek atış hepsini, hedefe o sırayla varacak şekilde gönderir.</li></ul>'],
+ ['Hedef ve hasar','<ul><li>Konsolda silah seçiliyken haritada rakip tarafına tıkla: <b>tıkladığın nokta hedeftir</b>. Bir tesisin üstüne tıklarsan yanında saldırı kartı açılır; adedi oradan da ayarlayıp gönderebilirsin.</li><li>Sarı çember patlama alanıdır. İçindeki her tesis ve batarya hasar alır; merkeze yakın olan daha çok.</li><li>Rakibin hava savunmasını ancak radarını açınca (yaklaşık yeri), ateş edince, keşif İHA\'sıyla ya da uydu çekiminde görürsün.</li></ul>'],
+ ['Hava savunma katmanları','<ul><li><b>Radar</b>: iz verir. Alçak uçanı ancak yaklaşınca görür.</li><li><b>Yakın savunma</b> (top, lazer, önleyici İHA): dron ve seyir füzesi, son birkaç kilometre. Ucuzdur.</li><li><b>Orta menzil</b>: seyir füzesi, uçak, dron.</li><li><b>Uzun menzil</b>: balistik füzeyi son evrede vurur. Sahte başlıklar atmosfere girerken yanar, onları bu katman görmez.</li><li><b>Üst katman</b>: balistik füzeyi uzayın eşiğinde vurur; orada sahte başlığı gerçeğinden ayıramaz.</li><li>Ateş kuralı: <i>Otomatik</i> her şeye ateş eder; <i>Seçici</i> boşa düşecek olana ve ucuz dronlara pahalı önleyici harcamaz; <i>Sessiz</i> radarı kapatıp saklanır.</li></ul>'],
+ ['Kontroller','<ul><li>Haritayı kaydır: sol tuşla sürükle, ok tuşları ya da mini harita. Yakınlaş: fare tekerleği.</li><li><kbd>Space</kbd>: duraklat. Emniyet açıkken basılı tut: ateş.</li><li><kbd>T</kbd> hedef seç, <kbd>A</kbd> emniyet kapağı, <kbd>C</kbd> menzil çemberleri, <kbd>H</kbd> üsse dön, <kbd>Esc</kbd> vazgeç.</li><li>Kurulum kartlarının üstüne gelince teknik çizim ve özellikler açılır.</li></ul><p><button class="btn pri" data-o="tut">Uygulamalı eğitimi başlat</button></p>'],
 ];
 function openHowto(i=0){const nav=HOWTO.map((h,j)=>`<button class="btn ${j===i?'on':'ghost'}" data-h="${j}">${j+1}. ${h[0]}</button>`).join('');overlayHTML(`<div class="card wide" style="max-width:960px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="margin:0">Nasıl oynanır</h2><button class="btn" data-o="back">Kapat</button></div><div class="howto"><nav>${nav}</nav><div class="pg"><h2 style="font-size:26px">${HOWTO[i][0]}</h2>${HOWTO[i][1]}</div></div></div>`)}
 function showEnd(){if(!G||G.ended)return;G.ended=true;const w=G.winner,sc=G.score,I=G.icp;if(!G.watch&&G.mode!=='tutorial'){LASTREC=matchRecord();try{lsSet('gok.lastrec',JSON.stringify(LASTREC))}catch(e){}}
   overlayHTML(`<div class="card"><h1 style="color:${w?'var(--'+w+')':'var(--ink)'}">${w?natOf(w).n+' kazandı':G.quad&&G.out[ME]?'Saf dışı kaldın':'Berabere'}</h1><p class="lead">${G.netEnd==='abandon'?(G.winner===ME?'Rakip bağlantıya dönmedi; maç senin.':'Bağlantın 90 saniyeden uzun koptu.'):G.time>=GAME_T?'Süre doldu: karar verdirilen hasarla.':G.quad?(G.out[ME]?'Komuta merkezin düştü.':'Son ayakta kalan.'):'Komuta merkezi düştü.'} Harekât ${mmss(G.time)} sürdü.</p>
-  <div class="cols"${G.quad?' style="grid-template-columns:repeat(2,1fr)"':''}>${G.sides.map(s=>`<div class="${s}"><h4>${natOf(s).n}${G.out[s]?' · saf dışı':''}</h4><div class="kv"><span>Verdirilen hasar</span><b>${money(sc[s].dmg)}</b><span>Harcanan (füze + önleyici)</span><b>${money(sc[s].sp)}</b><span>Önleme</span><b>${I[s].hit}/${I[s].n}${I[s].n?' · %'+Math.round(I[s].hit/I[s].n*100):''}</b><span>Önleyici harcaması</span><b>${money(I[s].cost)}</b><span>Sivil hasar (enkaz dahil)</span><b>${money(sc[s].civ)}</b></div></div>`).join('')}</div>
+  <div class="cols"${G.quad?' style="grid-template-columns:repeat(2,1fr)"':''}>${G.sides.map(s=>`<div class="${s}"><h4>${natOf(s).n}${G.out[s]?', saf dışı':''}</h4><div class="kv"><span>Verdirilen hasar</span><b>${money(sc[s].dmg)}</b><span>Harcanan (füze + önleyici)</span><b>${money(sc[s].sp)}</b><span>Önleme</span><b>${I[s].hit}/${I[s].n}${I[s].n?' (%'+Math.round(I[s].hit/I[s].n*100)+')':''}</b><span>Önleyici harcaması</span><b>${money(I[s].cost)}</b><span>Sivil hasar (enkaz dahil)</span><b>${money(sc[s].civ)}</b></div></div>`).join('')}</div>
   <div class="cta">${G.net?'<button class="btn pri" data-o="online">Yeni çevrimiçi maç</button>':'<button class="btn pri" data-o="again">Yeni harekât</button>'}${LASTREC&&G.mode!=='tutorial'?'<button class="btn" data-o="watch">'+(G.watch?'Tekrarı baştan izle':'Tekrarı izle')+'</button>':''}<button class="btn" data-o="menu">Ana ekran</button></div></div>`);ovBack=intro;sfx(w===ME?'gold':'radio')}
 ov.addEventListener('click',e=>{const h=e.target.closest('[data-h]');if(h){openHowto(+h.dataset.h);return}
   const ln=e.target.closest('[data-lnat]');if(ln&&!ln.disabled){lsSet('gok.nat',ln.dataset.lnat);if(NET&&NET.phase==='lobby'){NET.nat=ln.dataset.lnat;netSend({t:'nat',nat:ln.dataset.lnat})}else drawLobby();return}
@@ -3035,7 +3183,7 @@ ov.addEventListener('click',e=>{const h=e.target.closest('[data-h]');if(h){openH
 let lastT=performance.now(),uiT=0,mmT=0,simAcc=0;const STEP=1/60;
 // ---- watchdog: the loop never dies on an error, and long stalls are written down (shown in the corner, kept in localStorage)
 const DIAG={errs:[],hitch:[],shownAt:0,last:''};
-function diagShow(msg){const el=document.getElementById('perf');if(!el)return;DIAG.last=msg;el.innerHTML='<button aria-label="Kapat" onclick="this.parentNode.hidden=true">×</button>'+msg;el.hidden=false;DIAG.shownAt=performance.now();try{localStorage.setItem('menzil.diag',JSON.stringify({errs:DIAG.errs.slice(-8),hitch:DIAG.hitch.slice(-12)}))}catch(e){}}
+function diagShow(msg){const el=document.getElementById('perf');if(!el)return;DIAG.last=msg;let dbg=false;try{dbg=/[?&]debug/.test(location.search)||localStorage.getItem('gok.debug')==='1'}catch(e){}if(!dbg){try{localStorage.setItem('menzil.diag',JSON.stringify({errs:DIAG.errs.slice(-8),hitch:DIAG.hitch.slice(-12)}))}catch(e){}return}el.innerHTML='<button aria-label="Kapat" onclick="this.parentNode.hidden=true">×</button>'+msg;el.hidden=false;DIAG.shownAt=performance.now();try{localStorage.setItem('menzil.diag',JSON.stringify({errs:DIAG.errs.slice(-8),hitch:DIAG.hitch.slice(-12)}))}catch(e){}}
 function diagErr(where,e){const m=`${where}: ${e&&e.message||e}`;if(DIAG.errs.some(x=>x.m===m))return;DIAG.errs.push({m,st:String(e&&e.stack||'').split('\n').slice(0,3).join(' | '),t:G?Math.round(G.time):0});console.error('[menzil]',m,e);diagShow(`<b>Hata yakalandı, oyun devam ediyor</b>\n${esc(m)}\n${esc(DIAG.errs[DIAG.errs.length-1].st)}`)}
 addEventListener('error',e=>diagErr('genel',e.error||e.message));
 const TM={u:0,ui:0,r:0};
