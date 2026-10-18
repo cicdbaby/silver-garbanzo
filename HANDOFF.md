@@ -276,3 +276,12 @@ Her değişiklik için:
 - Konsol: iki modda da aynı üç kolon ve adım başlıkları (1 silah/tehdit, 2 adet-hedef/batarya, 3 ateş). Önleme: tehdit listesi tür filtresiyle, batarya listesi neden vuramadığıyla, seçilen batarya `G.con.bat` (`batOf`).
 - Konsol açıkken haritada düşman tesisine tıklamak doğrudan hedef yapar (açılır kart yok); Önleme'de iz tıklamak tehdidi seçer.
 - Üst şerit: zaman, görünüm (Uydu/Taktik/Menziller) ve tek **Menü** (ses, telsiz, sesli uyarı, nasıl oynanır, çık). Uydu çekimi harita araç çubuğuna taşındı; Göster filtresi iki görünümde de çalışır; Katmanlar paneli varsayılan kapalı. Sekmelerin altında bir cümlelik açıklama.
+
+## GÖREV 14 — savaş terazisi, karargâha giden yol, saldırı önizlemesi (Claude)
+- Savaş terazisi (`G.bal`, `balTick` saniyede bir, sim içinde): harekât başında `G.p0[s]=powerOf(s)` (tesis değeri + batarya/rampa maliyeti, maket hariç) ve `G.suf0`. Kayıp oranı `(suf−suf0)/p0`; `bal=50+50×(kayıpRakip−kayıpBen)/BAL_K` (K=0,5). 100/0 olunca maç biter (`G.balWin`); süre dolarsa önde olan kazanır. Dörtlü haritada eski kural. Ölçüm: planlı oyuncu zora karşı 2 süre galibiyeti (63, 78), 2 çöküş yenilgisi; terazi maç içinde iki yöne de sallanıyor.
+- Üst şeritte animasyonlu terazi (`trzLoop` kendi rAF döngüsü; delta yazısı, eşik parıltısı).
+- Karargâha giden yol: `hqMul(s,pen)` santrallerin sağlam oranına göre ×0,25→×0,6 (delici ×0,6→×1). Haberleşme: `G.nf[s]=.55+.45×share(COMM)` bataryaların menzilini çarpar (`rngOf` içinde). AI COMM ve PWR'yi daha değerli görür. Durum ve Saldırı sekmelerinde gösteriliyor.
+- Saldırı önizlemesi (`strikePath`, `strikePreview`, `drawStrikePreview`, `drawAProf`): konsolda hedef seçilince yol, bilinen bataryaların kubbeleri, girilen zarflarda kırmızı yol; konsolda yükseklik kesiti (kök ölçek) ve tahmini geçme şansı.
+- Takas: `forced()` her önleyici harcamasını emre (`o.icp`) ve `G.xch[side]` toplamına yazar; Kayıt'ta "rakibe X önleyici harcattı".
+- Maket rampa `DTEL` ($6M): CMD `feint` (SIDED, sunucuda izinli) ateşleme izi verir, rakipte gerçek rampa görünür; zor AI açılışta kurar, dalgadan önce sahte atış yapar.
+- Konsol yüksekliği 250.

@@ -8,7 +8,7 @@ const TURN_MS = 100;          // one turn = 6 sim ticks of 1/60 s
 const TICKS_PER_TURN = 6;
 const GRACE_MS = 90_000;      // how long a dropped player may take to come back
 const MAX_MSG = 16_000;       // bytes
-const CMD_KINDS = new Set(['build', 'buy', 'launch', 'sortie', 'engage', 'sat', 'go', 'mode', 'emit', 'sell', 'rebuild']);
+const CMD_KINDS = new Set(['build', 'buy', 'launch', 'sortie', 'engage', 'sat', 'go', 'mode', 'emit', 'sell', 'rebuild', 'feint']);
 const NATS = new Set(['TR', 'US', 'RU', 'CN', 'IL']);
 const CODE_RE = /^[A-Z2-9]{5}$/;
 

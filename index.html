@@ -515,6 +515,31 @@ kbd{background:transparent;border:1px solid var(--hair);border-bottom-width:1px}
 .lg-t{font:400 11.5px/1.4 var(--sans);color:var(--mute)}.lg-t b{color:#e9ecea;font-weight:600}.lg-t b.k{color:#9fc7a6}.lg-t em{font-style:normal;color:#ffd27a}
 .lg-row.live .lg-h b{color:#ffe0a0}
 
+/* ---- battle balance bar */
+.pw2.duo.trzw{grid-template-columns:140px minmax(0,1fr) 140px;max-width:980px;margin:0 auto;gap:18px}
+.trz{--v:50;position:relative;padding:4px 0 0}
+.trz-track{position:relative;height:20px;border-radius:3px;background:linear-gradient(#050607,#101416);box-shadow:inset 0 2px 4px rgba(0,0,0,.85),inset 0 -1px 0 rgba(255,255,255,.06),0 1px 0 rgba(255,255,255,.05);overflow:visible}
+.trz-me,.trz-foe{position:absolute;top:2px;bottom:2px;border-radius:2px;transition:filter .3s}
+.trz-me{left:2px;width:calc((var(--v) * 1%) - 4px);background:linear-gradient(180deg,color-mix(in srgb,var(--pc) 92%,#fff) 0%,var(--pc) 38%,color-mix(in srgb,var(--pc) 55%,#000) 100%)}
+.trz-foe{right:2px;width:calc(((100 - var(--v)) * 1%) - 4px);background:linear-gradient(180deg,color-mix(in srgb,var(--pc) 92%,#fff) 0%,var(--pc) 38%,color-mix(in srgb,var(--pc) 55%,#000) 100%)}
+.trz-me::after,.trz-foe::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 0 40%,rgba(255,255,255,.28) 50%,transparent 60% 100%);background-size:220% 100%;animation:trzsh 3.2s linear infinite;mix-blend-mode:screen;border-radius:2px}
+.trz-foe::after{animation-direction:reverse}
+@keyframes trzsh{from{background-position:120% 0}to{background-position:-120% 0}}
+.trz-mid{position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:rgba(255,255,255,.35);text-decoration:none}
+.trz-knob{position:absolute;top:50%;left:calc(var(--v) * 1%);transform:translate(-50%,-50%);display:grid;place-items:center;min-width:42px;height:30px;padding:0 6px;border-radius:4px;background:linear-gradient(#f4f6f4,#b9c0bd);box-shadow:0 3px 8px rgba(0,0,0,.6),inset 0 1px 0 #fff,inset 0 -2px 0 rgba(0,0,0,.2);z-index:2}
+.trz-knob u{text-decoration:none;font:700 17px/1 var(--cond);color:#0a0c0d;font-variant-numeric:tabular-nums}
+.trz.hit .trz-knob{animation:trzhit .5s ease-out}
+@keyframes trzhit{0%{transform:translate(-50%,-50%) scale(1.25)}100%{transform:translate(-50%,-50%) scale(1)}}
+.trz-leg{display:flex;justify-content:space-between;align-items:baseline;margin-top:5px;font:500 11.5px var(--sans);color:var(--mute)}
+.trz-leg em{font-style:normal;font-weight:600;color:#dfe5e2}
+.trz.near-win .trz-me{filter:brightness(1.25) drop-shadow(0 0 8px var(--pc))}
+.trz.near-lose .trz-foe{filter:brightness(1.25) drop-shadow(0 0 8px var(--pc))}
+.trz.near-lose .trz-leg em{color:#ffb2a6}.trz.near-win .trz-leg em{color:#bff3fa}
+.trz-d{position:absolute;top:-6px;transform:translateX(-50%);font:700 14px var(--cond);pointer-events:none;animation:trzd 1.4s ease-out forwards;z-index:3;text-shadow:0 1px 3px #000}
+.trz-d.up{color:#bff3fa}.trz-d.dn{color:#ff9d90}
+@keyframes trzd{0%{opacity:0;transform:translate(-50%,4px)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-26px)}}
+@media (prefers-reduced-motion:reduce){.trz-me::after,.trz-foe::after{animation:none}.trz.hit .trz-knob,.trz-d{animation:none}}
+
 /* ==== v6: plain-spoken controls. Sentence case, normal tracking; the condensed face only for figures and names.
    Three jobs in the side panel (Kur / Savunma / Saldırı) plus the log; weapon details open on demand. ==== */
 .btn{font:500 13px/1 var(--sans);letter-spacing:0;text-transform:none;padding:8px 11px}
@@ -640,6 +665,7 @@ header.top .btn[aria-pressed="false"]{color:#5f6967;text-decoration:line-through
 .wcard b{font:600 13px var(--cond)}
 .wcard i{font:400 11.5px var(--sans)}
 #prof{width:100%;height:50px;display:block;margin-top:6px}
+#aprof{width:100%;height:74px;display:block;margin-top:6px;border:1px solid var(--line)}
 /* weapon details popover */
 #specpop{width:330px;padding:14px 16px;background:rgba(8,10,11,.97);border:1px solid var(--hair);pointer-events:auto}
 #specpop h4{font:600 20px var(--cond);letter-spacing:.01em}
@@ -822,11 +848,12 @@ const SITE={
  DEC:{n:'Şişme Maket',role:'sahte batarya, ateş çeker',c:.2,hp:1,r:20,decoy:1,emit:1,d:'Rakibin elektronik dinlemesine uzun menzil HS gibi görünür; SEAD ve füze çeker. $200K.'},
  HPM:{n:'Mikrodalga HS',role:'İHA sürüsünü tek darbede düşürür',c:90,hp:120,r:14,hpm:1,rng:120,a0:0,a1:3,mag:999,ic:.002,cd:2.2,sens:130,mast:6,emit:1,d:'Yüksek güçlü mikrodalga darbesi 6 km içindeki bütün İHA\'ların elektroniğini yakar. Sürüyü tek atışta temizler, füzeye karşı zayıftır. Yayın yaptığı için yeri belli olur.'},
  GPI:{n:'Süzülme Evresi Önleyici',role:'hipersonik füzeyi süzülürken vurur',c:720,hp:200,r:20,rng:2600,a0:20,a1:70,mag:4,rl:30,ic:20,cd:2.6,spd:320,boost:1.2,launch:'vls',sens:3000,mast:14,emit:1,salvo:2,d:'Hipersonik füzeyi 20–70 km irtifada, süzülürken vurur. Balistik füzeye de işler ama asıl işi hipersonik. Önleyicisi çok pahalı.'},
+ DTEL:{n:'Maket Rampa',role:'sahte atış izi verir, karşı ateşi üstüne çeker',c:6,hp:1,r:16,decoy:1,feint:1,d:'Şişme füze rampası. "Sahte atış" deyince ateşleme izi verir; rakibin uydusu onu gerçek rampa sanar, karşı ateşini buraya boşaltır. Asıl rampan saklı kalır.'},
  TEL:{n:'Füze Rampası',role:'balistik, seyir ve hipersonik füze atar',c:120,hp:160,r:16,off:1,rl:22,d:'Mobil fırlatıcı. Her rampa bir füze atar, sonra 22 sn yeniden dolar. Salvo için birden çok rampa kur.'},
  DLN:{n:'İHA Rampası',role:'İHA sürüsü, aldatıcı ve keşif',c:50,hp:110,r:14,off:1,rl:10,d:'Kamikaze İHA, anti-radar İHA, aldatıcı füze ve keşif İHA fırlatır. Bir seferde 6 adede kadar.'},
 };
 // seconds from order to ready: a launcher or a long-range battery is not dropped in place in a moment
-const BUILD_T={RAD:10,CIWS:6,SHORAD:8,MRAD:14,LRAD:22,UPPER:30,LASER:12,IDR:8,EW:8,DEC:2,TEL:16,DLN:10,HPM:12,GPI:34};
+const BUILD_T={RAD:10,CIWS:6,SHORAD:8,MRAD:14,LRAD:22,UPPER:30,LASER:12,IDR:8,EW:8,DEC:2,TEL:16,DLN:10,HPM:12,GPI:34,DTEL:3};
 const PK={
  CIWS:{ucav:.3,jam:.5,drone:.75,armd:.7,cruise:.55,mald:.6,glide:.45,arm:.5,recon:.7},
  SHORAD:{ucav:.45,jam:.6,drone:.85,armd:.8,cruise:.75,mald:.8,glide:.5,arm:.45,ftr:.4,recon:.85},
@@ -952,7 +979,7 @@ const axOf=k=>{if(SITE[k])return AX_SITE[k]||null;const M=MUN[k];if(!M)return nu
 const profBars=(k,cls='pf')=>`<span class="${cls}" aria-label="${AXES.map(([a,n])=>n+' '+NPROF[k][a]).join(', ')}">${AXES.map(([a,n])=>`<i title="${n}: ${NPROF[k][a]}/5" style="--v:${NPROF[k][a]}"></i>`).join('')}</span>`;
 const nameOf=(s,k)=>{const M=MUN[k];if(M&&M.custom)return M.n;if(M&&M.cls&&M.cls!==k)return natOf(s).names[k]||(M.fut?M.n:(natOf(s).names[M.cls]||MUN[M.cls].n)+(M.suf?' '+M.suf:''));return natOf(s).names[k]||(SITE[k]||MUN[k]||{}).n||k};
 const costOf=(s,k)=>{const d=SITE[k]||MUN[k];const a=axOf(k);return d.c/(a?AXF(s,a):1)};
-const rngOf=(s,t)=>SITE[t].rng*(t==='EW'?DM.pow(AXF(s,'ew'),1.6):AX_SITE[t]==='ad'?Math.sqrt(AXF(s,'ad')):1);
+const rngOf=(s,t)=>SITE[t].rng*(t==='EW'?DM.pow(AXF(s,'ew'),1.6):AX_SITE[t]==='ad'?Math.sqrt(AXF(s,'ad')):1)*(G&&G.nf&&!SITE[t].ew&&!SITE[t].off?G.nf[s]??1:1);
 const sensOf=(s,t)=>(SITE[t].sens||0)*(SITE[t].emit?AXF(s,'sen'):1);
 
 // ================================================================ terrain
@@ -1254,6 +1281,16 @@ function prodRate(s){let r=PROD_BASE;for(const a of assets(s))if(a.t==='FAB')r+=
 // refineries and fuel depots keep the aircraft turning round. share() = surviving fraction of that kind (dark = 20%).
 function share(s,t){let h=0,m=0;for(const e of G.ents){if(e.cat!=='asset'||e.ruin||e.side!==s||e.t!==t)continue;m+=e.max;if(e.alive)h+=e.hp*(e.blackT>G.time?.2:1)}return m?h/m:1}
 const energyF=s=>.5+.5*share(s,'PWR');
+// the command bunker runs on the grid: every power plant lost strips its shielding
+const hqMul=(s,pen)=>{const open=1-share(s,'PWR');return pen?.6+.4*open:.25+.35*open};
+// battle balance (two sides): 50 when the war starts. Each side's losses since then (every facility and battery hit,
+// valued as the score does) as a share of what it had at the start; the one that has bled more pulls the bar to the other.
+// 100: the left side has broken the right; 0: the reverse.
+const BAL_K=.5;
+function powerOf(s){let p=0;for(const e of G.ents){if(e.side!==s||!e.alive||e.ruin)continue;if(e.cat==='asset')p+=ASSET_DEF[e.t].v*e.hp/e.max;else if(!SITE[e.t].decoy)p+=costOf(s,e.t)*e.hp/e.max}return p}
+function balTick(){G.nf=G.nf||{};for(const s of G.sides)G.nf[s]=.55+.45*share(s,'COMM');if(G.phase!=='war'||G.quad||!G.p0)return;const [a,b]=G.sides;
+  const la=(G.suf[a]-G.suf0[a])/G.p0[a],lb=(G.suf[b]-G.suf0[b])/G.p0[b];G.bal=50+50*clamp((lb-la)/BAL_K,-1,1);
+  if(!G.over&&(G.bal>=100||G.bal<=0)){G.over=true;G.winner=G.bal>=100?a:b;G.balWin=1}}
 const capOf=s=>12+12*share(s,'DEPO');
 const fuelF=s=>.5+.25*share(s,'REFN')+.25*share(s,'FUEL');
 const REARM_T=45;
@@ -1262,6 +1299,8 @@ const rebuildCost=t=>Math.round(ASSET_DEF[t].v*.8);
 const rebuildTime=t=>Math.round(40+ASSET_DEF[t].v*.18);
 function rebuild(s,id){const e=ent(id);if(!e||e.cat!=='asset'||e.ruin||e.side!==s||!e.dead||G.out[s])return 'Yeniden kurulacak tesis yok.';if(e.t==='HQ')return 'Komuta merkezi yeniden kurulamaz.';if(e.rbAt)return 'Zaten yapılıyor.';
   const c=rebuildCost(e.t);if(G.cash[s]<c)return 'Kasa yetersiz.';G.cash[s]-=c;G.score[s].sp+=c;e.rbT0=G.time;e.rbAt=G.time+rebuildTime(e.t);if(s===ME&&!G.silent)sfx('ok');return ''}
+function feint(s,id){const e=ent(id);if(!e||!e.alive||e.side!==s||e.t!=='DTEL'||e.bt>0)return 'Maket rampa yok.';if(e.fT>G.time)return `Maket ${Math.ceil(e.fT-G.time)} sn sonra yeniden kullanılabilir.`;e.fT=G.time+20;e.erect=1;e.fireT=G.time;later(4,()=>{e.erect=0});revealLaunch(e);
+  if(!G.silent){padBlast(e.x,e.y,1.2);sfx('ignite',e.x,e.y)}const lbl=natOf(s).names.BM||'balistik füze';for(const o of G.sides)if(o!==s&&o===ME)toast(`Uydu uyarısı: ${natOf(s).n} ${lbl} fırlattı.`,'E');if(s===ME)toast('<b>Sahte atış</b>Maket rampa ateşleme izi verdi; rakip karşı ateşini buraya çevirebilir.','W',true);return ''}
 function rebuildTick(){const done=G.ents.filter(e=>e.rbAt&&G.time>=e.rbAt);for(const e of done){e.rbAt=0;e.alive=true;e.dead=false;e.hp=e.max*.7;e.burn=0;e.marks=[];e.blackT=0;const rid=e.ruinId;e.ruinId=0;if(rid)G.ents=G.ents.filter(r=>r.id!==rid);
   if(e.side===ME)toast(`<b>Yeniden kuruldu</b>${esc(e.nm)} yeniden çalışıyor.`,'W',true);else toast(`${G.quad?esc(natOf(e.side).n)+': ':'Düşman '}${esc(e.nm)} yeniden kurdu.`,'')}}
 function buy(s,k,n=1){const c=costOf(s,k)*n;if(G.cash[s]<c)return 'Kasa yetersiz.';const u=prodUnits(k)*n;if(u&&(G.prod[s]||0)<u-1e-9){const m=Math.floor((G.prod[s]||0)/prodUnits(k));return m?`Fabrikalar şu an ${m} adet yetiştirebiliyor.`:`Fabrikalar yetişmiyor; sıradaki füze ${Math.ceil((u-(G.prod[s]||0))/prodRate(s)/n)} sn sonra.`}
@@ -1347,11 +1386,12 @@ function release(o){const s=o.side;
 // ---------------- interceptors
 function fireIcp(site,tgt){site.aim=DM.atan2(tgt.y-site.y,tgt.x-site.x);site.aimT=G.time;
   const d=SITE[site.t],s=site.side;const o=addAir({side:s,kind:'icp',bt:site.t,site:site.id,tgt:tgt.id,x:site.x+RN()*3,y:site.y+RN()*3,z:.005,spd:d.spd,boost:d.boost,launch:d.launch,hd:DM.atan2(tgt.y-site.y,tgt.x-site.x),life:3+d.rng*1.4/d.spd});
-  o.pk=pkOf(site,tgt);tgt.eng++;site.mag--;site.cd=d.cd;site.spent+=d.ic;site.fired++;spendIc(s,d.ic);
+  o.pk=pkOf(site,tgt);tgt.eng++;site.mag--;site.cd=d.cd;site.spent+=d.ic;site.fired++;spendIc(s,d.ic);forced(tgt,d.ic);
   if(d.launch==='vls'||d.launch==='canted')padBlast(site.x,site.y,d.launch==='vls'?.9:1.1);
   site.flash=.25;sfx(site.t==='IDR'?'drone':'sam',site.x,site.y);
   revealLaunch(site);return o;
 }
+function forced(t,c){if(!t||!t.side)return;const x=G.xch=G.xch||{};x[t.side]=(x[t.side]||0)+c;if(t.ord&&t.side===ME){const r=ordOf(t.ord);if(r)r.icp=(r.icp||0)+c}}
 function spendIc(s,c){G.cash[s]-=c;G.score[s].sp+=c;G.icp[s].n++;G.icp[s].cost+=c}
 function pkOf(site,t){const s=site.side,tab=PK[site.t]||{};let pk=tab[t.kind]||0;pk+=(axV(s,'ad')-3)*.03;
   const wx=G.wx.rain;if(site.t==='LASER')pk*=1-.65*wx-.25*G.wx.cover*(t.z>CLOUD_Z?1:0);if(SITE[site.t].ir)pk*=1-.25*wx;
@@ -1411,7 +1451,7 @@ function impact0(o){
   const d0=G.score[o.side].dmg,hitN=[];const pts=o.cl?Array.from({length:o.cl},(_,i)=>{const a=i/o.cl*6.283+srnd(),rr=o.r*(.8+srnd()*1.6);return{x:x+DM.cos(a)*rr,y:y+DM.sin(a)*rr*.8}}):[{x,y}];
   if(o.cl)boom(x,y,o.r*.6,true);
   for(const p of pts){(G.craters=G.craters||[]).push({x:p.x,y:p.y,r:o.r,fr:(6+Math.sqrt(o.cl?o.dmg:o.dmg||40)*2.2)/M_U,rot:Math.random()*6.283});if(G.craters.length>90)G.craters.shift();boom(p.x,p.y,o.r,!o.cl&&(HEAVY.has(o.kind)||o.kind==='cruise'),o.dmg);
-    for(const e of G.ents){if(!e.alive)continue;const d=hyp(e.x-p.x,e.y-p.y),R=o.r+e.r*.7;if(d<R){const f=1-d/R;const nm=(e.cat==='asset'?e.nm:nameOf(e.side,e.t))+(f>.6?' (tam isabet)':'');if(e.side!==o.side&&!hitN.includes(nm))hitN.push(nm);(e.marks=e.marks||[]).push({x:p.x-e.x,y:p.y-e.y,r:o.r*(.5+.4*Math.random())});if(e.marks.length>10)e.marks.shift();hurt(e,o.dmg*(.35+.65*f)*(o.pen?(e.cat==='asset'?1.6:.6):1)*(e.t==='HQ'&&e.cat==='asset'?(o.pen?.6:.25):1),o.side)}}}
+    for(const e of G.ents){if(!e.alive)continue;const d=hyp(e.x-p.x,e.y-p.y),R=o.r+e.r*.7;if(d<R){const f=1-d/R;const nm=(e.cat==='asset'?e.nm:nameOf(e.side,e.t))+(f>.6?' (tam isabet)':'');if(e.side!==o.side&&!hitN.includes(nm))hitN.push(nm);(e.marks=e.marks||[]).push({x:p.x-e.x,y:p.y-e.y,r:o.r*(.5+.4*Math.random())});if(e.marks.length>10)e.marks.shift();hurt(e,o.dmg*(.35+.65*f)*(o.pen?(e.cat==='asset'?1.6:.6):1)*(e.t==='HQ'&&e.cat==='asset'?hqMul(e.side,o.pen):1),o.side)}}}
   if(o.side===ME&&(HEAVY.has(o.kind)||o.kind==='cruise'||o.kind==='glide')){const dd=G.score[ME].dmg-d0;toast(hitN.length?`<b>${KNAME[o.kind]} isabet etti</b>${esc(hitN.join(', '))}. Hasar ${money(dd)}.`:`<b>${KNAME[o.kind]} ıskaladı</b>Boş araziye düştü; çemberin içinde düşman tesisi yoktu.`,hitN.length?'W':'',true)}
 }
 function hurt(e,dm,by,civ){
@@ -1506,7 +1546,7 @@ function engage(dt){
     if(!best)continue;
     if(d.hpm){e.cd=d.cd;spendIc(s,d.ic);e.spent+=d.ic;e.aimT=G.time;e.aim=DM.atan2(best.y-e.y,best.x-e.x);G.fx.push({k:'emp',x:e.x,y:e.y,r:R,t:0,life:.9});sfx('laser',e.x,e.y);revealLaunch(e);
       for(const o of G.air){if(!o.alive||o.side===s||o.kind==='icp'||!(PK.HPM||{})[o.kind]||o.z>d.a1||hyp(o.x-e.x,o.y-e.y)>R)continue;if(srnd()<pkOf(e,o)){const t=o;later(.05+srnd()*.2,()=>{if(t.alive)kill(t,{side:s,site:e.id})})}}continue}
-    if(d.gun){e.cd=d.cd;e.mag--;spendIc(s,d.ic);e.spent+=d.ic;e.aim=DM.atan2(best.y-e.y,best.x-e.x);e.aimT=G.time;G.fx.push({k:'tracer',x:e.x,y:e.y,tx:best.x,ty:best.y,tz:best.z,t:0,life:.3});sfx('ciws',e.x,e.y);revealLaunch(e);
+    if(d.gun){e.cd=d.cd;e.mag--;spendIc(s,d.ic);forced(best,d.ic);e.spent+=d.ic;e.aim=DM.atan2(best.y-e.y,best.x-e.x);e.aimT=G.time;G.fx.push({k:'tracer',x:e.x,y:e.y,tx:best.x,ty:best.y,tz:best.z,t:0,life:.3});sfx('ciws',e.x,e.y);revealLaunch(e);
       const pk=pkOf(e,best);if(srnd()<pk*.55){later(.15,()=>{if(best.alive)kill(best,{side:s,site:e.id})})}continue}
     if(d.laser){e.cd=d.cd;e.aim=DM.atan2(best.y-e.y,best.x-e.x);e.aimT=G.time;best.eng++;const tgt=best;G.fx.push({k:'beam',site:e.id,tgt:tgt.id,t:0,life:1.3});sfx('laser',e.x,e.y);spendIc(s,d.ic);
       later(1.3,()=>{tgt.eng=Math.max(0,tgt.eng-1);if(tgt.alive&&e.alive&&srnd()<pkOf(e,tgt))kill(tgt,{side:s,site:e.id})});continue}
@@ -1520,7 +1560,7 @@ function worthIt(e,o){const d=SITE[e.t];if(o.kind==='balloon')return true;
   return G.ents.some(a=>a.alive&&a.side===e.side&&hyp(a.x-ip.x,a.y-ip.y)<(a.r+90));}
 function impactPt(o){if(o.kind==='bm'||o.kind==='decoy'||o.kind==='hgv')return o.s>.25?{x:o.x1,y:o.y1}:null;if(o.route)return o.route[o.route.length-1];if(o.kind==='glide'||o.kind==='arm')return{x:o.tx,y:o.ty};return null}
 function etaOf(o){if(o.kind==='bm'||o.kind==='decoy'||o.kind==='hgv')return Math.max(0,o.T-(G.time-o.t0));if(o.route){let d=0,px=o.x,py=o.y;for(let i=o.ri;i<o.route.length;i++){d+=hyp(o.route[i].x-px,o.route[i].y-py);px=o.route[i].x;py=o.route[i].y}return d/o.spd}if(o.tx!=null)return hyp(o.tx-o.x,o.ty-o.y)/(o.spd||50);return 99}
-function revealLaunch(e){for(const s of G.sides){if(s===e.side||G.out[s])continue;const g=G.ghost[s];const p=g.get(e.id);g.set(e.id,{...p,id:e.id,side:e.side,cat:e.cat,t:e.t,x:e.x,y:e.y,at:G.time,src:'atış izi'});if(s===ME&&!p)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}
+function revealLaunch(e){for(const s of G.sides){if(s===e.side||G.out[s])continue;const g=G.ghost[s];const p=g.get(e.id);g.set(e.id,{...p,id:e.id,side:e.side,cat:e.cat,t:e.t==='DTEL'?'TEL':e.t,x:e.x,y:e.y,at:G.time,src:'atış izi'});if(s===ME&&!p)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}
 function revealAround(s,x,y,R){for(const e of G.ents)if(e.alive&&e.side!==s&&e.cat==='site'&&hyp(e.x-x,e.y-y)<R){const had=G.ghost[s].has(e.id);G.ghost[s].set(e.id,{...G.ghost[s].get(e.id),id:e.id,side:e.side,cat:e.cat,t:e.t==='DEC'?'LRAD':e.t,x:e.x,y:e.y,at:G.time,src:'keşif'});if(s===ME&&!had)G.fx.push({k:'ping',x:e.x,y:e.y,t:0,life:1.4})}}
 function intel(){
   for(const s of G.sides){if(G.out[s])continue;const g=G.ghost[s];
@@ -1538,7 +1578,7 @@ function newOrder(k,x,y,delay){const tg=G.ents.filter(e=>e.alive&&e.side!==ME&&(
 const ordOf=id=>(G.orders||[]).find(o=>o.id===id);
 function ordEv(id,ev,dmg){const o=ordOf(id);if(!o)return;if(ev==='down')o.down++;else if(ev==='fail')o.fail++;else if(ev==='arr'){o.arr++;if(dmg>0){o.hit++;o.dmg+=dmg}}}
 function ordTick(){for(const o of G.orders||[]){if(o.done)continue;const live=G.air.some(a=>a.alive&&a.ord===o.id);if(live||G.time<o.t+(o.delay||0)+3+o.n*.4)continue;o.done=true;o.end=G.time;
-    const tg=o.tg&&ent(o.tg);o.killed=!!(o.tg&&(!tg||!tg.alive));const txt=`${o.lbl}: ${o.n} atıştan ${o.hit} isabet${o.down?`, ${o.down} düşürüldü`:''}${o.fail?`, ${o.fail} arıza`:''}. Hasar ${money(o.dmg)}.${o.killed?' Tesis yıkıldı.':''}`;
+    const tg=o.tg&&ent(o.tg);o.killed=!!(o.tg&&(!tg||!tg.alive));const txt=`${o.lbl}: ${o.n} atıştan ${o.hit} isabet${o.down?`, ${o.down} düşürüldü`:''}${o.fail?`, ${o.fail} arıza`:''}. Hasar ${money(o.dmg)}.${o.icp?` Rakibe ${money(o.icp)} önleyici harcattı.`:''}${o.killed?' Tesis yıkıldı.':''}`;
     toast(`<b>Görev sonucu</b>${esc(txt)}`,o.hit?'W':'E',true);voice(o.killed?'destroyed_enemy':o.hit?(o.dmg>o.cost*1.5?'hit_enemy':'hit_partial'):o.down>=Math.max(1,o.n-o.fail)?'intercepted_all':'miss',o.tg&&tg?tg.t:null);if(tab==='L')renderSide(true)}}
 function launch(s,k,n,tx,ty,wp,delay=0,share){
   const M=MUN[k];if((G.stock[s][k]||0)<n)return 'Stok yetersiz.';
@@ -1578,10 +1618,11 @@ const CMD={
   designs:L=>{loadCustom(L,!!G.replay);for(const id of CUSTOM)for(const s of G.sides)if(G.stock[s][id]==null)G.stock[s][id]=0},
   auto:v=>{G.autoW=!!v},
   rebuild:(s,id)=>rebuild(s,id),
+  feint:(s,id)=>feint(s,id),
 };
 // Side-stamped execution: the side comes from who sent the order (the server stamps it online), never from the order itself,
 // so a player can only ever build, fire or switch off their own things.
-const SIDED={build:1,buy:1,launch:1,sortie:1,sat:1,sell:1,rebuild:1};
+const SIDED={build:1,buy:1,launch:1,sortie:1,sat:1,sell:1,rebuild:1,feint:1};
 function runCmd(side,k,a){if(!CMD[k])return '';a=a||[];if(SIDED[k])a[0]=side;
   if(k==='go')return CMD.go(side);
   if(k==='engage'){const e=ent(a[0]);if(!e||e.side!==side)return 'Batarya yok.'}
@@ -1628,12 +1669,12 @@ const AIK={
 const AIOPEN={
  easy:[['RAD','HQ'],['MRAD','HQ'],['CIWS','HQ'],['MRAD','REFN'],['SHORAD','CITY'],['TEL'],['DLN'],['CIWS','PWR']],
  med:[['RAD','HQ'],['LRAD','HQ'],['MRAD','HQ'],['CIWS','HQ'],['MRAD','REFN'],['SHORAD','CITY'],['CIWS','REFN'],['TEL'],['TEL'],['DLN'],['EW','HQ'],['IDR','CITY']],
- hard:[['RAD','HQ'],['LRAD','HQ'],['MRAD','HQ'],['CIWS','HQ'],['SHORAD','HQ'],['MRAD','REFN'],['CIWS','REFN'],['SHORAD','CITY'],['TEL'],['TEL'],['TEL'],['DLN'],['EW','HQ'],['DEC','HQ'],['RAD','CITY']]};
+ hard:[['RAD','HQ'],['LRAD','HQ'],['MRAD','HQ'],['CIWS','HQ'],['SHORAD','HQ'],['MRAD','REFN'],['CIWS','REFN'],['SHORAD','CITY'],['TEL'],['TEL'],['TEL'],['DLN'],['EW','HQ'],['DEC','HQ'],['RAD','CITY'],['DTEL']]};
 const LAYER_OF=o=>HEAVY.has(o.kind)?'bm':(o.kind==='drone'||o.kind==='armd')?'dr':'cm';
 const aiK=()=>AIK[G.diff]||AIK.med;
-function aiSpot(s,t,near){const as=assets(s);const base=near||(t==='RAD'||t==='UPPER'||t==='LRAD'||t==='EW'||t==='TEL'||t==='DLN'?HQPOS[s]:as[(srnd()*as.length)|0]||HQPOS[s]);
+function aiSpot(s,t,near){const as=assets(s);const base=near||(t==='RAD'||t==='UPPER'||t==='LRAD'||t==='EW'||t==='TEL'||t==='DLN'||t==='DTEL'?HQPOS[s]:as[(srnd()*as.length)|0]||HQPOS[s]);
   const FP=FOEPT(s),toE=DM.atan2(FP.y-base.y,FP.x-base.x);
-  for(let k=0;k<60;k++){const back=t==='TEL'||t==='DLN';const a=back?toE+Math.PI+RN()*1.2:toE+RN()*1.1;const d=(t==='CIWS'||t==='LASER'?50:back?180:near?90:120)+srnd()*(t==='RAD'?400:near?160:220);const x=base.x+DM.cos(a)*d,y=base.y+DM.sin(a)*d;if(!canPlace(s,t,x,y))return{x,y}}
+  for(let k=0;k<60;k++){const back=t==='TEL'||t==='DLN'||t==='DTEL';const a=back?toE+Math.PI+RN()*1.2:toE+RN()*1.1;const d=(t==='CIWS'||t==='LASER'?50:back?180:near?90:120)+srnd()*(t==='RAD'?400:near?160:220);const x=base.x+DM.cos(a)*d,y=base.y+DM.sin(a)*d;if(!canPlace(s,t,x,y))return{x,y}}
   // no luck nearby: the closest free pad from which the system still reaches the place it is meant to cover
   const reach=SITE[t].off?3200:SITE[t].rng?rngOf(s,t)*.7:SITE[t].sens?SITE[t].sens*.5:420;const fr=((G.slots&&G.slots[s])||[]).filter(q=>slotFree(q)&&hyp(q.x-base.x,q.y-base.y)<reach).sort((p,q)=>hyp(p.x-base.x,p.y-base.y)-hyp(q.x-base.x,q.y-base.y));
   for(const q of fr)if(!canPlace(s,t,q.x,q.y))return{x:q.x,y:q.y};return null}
@@ -1734,7 +1775,7 @@ function aiWave(s,K,D){const A=G.ai[s];A.wave++;A.next=(G.quad?18+srnd()*6:K.gap
   // target: damage per dollar, judged with what we know of their air defence; the capital only when it is soft or time runs short
   const late=G.time>GAME_T*.6,behind=G.score[s].dmg<G.score[ts].dmg;
   const sc=tgts.map(a=>{const D2=ASSET_DEF[a.t];const sB=survOf(s,'BM',o0,a),sC=survOf(s,'CM',o0,a),sD=survOf(s,'DRN',o0,a);const sv=Math.max(sB,sC*.9,sD*.6);
-    let v=(D2.v*(a.hp/a.max)+D2.inc*90)*(.35+sv);if(a.t==='HQ')v*=(sB>.55||late&&behind)?1.6:.45;if(a.t==='FAB')v*=1+Math.min(1.5,A.th.bm*.08+A.th.cm*.05);return {a,v:v*DM.exp(RN()*.25*K.soft),sB,sC,sD}}).sort((p,q)=>q.v-p.v);
+    let v=(D2.v*(a.hp/a.max)+D2.inc*90)*(.35+sv);if(a.t==='HQ')v*=(sB>.55||late&&behind)?1.6:.45;if(a.t==='FAB')v*=1+Math.min(1.5,A.th.bm*.08+A.th.cm*.05);if(a.t==='COMM')v*=1.5;if(a.t==='PWR')v*=1.25;return {a,v:v*DM.exp(RN()*.25*K.soft),sB,sC,sD}}).sort((p,q)=>q.v-p.v);
   const pickI=srnd()<K.mist?Math.min(1,sc.length-1):0;const T=sc[pickI],Ta=T.a,TP={x:Ta.x+RN()*10,y:Ta.y+RN()*10};
   const second=sc[Math.min(1,sc.length-1)].a;
   const budget=G.cash[s]*K.spend;let spent=0;const buyN=(k,n)=>{const have=G.stock[s][k]||0;if(have>=n)return n;const c=costOf(s,k);const m=Math.min(n-have,Math.floor((budget-spent)/c));if(m>0){buy(s,k,m);spent+=c*m}return Math.min(n,G.stock[s][k]||0)};
@@ -1755,6 +1796,7 @@ function aiWave(s,K,D){const A=G.ai[s];A.wave++;A.next=(G.quad?18+srnd()*6:K.gap
   if(G.stock[s].CM_HX>0&&(Ta.t==='HQ'||T.sB<.5)&&launchersFor(s,'CM_HX').length)pkg.push(['CM_HX',1,TP]);
   if(G.stock[s].BAL>0&&!G.air.some(o=>o.alive&&o.side===s&&o.kind==='balloon')){const c=tgts[(srnd()*tgts.length)|0];launch(s,'BAL',1,c.x+RN()*120,c.y+RN()*120,[])}
   const rk=known.find(g=>['LRAD','RAD','UPPER','MRAD'].includes(g.t));if(w>=3&&rk&&G.diff!=='easy')sortie(s,'SEAD',rk.x,rk.y);else if(w>=4&&srnd()<.5)sortie(s,G.diff==='hard'&&srnd()<.4?'WING':'GLIDE',second.x,second.y);
+  if(G.diff==='hard'&&srnd()<.6){const dt=sites(s,'DTEL').find(e=>!(e.fT>G.time)&&e.bt<=0);if(dt)feint(s,dt.id)}
   // time-on-target for medium/hard: everything arrives together
   const fts=pkg.map(([k,n,p])=>flightTime(s,k,o0.x,o0.y,p.x,p.y,routeAround(s,k,o0,p)));const mx=Math.max(...fts,0);
   pkg.forEach(([k,n,p],i)=>{const vs=(VAR[k]||[]).map(v=>v[0]).filter(v=>!MUN[v].fut&&!(G.diff==='easy'&&/_(M|D|H)$/.test(v)));const v=vs.length&&srnd()<.7?vs[(srnd()*vs.length)|0]:k;if(v!==k){G.stock[s][k]-=n;G.stock[s][v]=(G.stock[s][v]||0)+n}const wp=routeAround(s,v,o0,p);launch(s,v,n,p.x,p.y,wp,G.diff==='easy'?i*6:mx-fts[i])});
@@ -1780,19 +1822,19 @@ function update(dt){
   updDebris(dt);
   senseT+=dt;if(senseT>=.15){senseT=0;sense()}
   if(G.phase==='war')engage(dt);
-  intelT+=dt;if(intelT>=1){intelT=0;intel();satelliteAI();ordTick();rebuildTick()}
+  intelT+=dt;if(intelT>=1){intelT=0;intel();satelliteAI();ordTick();rebuildTick();balTick()}
   for(const p of G.parts){p.t+=dt;const dr=p.drag?DM.exp(-p.drag*dt):1;p.vx*=dr;p.vy*=dr;p.x+=p.vx*dt;p.y+=p.vy*dt;p.z=Math.max(0,p.z+(p.vz||0)*dt);if(p.gr)p.r+=p.gr*dt}
   G.parts=G.parts.filter(p=>p.t<p.life);if(G.parts.length>2200)G.parts.splice(0,G.parts.length-2200);
   for(const f of G.fx)f.t+=dt;G.fx=G.fx.filter(f=>f.t<f.life);
   updWeather(dt);
   if(!G.aiOff)for(const s of G.sides)if(!HUM(s)&&!G.out[s])aiThink(s,dt);if(G.autoW)aiThink2W(dt);
-  if(G.time>=GAME_T&&!G.over){G.over=true;const n=s=>G.score[s].dmg-G.score[s].sp*.25;const al=G.sides.filter(x=>!G.out[x]).sort((a,b)=>n(b)-n(a));G.winner=al.length>1&&n(al[0])===n(al[1])?null:al[0]}
+  if(G.time>=GAME_T&&!G.over){G.over=true;if(!G.quad&&G.bal!=null){G.winner=G.bal>50?G.sides[0]:G.bal<50?G.sides[1]:null}else{const n=s=>G.score[s].dmg-G.score[s].sp*.25;const al=G.sides.filter(x=>!G.out[x]).sort((a,b)=>n(b)-n(a));G.winner=al.length>1&&n(al[0])===n(al[1])?null:al[0]}}
   if(G.over&&(!G.replay||G.watch))setTimeout(showEnd,1400);
 }
 function satPass(s,area){let n=0;for(const e of G.ents)if(e.alive&&e.side!==s&&Math.abs(e.x-area.x)<=SAT_SIZE/2&&Math.abs(e.y-area.y)<=SAT_SIZE/2){
   G.ghost[s].set(e.id,{id:e.id,side:e.side,cat:e.cat,t:e.t==='DEC'?'LRAD':e.t,x:e.x,y:e.y,at:G.time,src:'uydu',satAt:G.time});n++}
   if(s===ME){G.fx.push({k:'satband',x:area.x,y:area.y,size:SAT_SIZE,t:0,life:3});toast(`<b>Uydu görüntüsü</b>60 × 60 km alanda ${n} düşman tesisi görüntülendi.`,'W',true)}}
-function startWar(){if(!G||G.phase!=='prep')return;G.phase='war';G.prepT=0;G.bannerAt=performance.now();sfx('alarm');eva('Harekât başladı','war',1);toast('<b>Harekât</b>Hazırlık bitti. Gelir artık tesislerinden gelir; rakip ilk dalgasını hazırlıyor.','E',true);renderTop()}
+function startWar(){if(!G||G.phase!=='prep')return;G.phase='war';G.prepT=0;G.p0={};G.suf0={};for(const s of G.sides){G.p0[s]=Math.max(1,powerOf(s));G.suf0[s]=G.suf[s]||0}G.bal=50;G.bannerAt=performance.now();sfx('alarm');eva('Harekât başladı','war',1);toast('<b>Harekât</b>Hazırlık bitti. Gelir artık tesislerinden gelir; rakip ilk dalgasını hazırlıyor.','E',true);renderTop()}
 // Power is sampled once per wall-clock second; hostile estimates never read private economy or readiness.
 const POWER_THREATS=[['drone','İHA',.7,.7],['cruise','Seyir',.05,.05],['bm','Balistik',10,150]];
 const POWER_REF=6000,SAT_SIZE=60*KMU,SAT_COST=15,SAT_WAIT=90,SAT_DELAY=8;
@@ -1827,6 +1869,15 @@ function samplePower(){
   }
   return G.power={at:now,values};
 }
+// ---- battle balance bar: tweened in its own animation loop, so it moves smoothly between sim updates
+const TRZ={v:50,shown:50,last:50,el:null,lastT:0};
+function trzTarget(){if(!G)return;const b=G.bal==null?50:G.bal;TRZ.v=ME===G.sides[0]?b:100-b;if(!TRZ.run){TRZ.run=1;requestAnimationFrame(trzLoop)}}
+function trzLoop(t){TRZ.run=0;const el=$('#trz');if(!el||!G)return;const dt=Math.min(.1,(t-(TRZ.lastT||t))/1000);TRZ.lastT=t;TRZ.shown+=(TRZ.v-TRZ.shown)*Math.min(1,dt*2.4);
+  el.style.setProperty('--v',TRZ.shown.toFixed(2));const vv=$('#trzv');if(vv)vv.textContent=Math.round(TRZ.shown);el.setAttribute('aria-valuenow',Math.round(TRZ.v));
+  el.classList.toggle('near-win',TRZ.v>=78);el.classList.toggle('near-lose',TRZ.v<=22);
+  const tt=$('#trzt');if(tt)tt.textContent=G.phase!=='war'?'Savaş terazisi: harekât başlayınca işler':TRZ.v>=78?'Rakip çökmek üzere':TRZ.v<=22?'Ülken çökmek üzere':Math.abs(TRZ.v-50)<4?'Denge':TRZ.v>50?'Üstünlük sende':'Üstünlük rakipte';
+  if(Math.abs(TRZ.v-TRZ.last)>=1){const d=Math.round(TRZ.v-TRZ.last);TRZ.last=TRZ.v;const k=document.createElement('span');k.className='trz-d '+(d>0?'up':'dn');k.textContent=(d>0?'+':'−')+Math.abs(d);k.style.left=TRZ.v+'%';el.querySelector('.trz-track').appendChild(k);setTimeout(()=>k.remove(),1400);el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit')}
+  if(Math.abs(TRZ.v-TRZ.shown)>.02||!TRZ.idle){TRZ.idle=Math.abs(TRZ.v-TRZ.shown)<.02;TRZ.run=1;requestAnimationFrame(trzLoop)}}
 function renderPower(){
   const root=$('#power');if(!root||!G)return;const P=samplePower();
   const pct=v=>Math.round(v)+'%',bar=(name,v)=>`<span class="pw-line"><span>${name}</span><i><b style="width:${v==null?0:v}%"></b></i><strong>${v==null?'?':pct(v)}</strong></span>`;
@@ -1834,8 +1885,9 @@ function renderPower(){
   const det=s=>{const p=P.values[s],open=G.powerSide===s;return `${open?`<div class="pw-detail"><b>${esc(natOf(s).n)} gücü</b><div class="pw-prof">${AXES.map(([a,n])=>`<span>${n}</span><i>${[1,2,3,4,5].map(j=>`<b class="${j<=axV(s,a)?'on':''}"></b>`).join('')}</i>`).join('')}</div>${!p?'Bilgi yok. Uydu veya keşif iste.':p.out?'Harekât dışı.':`${POWER_THREATS.map((t,i)=>bar(t[1],p.def?.sub[i].value)).join('')}<p>${!p.def?'Savunma bilgisi yok.':p.def.radar?'Radar desteği var.':'Bilinen etkin radar yok: kapsama ×0,65.'}</p><p>${p.atk?'60 sn ham saldırı: ≈'+Math.round(p.atk.damage)+' hasar.':'Rampa bilgisi yok.'}</p><p>${p.estimated?'Tahmini: bilinen bataryalar hazır ve dolu; bilinen rampalarda bir yük stok; kasa 0, gelir açık tesislerin nominal geliri varsayılır. Gizli stok/kasa okunmaz.':'Mevcut hazır rampalar, stok, kasa ve gelir kullanılır.'}</p><small>Kapsama, isabet garantisi değildir. Saldırı puanı savunma ve uçuş süresi öncesidir.</small>`}</div>`:''}`};
   const name=(s,cls)=>{const p=P.values[s];return `<div class="pw-side ${cls}" style="--pc:${SHEX[s]}"><button data-t="power" data-side="${s}" aria-expanded="${G.powerSide===s}" class="pw-button pw2-n"><b>${esc(natOf(s).n)}</b><small>${tag(s,p)}</small></button>${det(s)}</div>`};
   const half=(v,side,col)=>`<i class="pw2-bar ${side}${v==null?' unk':''}" style="--pc:${col}"><u style="width:${v==null?0:clamp(v,0,100)}%"></u></i>`;
-  if(G.sides.length===2){const [a,b]=[ME,...G.sides.filter(x=>x!==ME)],pa=P.values[a],pb=P.values[b];
-    setH(root,`<div class="pw2 duo">${name(a,'l')}<div class="pw2-rows">${[['d','Savunma'],['t','Saldırı']].map(([k,n])=>{const va=val(pa,k==='d'?'d':'a'),vb=val(pb,k==='d'?'d':'a');const lead=va!=null&&vb!=null?(va>vb+3?'l':vb>va+3?'r':''):'';return `<div class="pw2-row ${lead?'lead-'+lead:''}"><b class="v">${num(va)}</b>${half(va,'l',SHEX[a])}<span class="m">${n}</span>${half(vb,'r',SHEX[b])}<b class="v">${num(vb)}</b></div>`}).join('')}</div>${name(b,'r')}</div>`)}
+  if(G.sides.length===2){const [a,b]=[ME,...G.sides.filter(x=>x!==ME)];const sig=G.powerSide+'|'+tag(a,P.values[a])+tag(b,P.values[b])+(G.powerSide?JSON.stringify(P.values[G.powerSide]||0).length:0);
+    if(root.dataset.sig!==sig||!$('#trz')){root.dataset.sig=sig;root.innerHTML=`<div class="pw2 duo trzw">${name(a,'l')}<div class="trz" id="trz" role="meter" aria-label="Savaş terazisi" aria-valuemin="0" aria-valuemax="100"><div class="trz-track"><i class="trz-me" style="--pc:${SHEX[a]}"></i><i class="trz-foe" style="--pc:${SHEX[b]}"></i><s class="trz-mid"></s><b class="trz-knob"><u id="trzv">50</u></b></div><div class="trz-leg"><span>${esc(natOf(b).n)} kazanır</span><em id="trzt">Savaş terazisi</em><span>Sen kazanırsın</span></div></div>${name(b,'r')}</div>`;TRZ.el=null}
+    trzTarget()}
   else setH(root,`<div class="pw2 quad">${G.sides.map(s=>{const p=P.values[s];return `<div class="pw2-q${p?.out?' out':''}">${name(s,'q')}${[['d','Sav'],['a','Sal']].map(([k,n])=>{const v=val(p,k);return `<div class="pw2-qr"><span>${n}</span>${half(v,'r',SHEX[s])}<b>${num(v)}</b></div>`}).join('')}</div>`}).join('')}</div>`);
   const btn=$('#satb');if(btn){const st=G.sat[ME],left=Math.max(0,Math.ceil(st.readyAt-G.time));btn.disabled=G.phase!=='war'||G.over||!!G.out[ME]||left>0||G.cash[ME]<SAT_COST;btn.textContent=st.pending?`Uydu ${Math.max(0,Math.ceil(st.pending.at-G.time))} sn sonra`:left?`Uydu ${left} sn sonra hazır`:`Uydu çekimi, ${money(SAT_COST)}`;btn.title=`Seçtiğin 60×60 km alanın uydu görüntüsü; oradaki gizli bataryalar görünür`}
 }
@@ -1907,6 +1959,7 @@ const P7={RAD:[['S_RAD_base',0,0,2000],['S_RAD_ant',20,-320,1300,0,'spin',.5,.5]
  IDR:[['S_IDR',0,0,1900]],EW:[['S_EW_base',0,0,2000],['S_EW_ant',40,-400,1200,0,'spin2',.48,.5]],
  DEC:[['S_DEC',-470,0,1700,-.22],['S_DEC',480,140,1700,.25]],
  TEL:[['S_TEL_down',0,0,2100,-Math.PI/2,'tel']],DLN:[['S_DLN_closed',0,0,2000,0,'dln']],
+ DTEL:[['S_TEL_down',0,0,2100,-Math.PI/2,'tel']],
  HPM:[['S_HPM_base',0,0,2000],['S_HPM_ant',-20,-160,700,0,'aim',.33,.5]],
  GPI:[['S_GPI_rad',0,-700,1700],['S_GPI_ln',-640,520,1800,-.28],['S_GPI_ln',660,560,1800,.3]]};
 // new systems keep a stand-in look until their own pictures are added
@@ -2487,7 +2540,7 @@ function chip(kind,txt,x,y,col,size=11){ctx.font=`600 ${px(size)}px "Archivo Con
 let THR={on:false,t:-9,list:[]},TACF=(()=>{try{return localStorage.getItem('gok.tacf')||'all'}catch(e){return 'all'}})();
 function updMapbar(){const b=$('#thrb');if(b){b.classList.toggle('on',THR.on);b.setAttribute('aria-pressed',THR.on)}const f=$('#tacf');if(f){f.querySelectorAll('[data-tf]').forEach(x=>x.classList.toggle('on',x.dataset.tf===TACF))}const sm=$('#thrsum');if(sm&&!THR.on)sm.hidden=true}
 function toggleThreats(){THR.on=!THR.on;THR.t=-9;updMapbar();if(THR.on)sfx('beep',null,null,760)}
-const tacShow=e=>{if(TACF==='all')return true;if(e.cat==='asset')return TACF==='fac';const d=SITE[e.t];if(!d)return true;return TACF==='atk'?!!d.off:TACF==='ad'?!d.off:false};
+const tacShow=e=>{if(TACF==='all')return true;if(e.cat==='asset')return TACF==='fac';const d=SITE[e.t];if(!d)return true;return TACF==='atk'?!!(d.off||d.feint):TACF==='ad'?!(d.off||d.feint):false};
 function futPos(o,dt){if(o.kind==='bm'||o.kind==='decoy'){const s=Math.min(1,(G.time+dt-o.t0)/o.T);return bmPos(o,s)}if(o.kind==='hgv'){const s=Math.min(1,(G.time+dt-o.t0)/o.T);return hgvPos(o,s)}
   if(o.route){let left=(o.spd||50)*dt,px_=o.x,py=o.y;for(let i=o.ri;i<o.route.length;i++){const p=o.route[i],d=hyp(p.x-px_,p.y-py);if(d>=left)return{x:px_+(p.x-px_)/d*left,y:py+(p.y-py)/d*left,z:o.hyp?o.zc:o.z};left-=d;px_=p.x;py=p.y}return{x:px_,y:py,z:0}}
   if(o.tx!=null){const d=hyp(o.tx-o.x,o.ty-o.y)||1,st=Math.min(d,(o.spd||50)*dt);return{x:o.x+(o.tx-o.x)/d*st,y:o.y+(o.ty-o.y)/d*st,z:o.z*(1-st/d)}}return{x:o.x,y:o.y,z:o.z}}
@@ -2539,8 +2592,44 @@ function drawTrackOverlay(air,time){
     if(ou.has(o))continue;const nm=trkName(o);const same=OW.filter(q=>!ou.has(q)&&trkName(q)===nm&&hyp(sX(q.x)-sX(o.x),sY(q.y-LIFT(q.z))-sY(y))<54);same.forEach(q=>ou.add(q));
     const txt=`${nm}${same.length>1?' ×'+same.length:''}, ${Math.ceil(etaOf(o))} sn`;if(free(o.x+px(11),y,txt.length*7+22))chip(o.kind,txt,o.x+px(11),y,'#9ee7f0',10)}
   for(const o of air){if(o.kind!=='icp')continue;const t=airById(o.tgt);if(!t||!t.alive)continue;ctx.strokeStyle=o.side===ME?'rgba(159,208,220,.28)':`rgba(${G.quad?SCOL[o.side]:'226,114,91'},.2)`;ctx.lineWidth=px(1);ctx.setLineDash([px(2),px(4)]);ctx.beginPath();ctx.moveTo(o.x,o.y-LIFT(o.z));ctx.lineTo(t.x,t.y-LIFT(t.z));ctx.stroke();ctx.setLineDash([])}
-  drawTarget(time);
+  drawTarget(time);drawStrikePreview(time);
 }
+// ---------------- strike preview: the chosen weapon's path against the enemy batteries we know of, in plan and in height
+function strikePath(k,o,t,wp){const M=MUN[k];if(!M)return null;const d=hyp(t.x-o.x,t.y-o.y)||1,N=90,P=[];
+  if(M.kind==='bm'){const q={x0:o.x,y0:o.y,x1:t.x,y1:t.y,dist:d,apo:Math.min(135,(45+d/80)*(M.apo||90)/90)};for(let i=0;i<=N;i++){const p=bmPos(q,i/N);P.push({x:p.x,y:p.y,z:p.z})}}
+  else if(M.kind==='hgv'){const q={x0:o.x,y0:o.y,x1:t.x,y1:t.y,dist:d};for(let i=0;i<=N;i++){const p=hgvPos(q,i/N);P.push({x:p.x,y:p.y,z:p.z})}}
+  else{const pts=[o,...(wp||[]),t];let L=0;const seg=[];for(let i=1;i<pts.length;i++){const l=hyp(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y);seg.push(l);L+=l}
+    for(let i=0;i<=N;i++){let left=L*i/N,j=0;while(j<seg.length-1&&left>seg[j]){left-=seg[j];j++}const a=pts[j],b=pts[j+1],f=seg[j]?Math.min(1,left/seg[j]):0;const rem=L*(1-i/N);
+      let z=M.z;if(M.hyp)z=rem<400?M.z*rem/400:M.z;else if(M.kind==='cruise')z=rem<90?.35*rem/90:M.z;else if(rem<70)z=M.z*rem/70;P.push({x:a.x+(b.x-a.x)*f,y:a.y+(b.y-a.y)*f,z})}}
+  let acc=0;P.forEach((p,i)=>{if(i)acc+=hyp(p.x-P[i-1].x,p.y-P[i-1].y);p.d=acc});return P}
+function strikePreview(){const C=G.con;if(conEl.hidden||C.mode!=='atk'||!C.tgt||isAir(C.w)||!MUN[C.w])return null;const M=MUN[C.w],L=launchersFor(ME,C.w)[0]||sites(ME,M.from)[0]||HQPOS[ME];
+  const key=[C.w,C.tgt.x|0,C.tgt.y|0,(C.wp||[]).length,L.x|0,G.ghost[ME].size,Math.floor(G.time/2)].join();if(SPV.key===key)return SPV.v;
+  const P=strikePath(C.w,L,C.tgt,C.wp);const B=[];for(const g of G.ghost[ME].values()){const e=ent(g.id),d=SITE[g.t];if(!e||!e.alive||!d||!d.rng||d.ew)continue;const pk=(PK[g.t]||{})[M.kind];if(!pk)continue;
+    const R=rngOf(gS(g),g.t);let x0=-1,x1=-1,hit=-1;P.forEach((p,i)=>{if(hyp(p.x-g.x,p.y-g.y)<=R){if(x0<0)x0=i;x1=i;if(hit<0&&p.z>=d.a0&&p.z<=d.a1)hit=i}});if(x0<0)continue;
+    B.push({g,d,x0,x1,hit,pk:Math.min(.92,pk*(M.dec?.6:1)*(M.hyp&&g.t!=='GPI'?.35:1)*((M.rcs||.5)<.2?.75:1))})}
+  const inn=P.map((p,i)=>B.some(b=>b.hit>=0&&i>=b.x0&&i<=b.x1&&p.z>=b.d.a0&&p.z<=b.d.a1));let pass=1;for(const b of B)if(b.hit>=0)pass*=1-b.pk;
+  SPV={key,v:{P,B,inn,pass}};return SPV.v}
+let SPV={key:''};
+function drawStrikePreview(time){const S=strikePreview();if(!S)return;const {P,B,inn}=S;
+  for(const b of B){if(b.hit<0)continue;const g=b.g,R=rngOf(gS(g),g.t);const gr=ctx.createRadialGradient(g.x-R*.35,g.y-R*.35,R*.1,g.x,g.y,R);gr.addColorStop(0,'rgba(255,150,130,.22)');gr.addColorStop(.7,'rgba(226,90,70,.12)');gr.addColorStop(1,'rgba(226,90,70,.03)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(g.x,g.y,R,0,7);ctx.fill();
+    ctx.strokeStyle='rgba(255,140,120,.7)';ctx.lineWidth=px(1.4);ctx.stroke();ctx.strokeStyle='rgba(255,220,210,.35)';ctx.lineWidth=px(3);ctx.beginPath();ctx.arc(g.x,g.y,R*.97,Math.PI*1.05,Math.PI*1.55);ctx.stroke();
+    mono(`${nameOf(gS(g),g.t)}: tavan ${b.d.a1} km`,g.x,g.y-R+px(14),'#ffc2b8',10,'center')}
+  for(let i=1;i<P.length;i++){ctx.strokeStyle=inn[i]?'rgba(255,96,80,.95)':'rgba(191,243,250,.8)';ctx.lineWidth=px(inn[i]?3:2);ctx.beginPath();ctx.moveTo(P[i-1].x,P[i-1].y);ctx.lineTo(P[i].x,P[i].y);ctx.stroke()}
+  for(const b of B)if(b.hit>=0){const p=P[b.hit];ctx.fillStyle='#ff6a55';ctx.beginPath();ctx.arc(p.x,p.y,px(4),0,7);ctx.fill()}}
+function drawAProf(){const c=$('#aprof'),S=strikePreview();if(!c||!S)return;const r=c.getBoundingClientRect();const W=Math.max(200,r.width),H=r.height||70;c.width=W*DPR;c.height=H*DPR;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);
+  const {P,B,inn,pass}=S,D=P[P.length-1].d||1,zt=Math.max(1,...P.map(p=>p.z),...B.filter(b=>b.hit>=0).map(b=>Math.min(b.d.a1,150)))*1.08,pad=6,gy=H-12;
+  const X=d=>pad+(W-pad*2-44)*d/D,Y=z=>gy-(gy-8)*Math.sqrt(Math.max(0,z)/zt);
+  x.fillStyle='#060708';x.fillRect(0,0,W,H);x.strokeStyle='rgba(220,230,226,.18)';x.beginPath();x.moveTo(pad,gy+.5);x.lineTo(W-44,gy+.5);x.stroke();
+  x.font='500 9.5px "Archivo Cond",sans-serif';x.fillStyle='rgba(220,230,226,.45)';x.textAlign='left';let ly=1e9;for(const z of [150,60,20,5,1])if(z<zt&&(ly===1e9||Y(z)-ly>11)){ly=Y(z);x.fillText(z+' km',W-40,Y(z)+3);x.strokeStyle='rgba(220,230,226,.06)';x.beginPath();x.moveTo(pad,Y(z));x.lineTo(W-44,Y(z));x.stroke()}
+  // each known battery is a solid block of sky: its range along our path, from its floor to its ceiling
+  for(const b of B){const x0=X(P[b.x0].d),x1=X(P[b.x1].d),y0=Y(b.d.a0),y1=Y(Math.min(b.d.a1,zt)),dx=6,dy=4,live=b.hit>=0;
+    x.fillStyle=live?'rgba(226,90,70,.28)':'rgba(140,150,150,.14)';x.fillRect(x0,y1,x1-x0,y0-y1);
+    x.fillStyle=live?'rgba(255,160,140,.35)':'rgba(190,200,200,.18)';x.beginPath();x.moveTo(x0,y1);x.lineTo(x0+dx,y1-dy);x.lineTo(x1+dx,y1-dy);x.lineTo(x1,y1);x.closePath();x.fill();
+    x.fillStyle=live?'rgba(150,40,30,.4)':'rgba(90,100,100,.2)';x.beginPath();x.moveTo(x1,y1);x.lineTo(x1+dx,y1-dy);x.lineTo(x1+dx,y0-dy);x.lineTo(x1,y0);x.closePath();x.fill();
+    x.strokeStyle=live?'rgba(255,140,120,.9)':'rgba(200,210,210,.35)';x.lineWidth=1;x.strokeRect(x0+.5,y1+.5,x1-x0,y0-y1);
+    if(x1-x0>40){x.fillStyle=live?'#ffd0c8':'rgba(220,230,226,.6)';x.fillText(nameOf(gS(b.g),b.g.t),x0+4,y1+11)}}
+  for(let i=1;i<P.length;i++){x.strokeStyle=inn[i]?'#ff5a46':'#bff3fa';x.lineWidth=inn[i]?2.6:1.8;x.beginPath();x.moveTo(X(P[i-1].d),Y(P[i-1].z));x.lineTo(X(P[i].d),Y(P[i].z));x.stroke()}
+  x.font='600 11px "Archivo Cond",sans-serif';x.textAlign='left';x.fillStyle=pass>.6?'#a8d8b4':pass>.3?'#f0dca0':'#ff9d90';x.fillText(B.some(b=>b.hit>=0)?`Geçme şansı ~%${Math.round(pass*100)} (tahmini, bilinen bataryalara göre)`:'Bilinen hiçbir bataryanın tavanına girmiyor',pad+2,12)}
 function drawTarget(time){if(!G||conEl.hidden||G.con.mode!=='atk')return;const C=G.con,t=C.tgt;
   C.pkg.forEach((p,i)=>{const R=isAir(p.w)?30:Math.max(MUN[p.w].r||14,14);ctx.strokeStyle='rgba(217,195,143,.8)';ctx.lineWidth=px(1.3);ctx.setLineDash([px(4),px(4)]);ctx.beginPath();ctx.arc(p.x,p.y,R,0,7);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#d9c38f';ctx.fillRect(p.x-px(8),p.y-px(8),px(16),px(16));ctx.fillStyle='#0b0e10';ctx.font=`700 ${px(11)}px "Archivo Cond",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(i+1),p.x,p.y+px(.5));mono(`${p.n} ${wName(p.w)}${p.at?', +'+p.at+' sn':''}`,p.x,p.y+R+px(12),'#d9c38f',10,'center')});
   const M=MUN[C.w];const R=M?Math.max((M.cl?M.r*2.2:M.r)||20,14):40;
@@ -2668,7 +2757,7 @@ topEl.addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)re
   else if(k==='eva'){EVA.on=!EVA.on;lsSet('gok.eva',EVA.on?'1':'0');if(EVA.on)eva('Sesli uyarılar açık','evaon',1);renderTop()}else if(k==='mute'){setMute(!SND.muted);renderTop()}else if(k==='radio'){VOICE.off=!VOICE.off;lsSet('gok.radio',VOICE.off?'0':'1');if(VOICE.off)VOICE.q.length=0;renderTop()}else if(k==='how'){ovBack=null;openHowto(0)}else if(k==='quit')intro();updTop()});
 
 // ================================================================ side panel
-const DSECT=[['Gözetleme','Görmediğin tehdidi vuramazsın.',['RAD']],['Yakın savunma','Dron, seyir füzesi ve bombayı son kilometrelerde durdurur.',['CIWS','LASER','IDR','HPM']],['Orta menzil','Uçak, seyir füzesi ve dron; 20 km irtifaya kadar.',['SHORAD','MRAD']],['Balistik savunma','Balistik ve hipersonik füzeye karşı.',['LRAD','UPPER','GPI']],['Karıştırma ve aldatma','',['EW','DEC']],['Saldırı rampaları','Füze ve İHA atmak için.',['TEL','DLN']]];
+const DSECT=[['Gözetleme','Görmediğin tehdidi vuramazsın.',['RAD']],['Yakın savunma','Dron, seyir füzesi ve bombayı son kilometrelerde durdurur.',['CIWS','LASER','IDR','HPM']],['Orta menzil','Uçak, seyir füzesi ve dron; 20 km irtifaya kadar.',['SHORAD','MRAD']],['Balistik savunma','Balistik ve hipersonik füzeye karşı.',['LRAD','UPPER','GPI']],['Karıştırma ve aldatma','',['EW','DEC']],['Saldırı rampaları','Füze ve İHA atmak için.',['TEL','DLN','DTEL']]];
 function buildSide(){side.innerHTML=`<div class="money"><b id="cash">$0</b><small id="inc"></small></div><div class="prod" id="prod" data-tab="S" role="button" tabindex="0" title="Durumu aç"></div><div class="mmwrap"><canvas id="mm"></canvas></div>
   <nav class="tabs" aria-label="Komuta">${[['K','Kur'],['D','Savunma'],['A','Saldırı'],['S','Durum'],['L','Kayıt']].map(([k,n])=>`<button class="btn" data-tab="${k}">${n}</button>`).join('')}</nav>
   <div class="tabdesc" id="tabdesc"></div><div class="build" id="build"></div><div class="selp" id="selp"></div>`;
@@ -2695,6 +2784,8 @@ function statusOf(s){const all=G.ents.filter(e=>e.cat==='asset'&&!e.ruin&&e.side
    {k:'pop',n:'Nüfus',v:fmtPop(popNow),f:popMax?popNow/popMax:1,fx:'Şehirlerin geliri nüfusla gider',why:why(['CITY'])},
    {k:'pwr',n:'Elektrik',v:`%${Math.round(en*100)}`,f:en,fx:'Fabrikalar elektrikle çalışır',why:why(['PWR'])},
    {k:'fuel',n:'Yakıt',v:`%${Math.round(fuel*100)}`,f:fuel,fx:`Uçak bakımı ${Math.round(REARM_T/fu)} sn`,why:why(['REFN','FUEL'])},
+   {k:'comm',n:'Haberleşme',v:`%${Math.round(share(s,'COMM')*100)}`,f:share(s,'COMM'),fx:'Bataryalar ortak radar resmiyle tam menzil kullanır',why:share(s,'COMM')<.985?[...why(['COMM']),`Bataryalar menzilin %${Math.round((G.nf&&G.nf[s]||1)*100)}'ini kullanabiliyor`]:[]},
+   {k:'hq',n:'Karargâh sığınağı',v:hqMul(s)<.26?'tam korumalı':`açık, hasar ×${f1(hqMul(s))}`,f:1-(hqMul(s)-.25)/.35,fx:'Santraller sığınağı besler; normal başlık ×0,25 işler',why:hqMul(s)>=.26?['Santraller vuruldu: sığınağın koruması azaldı']:[]},
    {k:'air',n:'Savaş uçağı',v:`${rdy} hazır, ${4-lost} elde`,f:abUp?rdy/4:0,fx:'Süzülen bomba ve SEAD görevleri',why:aWhy}]}
 // the strip under the cash: three columns always in view, and the first reason something is short
 function updProd(){const el=$('#prod');if(!el||!G)return;const S=statusOf(ME),pick=['inc','prod','pop'].map(k=>S.find(r=>r.k===k));
@@ -2708,7 +2799,7 @@ function card(key,opts={}){const d=SITE[key]||MUN[key]||SORT[key];const c=opts.c
   return `<button class="card-b ${off?'off':''} ${mode&&mode.t===key?'on':''} ${ph?'ph':''}" data-k="${key}" data-kind="${opts.kind||'site'}">${ph?`<img src="img/${ph}.webp" alt="" loading="lazy">`:''}<b>${esc(SORT[key]?d.n:nameOf(ME,key))}</b><span>${esc(SITE[key]?SITE[key].role:'')}</span><em>${opts.ct||money(c)}</em>${opts.k!=null&&opts.k!==''?`<i>${opts.k} kurulu</i>`:''}</button>`}
 const sect=(n,e)=>`<div class="sect">${n}${e?`<em>${e}</em>`:''}</div>`;
 let sideSig='';
-function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')tab='A';const sig=[tab,mode&&mode.t,G.phase,...Object.keys(SITE).map(k=>G.cash[ME]<costOf(ME,k)?0:1),...['TEL','DLN','RAD','MRAD','LRAD','UPPER','SHORAD','CIWS','LASER','IDR','EW','DEC','HPM','GPI'].map(k=>sites(ME,k).length),...G.air4[ME].map(a=>a.st),tab!=='K'?Math.floor(G.time/(tab==='L'||tab==='S'?1:2)):0,tab==='S'?Math.floor(G.cash[ME]/20):0,sites(ME).map(s=>s.mode).join('')].join('|');if(!force&&sig===sideSig)return;sideSig=sig;let h='';
+function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')tab='A';const sig=[tab,mode&&mode.t,G.phase,...Object.keys(SITE).map(k=>G.cash[ME]<costOf(ME,k)?0:1),...['TEL','DLN','RAD','MRAD','LRAD','UPPER','SHORAD','CIWS','LASER','IDR','EW','DEC','HPM','GPI','DTEL'].map(k=>sites(ME,k).length),...G.air4[ME].map(a=>a.st),tab!=='K'?Math.floor(G.time/(tab==='L'||tab==='S'?1:2)):0,tab==='S'?Math.floor(G.cash[ME]/20):0,sites(ME).map(s=>s.mode).join('')].join('|');if(!force&&sig===sideSig)return;sideSig=sig;let h='';
   if(tab==='K'){for(const [n,e,ks] of DSECT){h+=sect(n,e);for(const k of ks)h+=card(k,{off:G.cash[ME]<costOf(ME,k),k:sites(ME,k).length||''})}}
   else if(tab==='D'){const gaps=defGaps();G.anal={...(G.anal||{}),gaps};const all=sites(ME).filter(s=>SITE[s.t].rng&&!SITE[s.t].ew);
     const doc=all.length&&all.every(s=>s.mode===all[0].mode)?all[0].mode:null;
@@ -2723,7 +2814,8 @@ function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')t
   else if(tab==='A'){const ops=G.phase==='war'?strikeOps():[],SKM=strikeMap();G.anal={...(G.anal||{}),ops};
     const tel=sites(ME,'TEL'),dln=sites(ME,'DLN'),ab=assets(ME).find(a=>a.t==='AIRB');
     const rd=l=>l.filter(e=>e.bt<=0&&e.rl<=0&&!(e.empT>G.time)).length;
-    h+=sect('Elindeki güç','');
+
+    {const F=other(ME),hm=hqMul(F),cm=share(F,'COMM');h+=sect('Rakibin zayıf noktaları','karargâha giden yol');h+=`<div class="stat"><span>Karargâh sığınağı</span><b>${hm<.26?'tam korumalı, ×0,25':'açık, ×'+f1(hm)}</b></div><div class="note">${hm<.26?'Santrallerini vurdukça sığınak açılır: hepsi düşerse normal başlık ×0,6, sığınak delici tam hasar verir.':'Santralleri vuruldu; karargâh artık daha savunmasız.'} ${cm<.985?`Haberleşmesi %${Math.round(cm*100)}: bataryaları menzilinin bir kısmını kaybetti.`:'Haberleşme merkezlerini vurursan bataryaları ortak radar resmini kaybeder, menzilleri yarıya yakın kısalır.'}</div>`;h+=sect('Elindeki güç','')}
     h+=`<div class="stat"><span>Füze rampası</span><b>${tel.length?`${rd(tel)} hazır, ${tel.length} toplam`:'yok'}</b></div><div class="stat"><span>İHA rampası</span><b>${dln.length?`${rd(dln)} hazır, ${dln.length} toplam`:'yok'}</b></div><div class="stat"><span>Savaş uçağı</span><b>${ab?`${G.air4[ME].filter(a=>a.st==='ready').length} hazır`:'hava üssü yıkıldı'}</b></div><div class="stat"><span>Füze üretimi</span><b>${Math.floor(G.prod[ME])} hazır, dakikada ${Math.round(prodRate(ME)*60)}</b></div>`;
     if(!tel.length&&!dln.length)h+='<div class="note">Saldırmak için rampa gerekir. Kur sekmesinin en altında.</div>';
     else{const LL=tel.concat(dln);h+=sect('Rampaların',LL.some(l=>l.km&&l.km.length)?'yıldız: üç ve fazla tesis yıktı':'');h+=LL.slice(0,10).map(l=>`<button class="bat ${G.sel===l.id?'on':''}" data-bat="${l.id}"><b>${esc(nameOf(ME,l.t))}${l.km&&l.km.length>=3?' <i class="star">★</i>':''}</b><span>${l.bt>0?`kuruluyor, ${Math.ceil(l.bt)} sn`:l.rl>0?`doluyor, ${Math.ceil(l.rl)} sn`:'hazır'}</span><em>${l.km&&l.km.length?`${l.km.length} yıkım`:`${l.shots||0} atış`}</em></button>`).join('')}
@@ -2739,7 +2831,7 @@ function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')t
     h+=F.map(e=>{const f=e.alive?e.hp/e.max:0,st=facState(e);let act='';
       if(!e.alive&&e.t!=='HQ'){if(e.rbAt){const T=e.rbAt-e.rbT0,p=1-(e.rbAt-G.time)/T;act=`<span class="rb-p"><i style="width:${Math.round(clamp(p,0,1)*100)}%"></i></span>`}else{const c=rebuildCost(e.t);act=`<button class="btn sm${G.cash[ME]>=c?' pri':''}" data-rb="${e.id}"${G.cash[ME]>=c?'':' disabled'}>Yeniden kur</button>`}}
       return `<div class="fac${e.alive?'':' dead'}" data-fac="${e.id}"><div><b>${esc(e.nm)}</b><em>${esc(ASSET_DEF[e.t].n)}${e.t==='CITY'&&e.pop?', '+fmtPop(e.pop*f):''}${st?', '+esc(st):''}${!e.alive&&!e.rbAt&&e.t!=='HQ'?`. ${money(rebuildCost(e.t))}, ${rebuildTime(e.t)} sn sürer`:''}</em>${e.alive?`<i><u style="width:${Math.round(f*100)}%"></u></i>`:''}</div>${act}</div>`}).join('')}
-  else if(tab==='L'){const L=G.orders||[];h+=sect('Verdiğin emirler',L.length?L.length+' emir':'');h+=L.length?L.map(o=>{const pend=Math.max(0,o.n-o.hit-o.down-o.fail-(o.arr-o.hit));const seg=(n,c)=>n?`<i class="${c}" style="flex:${n}"></i>`:'';return `<div class="lg-row ${o.done?'':'live'}" data-lg="${o.id}"><div class="lg-h"><s>${mmss(o.t)}</s><b>${o.n||'?'} ${esc(nameOf(ME,o.k))}</b><span>${esc(o.lbl)}</span></div><div class="lg-bar">${seg(o.hit,'h')}${seg(o.arr-o.hit,'m')}${seg(o.down,'d')}${seg(o.fail,'f')}${seg(pend,'p')}</div><div class="lg-t">${o.done?'':'<em>Havada.</em> '}${o.hit} isabet, ${o.down} düşürüldü${o.arr-o.hit?', '+(o.arr-o.hit)+' boşa':''}${o.fail?', '+o.fail+' arıza':''}. Hasar <b>${money(o.dmg)}</b>, maliyet ${money(o.cost)}.${o.killed?' <b class="k">Tesis yıkıldı.</b>':''}</div></div>`}).join(''):'<div class="note">Henüz atış emri yok. Verdiğin her emir burada izlenir: kaçı vurdu, kaçı düşürüldü, ne kadar hasar verdi.</div>'}
+  else if(tab==='L'){const L=G.orders||[];h+=sect('Verdiğin emirler',L.length?L.length+' emir':'');h+=L.length?L.map(o=>{const pend=Math.max(0,o.n-o.hit-o.down-o.fail-(o.arr-o.hit));const seg=(n,c)=>n?`<i class="${c}" style="flex:${n}"></i>`:'';return `<div class="lg-row ${o.done?'':'live'}" data-lg="${o.id}"><div class="lg-h"><s>${mmss(o.t)}</s><b>${o.n||'?'} ${esc(nameOf(ME,o.k))}</b><span>${esc(o.lbl)}</span></div><div class="lg-bar">${seg(o.hit,'h')}${seg(o.arr-o.hit,'m')}${seg(o.down,'d')}${seg(o.fail,'f')}${seg(pend,'p')}</div><div class="lg-t">${o.done?'':'<em>Havada.</em> '}${o.hit} isabet, ${o.down} düşürüldü${o.arr-o.hit?', '+(o.arr-o.hit)+' boşa':''}${o.fail?', '+o.fail+' arıza':''}. Hasar <b>${money(o.dmg)}</b>, maliyet ${money(o.cost)}${o.icp?`, rakibe ${money(o.icp)} önleyici harcattı`:''}.${o.killed?' <b class="k">Tesis yıkıldı.</b>':''}</div></div>`}).join(''):'<div class="note">Henüz atış emri yok. Verdiğin her emir burada izlenir: kaçı vurdu, kaçı düşürüldü, ne kadar hasar verdi.</div>'}
   el.innerHTML=h;$('#tabdesc').textContent={K:'Kartı seç, sonra haritada kendi tarafında bir yere tıkla.',D:'Bataryaların ne zaman ateş edeceği ve hangi tesisin açıkta kaldığı.',A:'Rampaların ve en çok kazandıran hedefler. Ateş etmek için alttaki konsol.',S:'Gelir, üretim, nüfus: neyin neden düştüğü. Yıkılanı buradan yeniden kur.',L:'Verdiğin her atış emri ve sonucu.'}[tab]||'';
   side.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));updProd()}
 let infoKey=null;
@@ -2961,6 +3053,7 @@ function renderSel(){renderCard();const el=$('#selp');if(!el||!G)return;if(infoK
   if(e.cat==='asset'){el.innerHTML=`<h4>${esc(e.nm)}</h4><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div><div class="m">Dayanıklılık ${Math.round(e.hp)}/${e.max}, gelir ${money(ASSET_DEF[e.t].inc*e.hp/e.max)}/sn${e.t==='AIRB'?', 4 uçak':''}.</div>`;return}
   const d=SITE[e.t];const acts=[];
   if(d.rng&&!d.ew)acts.push(...[['auto','Otomatik'],['sel','Seçici'],['off','Sessiz']].map(([m,n])=>`<button class="btn sm ${e.mode===m?'on':''}" data-sm="${m}">${n}</button>`));
+  if(e.t==='DTEL')acts.push(`<button class="btn sm pri" data-sa="feint"${e.fT>G.time?' disabled':''}>${e.fT>G.time?'Sahte atış '+Math.ceil(e.fT-G.time)+' sn':'Sahte atış yap'}</button>`);
   if(e.t==='RAD'||e.t==='EW')acts.push(`<button class="btn sm ${e.emit?'on':''}" data-sa="emit">${e.emit?'Yayında':'Sessiz'}</button>`);
   acts.push(`<button class="btn sm ghost" data-sa="sell">Sat (${money(costOf(ME,e.t)*.5)})</button>`);
   el.innerHTML=`<h4>${esc(nameOf(ME,e.t))}</h4><div class="m" style="margin:0">${esc(d.role)}</div><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div>${d.mag&&d.mag<999?`<div class="bar mg"><i style="width:${e.mag/d.mag*100}%"></i></div>`:''}<div class="m">${d.mag&&d.mag<999?`Önleyici ${e.mag}/${d.mag}, `:''}${d.rl&&d.mag?`dolum ${d.rl} sn, `:''}${d.off?`${e.rl>0?'dolumda, '+Math.ceil(e.rl)+' sn':'hazır'}, `:''}${d.off?`${e.shots||0} atış, ${e.hits||0} isabet${e.km&&e.km.length?`. <b style="color:#e6c35a">Yıktıkları:</b> ${esc(killSum(e))}`:''}`:`${e.kills} vuruş, harcama ${money(e.spent)}`}${e.bt>0?', kuruluyor':''}.${e.mode==='sel'?' <b style="color:#7fe0a0">Seçici:</b> boş araziye düşecekleri ve ucuz dronları pahalı füzeyle vurmaz':''}</div><div class="acts">${acts.join('')}</div>`}
@@ -2971,7 +3064,7 @@ side.addEventListener('click',e=>{if(!G)return;audioInit();const tb=e.target.clo
   const bt=e.target.closest('[data-bat]');if(bt){const s=ent(+bt.dataset.bat);if(s){G.sel=s.id;G.selTrk=null;camGo(s.x,s.y,Math.max(cam.z,.35));renderSel();renderSide(true)}return}
   const dc=e.target.closest('[data-doc]');if(dc){issue('mode',sites(ME).filter(s=>SITE[s.t].rng&&!SITE[s.t].ew).map(s=>s.id),dc.dataset.doc);sfx('beep');renderSide(true);renderSel();return}
   const sm=e.target.closest('[data-sm]');if(sm){const s=ent(G.sel);if(s){issue('mode',[s.id],sm.dataset.sm);sfx('beep');renderSel()}return}
-  const sa=e.target.closest('[data-sa]');if(sa){const k=sa.dataset.sa;const s=ent(G.sel);if(k==='emit'&&s){issue('emit',s.id,!s.emit)}else if(k==='sell'&&s){const r=issue('sell',ME,s.id);if(r)hint(r,1);else{G.sel=null;sfx('ok')}}else if(k==='engage'){openCon('def')}renderSel();return}
+  const sa=e.target.closest('[data-sa]');if(sa){const k=sa.dataset.sa;const s=ent(G.sel);if(k==='feint'&&s){const r=issue('feint',ME,s.id);if(r)hint(r,1)}else if(k==='emit'&&s){issue('emit',s.id,!s.emit)}else if(k==='sell'&&s){const r=issue('sell',ME,s.id);if(r)hint(r,1);else{G.sel=null;sfx('ok')}}else if(k==='engage'){openCon('def')}renderSel();return}
   const b=e.target.closest('.card-b');if(!b||b.classList.contains('off'))return;const k=b.dataset.k,kind=b.dataset.kind;
   if(kind==='site'){mode={k:'place',t:k};closeInfo();qaClose();hint(`<b>${esc(nameOf(ME,k))}</b>: tıkladığın yere en yakın boş kurulum yerine kurulur (beyaz kareler). Sağ tık ya da Esc vazgeçer.`);renderSide(true)}
 });
@@ -2987,7 +3080,7 @@ const CW_KEYS=['BM','HGV','CM','DRN','ARMD','MALD','RCN','SEAD','GLIDE'];
 const FCS={armed:false,hold:0,holding:false,firedAt:0};
 function toggleCon(){if(conEl.hidden)openCon(G.con.mode);else{conEl.hidden=true;if(mode?.k==='target'){mode=null;hint('')}stage.style.setProperty('--conH','0px')}renderTop()}
 function openCon(m){G.con.mode=m||G.con.mode;if(G.con.mode==='def'&&mode?.k==='target')mode=null;conEl.hidden=false;stage.style.setProperty('--conH',CONH+'px');buildCon();renderTop()}
-const CONH=196;
+const CONH=250;
 function buildCon(){conEl.style.setProperty('--conH',CONH+'px');conEl.style.height=CONH+'px';
   conEl.innerHTML=`<div class="col cA" id="cA"></div><div class="col cP" id="cP"></div><div class="col cB" id="cB" hidden></div><div class="fc" id="cC"><div class="cstep fch"><b>3</b> Ateş</div>
    <div class="armw"><button class="arm" id="armb" aria-label="Emniyet kapağı"><span class="tog"></span><span class="cover"></span></button><small id="armt">Emniyette</small></div>
@@ -3044,7 +3137,7 @@ function renderCon(){if(conEl.hidden||!G)return;const C=G.con,A=$('#cA'),P=$('#c
       info=`<b>${esc(t.lbl)}</b>, ${f1(d/KMU)} km, ${Math.ceil(ft)} saniyede varır. <button class="lnk" data-p="clrt">Hedefi kaldır</button><br>${risk.length?`<span class="risk">Yolda: ${esc(risk.join(', '))}</span>`:'<span class="ok">Yolda bilinen savunma yok.</span>'}`}
     const pk=C.pkg;let ph='';
     if(pk.length){const mxAt=Math.max(...pk.map(p=>p.at),1);ph=`<div class="plan">${pk.map((p,i)=>`<div class="pi"><span class="n">${i+1}</span><span class="w">${p.n} ${esc(wName(p.w))}</span><span class="t">${esc(p.lbl)}</span><span class="at"><button data-at="${i}" data-d="-5" aria-label="Erkene al">−</button>${p.at?'+'+p.at:'0'} sn<button data-at="${i}" data-d="5" aria-label="Geciktir">+</button></span><button class="x" data-rm="${i}" aria-label="Çıkar">×</button></div>`).join('')}</div><div class="pt">Planda ${pk.length} kalem, toplam ${money(planCost(pk))}. Numaralar varış sırası.</div>`}
-    setH(P,`<div class="cstep"><b>2</b> Adet ve hedef</div><div class="qrow">${qty}</div><div class="trow"><button class="btn tgtb ${mode?.k==='target'?'on':''} ${C.tgt?'':'need'}" data-p="target">${mode?.k==='target'?'Hedef seçimini bitir':C.tgt?'Hedefi değiştir':'Hedef seç'}<kbd>T</kbd></button><button class="btn sm" data-p="add" title="Bu silahı ve hedefi plana ekle; sonra başka silah ve hedef ekleyip hepsini tek atışla gönder">Plana ekle</button><button class="btn sm" data-p="blind" title="Önce karıştırıcı ve anti-radar İHA ile hedefin radarlarını kör eder, aldatıcılarla önleyicileri boşa çeker, ana silahı 12 saniye sonra indirir">Kör et, sonra vur</button>${pk.length?'<button class="btn sm ghost" data-p="clr">Planı sil</button>':''}</div><div class="tinfo">${info}</div>${ph}`)}
+    setH(P,`<div class="cstep"><b>2</b> Adet ve hedef</div><div class="qrow">${qty}</div><div class="trow"><button class="btn tgtb ${mode?.k==='target'?'on':''} ${C.tgt?'':'need'}" data-p="target">${mode?.k==='target'?'Hedef seçimini bitir':C.tgt?'Hedefi değiştir':'Hedef seç'}<kbd>T</kbd></button><button class="btn sm" data-p="add" title="Bu silahı ve hedefi plana ekle; sonra başka silah ve hedef ekleyip hepsini tek atışla gönder">Plana ekle</button><button class="btn sm" data-p="blind" title="Önce karıştırıcı ve anti-radar İHA ile hedefin radarlarını kör eder, aldatıcılarla önleyicileri boşa çeker, ana silahı 12 saniye sonra indirir">Kör et, sonra vur</button>${pk.length?'<button class="btn sm ghost" data-p="clr">Planı sil</button>':''}</div><div class="tinfo">${info}</div>${C.tgt&&!isAir(k)&&MUN[k]?'<canvas id="aprof"></canvas>':''}${ph}`);drawAProf()}
   else{if(WPOP)weaponPop(null);C.tf=C.tf||'all';const ALL=[...G.air].filter(o=>o.alive&&o.side!==ME&&G.trk[ME].has(o.id)&&o.kind!=='icp').sort((a,b)=>etaOf(a)-etaOf(b));
     const grp=o=>HEAVY.has(o.kind)||o.hyp?'bm':(o.kind==='drone'||o.kind==='armd'||o.kind==='mald'||o.kind==='jam'||o.kind==='recon')?'dr':'cm';const cnt=g=>ALL.filter(o=>g==='all'||grp(o)===g).length;
     const L=ALL.filter(o=>C.tf==='all'||grp(o)===C.tf).slice(0,30);
@@ -3413,7 +3506,7 @@ function startGame(m,opts,rec,online){if(!online)ME='W';if(rec){opts=rec.opts;m=
   const need=m==='ffa'?['m4','mat4']:['m0','mat'];let tries=0;const go=()=>{if(need.some(k=>!ready(k))&&tries++<150){setTimeout(go,100);return}newGame(m,opts);if(rec){G.replay={cmds:rec.cmds,i:0,end:rec.ticks};G.watch=true}if(online){G.net=true;G.speed=1}G.advS={t:0,list:[],obj:null,snz:{},al:{},pin:0,sig:''};cloudSprites();for(const k in BP)delete BP[k];tab='K';mode=null;cam.z=.7;cam.x=HQPOS[ME].x+420*(ME==='E'?-1:1);cam.y=HQPOS[ME].y-260;resize();camClamp();ov.hidden=true;sideSig='';renderTop();buildSide();openCon('atk');FCS.armed=false;
     if(online){TUT.on=false;coach.hidden=true;toast(`<b>Çevrimiçi harekât</b>${natOf(ME).n} olarak ${natOf(G.sides.find(x=>x!==ME)).n}'ya karşı. 2 dakika hazırlık; ikiniz de "Hazırım" deyince başlar. Duraklatma yok.`,'W',true)}else if(rec){conEl.hidden=true;stage.style.setProperty('--conH','0px');$('#adv').hidden=true;TUT.on=false;coach.hidden=true;toast(`<b>Tekrar</b>${natOf(ME).n} – ${G.sides.slice(1).map(x=>natOf(x).n).join(', ')} maçı baştan oynatılıyor. Emir veremezsin; hızı üstteki 2× düğmesiyle 4×'e kadar çıkarabilirsin.`,'W',true)}else if(m==='tutorial')tutStart();else{TUT.on=false;coach.hidden=true;toast(G.quad?`<b>Hazırlık</b>${natOf(ME).n} sol alt köşede. Karşında ${G.sides.slice(1).map(x=>natOf(x).n).join(', ')}. 2 dakikan var; sonra herkes herkese saldırabilir.`:`<b>Hazırlık</b>${natOf(ME).n} olarak ${natOf(G.sides.find(x=>x!==ME)).n}'ya karşı. 2 dakikan var: radar, hava savunma, rampalar.`,'W',true)}sfx('radio')};setTimeout(go,40)}
 const HOWTO=[
- ['Oyunun mantığı','<p>İki ülke karşı karşıya. İkisinin de şehirleri, rafinerisi, santrali, fabrikası, hava üssü ve komuta merkezi var. <b>Para bu tesislerden gelir</b>; hasar alan tesis daha az kazandırır.</p><p>Üç işin var: <b>kurmak</b>, <b>savunmak</b> ve <b>vurmak</b>.</p><p><b>Kazanmak</b>: 15 dakikanın sonunda rakibe daha çok hasar verdiren kazanır. Komuta merkezi yıkılan o an kaybeder; ama merkez bir sığınaktır, normal başlıklar ona ancak çeyrek hasar verir. Onu tek başına yerle bir etmeye çalışmak uzun ve pahalı bir kumardır.</p><p>Başta 2 dakika hazırlık var: $900M ile kurarsın, kimse ateş etmez. İkiniz de hazır olunca harekât başlar.</p>'],
+ ['Oyunun mantığı','<p>İki ülke karşı karşıya. İkisinin de şehirleri, rafinerisi, santrali, fabrikası, hava üssü ve komuta merkezi var. <b>Para bu tesislerden gelir</b>; hasar alan tesis daha az kazandırır.</p><p>Üç işin var: <b>kurmak</b>, <b>savunmak</b> ve <b>vurmak</b>.</p><p><b>Kazanmak</b>: üstteki <b>savaş terazisi</b> 50\'de başlar. İki ülkenin savaş gücü (tesisler, bataryalar, rampalar) harekât başındakiyle karşılaştırılır: rakibi senden çok yıprattıkça terazi sana döner. <b>100\'e ulaşırsan kazanırsın, 0\'a düşerse kaybedersin.</b> 15 dakika dolarsa terazide önde olan kazanır. Komuta merkezini yıkmak da anında kazandırır.</p><p><b>Karargâha giden yol</b>: merkez bir sığınaktır, normal başlık ona çeyrek hasar verir. Ama elektriğini santraller verir: santraller düştükçe sığınak açılır. Haberleşme merkezleri düşerse rakibin bataryaları ortak radar resmini kaybeder, menzilleri kısalır. Önce haberleşme ve enerji, sonra karargâh.</p><p><b>Atmadan önce</b>: konsolda hedef seçince haritada silahın yolu ve bildiğin düşman bataryalarının kubbeleri çıkar; altta yükseklik kesitinde her bataryanın tavanı bir blok olarak görünür. Yol kırmızıya dönüyorsa o blokun içinden geçiyor demektir. Maket rampa ile sahte atış yapıp rakibin karşı ateşini boşa çektirebilirsin.</p><p>Başta 2 dakika hazırlık var: $900M ile kurarsın, kimse ateş etmez. İkiniz de hazır olunca harekât başlar.</p>'],
  ['Ekran: ne nerede','<ul><li><b>Üst şerit</b>: solda saat ve skor; sağda zaman (Duraklat, 2×), harita görünümü (Uydu, Taktik, Menziller) ve <b>Menü</b> (ses, telsiz, nasıl oynanır, çık).</li><li><b>Haritanın sol üstü</b>: Tüm harita (F), <b>Gelenler</b> (G: gelen her füzenin hedefi ve nerede önleneceği), Uydu çekimi, ne gösterileceği (Hepsi, Hava savunma, Tesisler, Rampalar) ve Katmanlar (menzil halkaları).</li><li><b>Sağ panel</b>: paranın altında gelir, üretim ve nüfus; altında beş sekme. <i>Kur</i>: radar, batarya, rampa. <i>Savunma</i>: ateş kuralı ve açıkta kalan tesisler. <i>Saldırı</i>: rampaların ve en kazançlı hedefler. <i>Durum</i>: neyin neden düştüğü, yıkılanı yeniden kurma. <i>Kayıt</i>: her emrin sonucu.</li><li><b>Alttaki konsol</b> soldan sağa üç adım: <b>1</b> silahı (ya da Önleme\'de tehdidi) seç, <b>2</b> adet ve hedefi (ya da bataryayı) belirle, <b>3</b> emniyeti kaldır ve ATEŞ\'e basılı tut. Konsol açıkken haritada düşman tesisine tıklamak onu doğrudan hedef yapar.</li><li><b>Üstteki danışman</b>: o an en önemli işi söyler; düğmesine basarsan kendisi yapar.</li></ul>'],
 
  ['Para, üretim ve zaman','<ul><li>Füzenin parasını ateşlediğin anda ödersin; ayrıca stok almana gerek yok.</li><li>Ama rampadan atılan füzeler <b>fabrikadan</b> gelir: her an hazır olan sayı sınırlıdır (en çok 24) ve dakikada temel 4 füzeye, her sağlam fabrika için 4 füze daha eklenir. Rakibin fabrikasını vurmak, onun füze yağmurunu yavaşlatır.</li><li>Destek tesisleri de iş görür: <b>santraller</b> fabrikaları besler (elektrik düşerse üretim yarıya kadar iner), <b>cephanelikler</b> hazır füze sınırını taşır (yıkılırsa 24\'ten 12\'ye iner), <b>rafineri ve yakıt depoları</b> uçakların bakım süresini belirler.</li><li>Yıkılan tesis <b>yeniden kurulabilir</b>: değerinin beşte dördü kadar para ve 1–2 dakika ister. Komuta merkezi kurulamaz.</li><li>Kurulum zaman alır: top 6 saniyede, uzun menzil batarya 22, üst katman 30 saniyede hazır olur. Rampa 16 saniye.</li><li>Her <b>füze rampası</b> bir füze atar, sonra 22 saniye dolum yapar. <b>İHA rampası</b> bir seferde 6 İHA uçurur. <b>Hava üssü</b> 4 uçakla radar avı ve süzülen bomba görevi yapar.</li><li>Balistik füze ateşlenince yanmalı motoru uzaydan görülür: <b>rampanın yeri rakibe belli olur</b>. Aynı yerden ısrarla atarsan karşı ateş yersin.</li></ul>'],
@@ -3425,7 +3518,7 @@ const HOWTO=[
 ];
 function openHowto(i=0){const nav=HOWTO.map((h,j)=>`<button class="btn ${j===i?'on':'ghost'}" data-h="${j}">${j+1}. ${h[0]}</button>`).join('');overlayHTML(`<div class="card wide" style="max-width:960px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="margin:0">Nasıl oynanır</h2><button class="btn" data-o="back">Kapat</button></div><div class="howto"><nav>${nav}</nav><div class="pg"><h2 style="font-size:26px">${HOWTO[i][0]}</h2>${HOWTO[i][1]}</div></div></div>`)}
 function showEnd(){if(!G||G.ended)return;G.ended=true;const w=G.winner,sc=G.score,I=G.icp;if(!G.watch&&G.mode!=='tutorial'){LASTREC=matchRecord();try{lsSet('gok.lastrec',JSON.stringify(LASTREC))}catch(e){}}
-  overlayHTML(`<div class="card"><h1 style="color:${w?'var(--'+w+')':'var(--ink)'}">${w?natOf(w).n+' kazandı':G.quad&&G.out[ME]?'Saf dışı kaldın':'Berabere'}</h1><p class="lead">${G.netEnd==='abandon'?(G.winner===ME?'Rakip bağlantıya dönmedi; maç senin.':'Bağlantın 90 saniyeden uzun koptu.'):G.time>=GAME_T?'Süre doldu: karar verdirilen hasarla.':G.quad?(G.out[ME]?'Komuta merkezin düştü.':'Son ayakta kalan.'):'Komuta merkezi düştü.'} Harekât ${mmss(G.time)} sürdü.</p>
+  overlayHTML(`<div class="card"><h1 style="color:${w?'var(--'+w+')':'var(--ink)'}">${w?natOf(w).n+' kazandı':G.quad&&G.out[ME]?'Saf dışı kaldın':'Berabere'}</h1><p class="lead">${G.netEnd==='abandon'?(G.winner===ME?'Rakip bağlantıya dönmedi; maç senin.':'Bağlantın 90 saniyeden uzun koptu.'):G.balWin?(G.winner===ME?'Savaş terazisi 100\'e ulaştı: rakibin savaş gücü çöktü.':'Savaş terazisi 0\'a düştü: ülkenin savaş gücü çöktü.'):G.time>=GAME_T?(G.quad?'Süre doldu: karar verdirilen hasarla.':'Süre doldu: karar terazideki üstünlükle.'):G.quad?(G.out[ME]?'Komuta merkezin düştü.':'Son ayakta kalan.'):'Komuta merkezi düştü.'} Harekât ${mmss(G.time)} sürdü.</p>
   <div class="cols"${G.quad?' style="grid-template-columns:repeat(2,1fr)"':''}>${G.sides.map(s=>`<div class="${s}"><h4>${natOf(s).n}${G.out[s]?', saf dışı':''}</h4><div class="kv"><span>Verdirilen hasar</span><b>${money(sc[s].dmg)}</b><span>Harcanan (füze + önleyici)</span><b>${money(sc[s].sp)}</b><span>Önleme</span><b>${I[s].hit}/${I[s].n}${I[s].n?' (%'+Math.round(I[s].hit/I[s].n*100)+')':''}</b><span>Önleyici harcaması</span><b>${money(I[s].cost)}</b><span>Sivil hasar (enkaz dahil)</span><b>${money(sc[s].civ)}</b></div></div>`).join('')}</div>
   <div class="cta">${G.net?'<button class="btn pri" data-o="online">Yeni çevrimiçi maç</button>':'<button class="btn pri" data-o="again">Yeni harekât</button>'}${LASTREC&&G.mode!=='tutorial'?'<button class="btn" data-o="watch">'+(G.watch?'Tekrarı baştan izle':'Tekrarı izle')+'</button>':''}<button class="btn" data-o="menu">Ana ekran</button></div></div>`);ovBack=intro;sfx(w===ME?'gold':'radio')}
 ov.addEventListener('click',e=>{const h=e.target.closest('[data-h]');if(h){openHowto(+h.dataset.h);return}
