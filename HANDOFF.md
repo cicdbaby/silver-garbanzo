@@ -269,3 +269,10 @@ Her değişiklik için:
 - **Gelenler (G)**: `threatScan` her gelen silahın hedefini, kalan süresini ve mevcut bataryalarla ilk önleme noktasını (`meetOf`, `futPos`) hesaplar; önlenemeyecekleri "Engelleyecek hiçbir şey yok" diye yazar; altta özet.
 - Taktik haritada filtre (`TACF`): Hepsi / Hava savunma / Tesisler / Rampalar.
 - Patlama görselleri: `tools/GOREV12_PATLAMA.md` (10 görsel, her yerde aynı set). Yangın tek modelde: `fireK` = vuruş gücü × (yakıt tesisi 1,4), boy tesisin görsel yarıçapıyla. Gelince: siyah fonlular parlaklıktan alfa, ateş topu a→b→c sırayla.
+
+## GÖREV 13 — patlama görselleri, kurulum yeri, menü düzeni (Claude)
+- Patlama: `v7/X_fb_a|b|b2|c` üç an (çakma → ateş topu → duman), `X_debris` büyük vuruşta, `X_fire1|2` tesis yangınında, yeni `X_air` (önleme), `X_smoke1|2`, `X_crater2`. Siyah fonlular parlaklıktan alfa çıkarılıp normal karışımla çiziliyor (dumanın koyusu kayboluyor değil).
+- Kurulum yeri: her tesisin yanında 3 (şehir ve merkezde 4) ped, 16 bölge × 6 ped, `ZONE_GAP` 440. İkili haritada taraf başı ~120 ped (önce ~80).
+- Konsol: iki modda da aynı üç kolon ve adım başlıkları (1 silah/tehdit, 2 adet-hedef/batarya, 3 ateş). Önleme: tehdit listesi tür filtresiyle, batarya listesi neden vuramadığıyla, seçilen batarya `G.con.bat` (`batOf`).
+- Konsol açıkken haritada düşman tesisine tıklamak doğrudan hedef yapar (açılır kart yok); Önleme'de iz tıklamak tehdidi seçer.
+- Üst şerit: zaman, görünüm (Uydu/Taktik/Menziller) ve tek **Menü** (ses, telsiz, sesli uyarı, nasıl oynanır, çık). Uydu çekimi harita araç çubuğuna taşındı; Göster filtresi iki görünümde de çalışır; Katmanlar paneli varsayılan kapalı. Sekmelerin altında bir cümlelik açıklama.
