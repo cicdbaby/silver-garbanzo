@@ -258,3 +258,14 @@ Her değişiklik için:
 - Şehirler: `CITIES` ülkeye göre gerçek şehir + nüfus (bin). Aynı ülke iki tarafta ise ikinci taraf sonraki isimleri alır.
 - Yeni silahlar (5–10 yıl): uçaklar KAAN / F-47 / Su-57M / J-35A / F-35I (gizlilik çarpanı); **Sadık kanat** görevi (`WING`, $6M, iki `ucav` hedefe 26 km yaklaşıp ikişer süzülen bomba); **Mikrodalga HS** (`HPM`, alan darbesi, İHA'ya); **Süzülme Evresi Önleyici** (`GPI`, hipersonik, 20–70 km); **Sürü İHA** (`DRN_S`, tek atışta 12); **Hipersonik seyir** (`CM_HX`, 25 km irtifa, GPI dışı önleme ×0,35). Gelecek varyantlar `fut:1`; AI bunları stok etiketi değiştirerek değil satın alarak kullanır.
 - Görseller: `tools/GOREV11_GORSEL.md` (8 prompt). Gelene kadar `P7FB` ve `airSpr` yedek görsel kullanır; dosyalar `public/img/v7/` altına aynı adla gelince kendiliğinden geçer.
+
+## GÖREV 12 — temas, yangın, patlama sesi, gelenler haritası (Claude)
+- Yeni silah görselleri işlendi (`public/img/v7/S_HPM_*`, `S_GPI_*`, `H_KAAN`, `H_UCAV`, `H_SWRM`, `H_HCM`). `S_HPM_base` yandan çizilmiş geldi; istenirse yeniden üretilir.
+- Temas: kamikaze/anti-radar İHA ve aldatıcı son 3,5 km'de hedefe dalar, yere değince patlar; hipersonik seyir dalışı sıfıra iner.
+- Yangın (`fireLvl`, `drawFires`, yalnız görsel): vurulan tesis yanar; rafineri/yakıt deposu (`OILF`) her ciddi vuruşta büyük petrol yangını ve ateş topu; yıkılan tesis harabe olarak 70–200 sn yanar, duman sütunu rüzgârla sürüklenir.
+- Yıkım (`facilityBlast`): ana patlama + gecikmeli ikincil patlamalar (fx'te negatif `t`), enkaz kıvılcımı, sarsıntı; cephanelikte zincirleme.
+- Ses `blast`: sert çatırtı, 58→17 Hz basınç dalgası, uzun gök gürültüsü, ikincil patlamalar (cephanelik 14), yangın uğultusu.
+- Taktik sembol ağırlığı `threatCls`: balistik/hipersonik büyük dolu, seyir/uçak orta, küçük İHA soluk ve küçük.
+- **Gelenler (G)**: `threatScan` her gelen silahın hedefini, kalan süresini ve mevcut bataryalarla ilk önleme noktasını (`meetOf`, `futPos`) hesaplar; önlenemeyecekleri "Engelleyecek hiçbir şey yok" diye yazar; altta özet.
+- Taktik haritada filtre (`TACF`): Hepsi / Hava savunma / Tesisler / Rampalar.
+- Patlama görsel paketi istemleri: `tools/GOREV12_PATLAMA.md` (72 görsel). Gelince: siyah fonlular parlaklıktan alfa, ateş topları a→b→c aşamalı, harabeler `ruinOf` yerine.

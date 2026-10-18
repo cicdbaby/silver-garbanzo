@@ -443,6 +443,14 @@ kbd{background:transparent;border:1px solid var(--hair);border-bottom-width:1px}
 #fitbtn{position:absolute;left:12px;top:44px;z-index:4;background:var(--glass);border:0;border-top:1px solid var(--hair);padding:7px 10px;display:flex;gap:8px;align-items:center}
 #fitbtn kbd{font-size:9.5px;padding:0 4px;color:var(--mute)}#fitbtn.on kbd{color:#0a0c0d;border-color:rgba(0,0,0,.3)}
 #rng{top:80px}#fitbtn.on{background:#dfe5e2;color:#0a0c0d}
+#mapbar{position:absolute;left:132px;top:44px;z-index:4;display:flex;gap:8px;align-items:stretch}
+#thrb{background:var(--glass);border:0;border-top:1px solid var(--hair);padding:7px 10px;display:flex;gap:8px;align-items:center}#thrb kbd{font-size:9.5px;padding:0 4px;color:var(--mute)}
+#thrb.on{background:#ff8a7e;color:#1a0a08}#thrb.on kbd{color:#1a0a08;border-color:rgba(0,0,0,.3)}
+#tacf{display:flex;background:var(--glass);border-top:1px solid var(--hair)}#tacf[hidden]{display:none}
+#tacf button{background:none;border:0;border-right:1px solid var(--hair);color:#9aa4a2;font:500 12.5px var(--sans);padding:7px 10px;cursor:pointer}#tacf button:last-child{border-right:0}
+#tacf button:hover{color:#eef1ee}#tacf button.on{color:#0a0c0d;background:#dfe5e2}
+#thrsum{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(var(--conH,0px) + 12px);z-index:4;max-width:360px;background:rgba(10,12,14,.9);border-left:3px solid #ff8a7e;padding:9px 12px;font:400 12.5px/1.45 var(--sans);color:#c9d0cd;pointer-events:none}
+#thrsum b{color:#fff;font-weight:600}#thrsum .no{color:#ffb2a6}#thrsum .ok{color:#a8d8b4}#thrsum p{margin:0}#thrsum p+p{margin-top:3px}
 #rng .lg{display:flex;align-items:center;gap:5px;padding:5px 10px 2px;font:500 9.5px var(--mono);color:var(--mute)}#rng .lg span{margin-right:auto;letter-spacing:.08em}
 #rng .lg i{width:10px;height:10px;background:rgba(169,195,198,.1);border:1px solid rgba(169,195,198,.3)}#rng .lg i.d2{background:rgba(169,195,198,.19)}#rng .lg i.d3{background:rgba(169,195,198,.29)}#rng .lg i.d4{background:rgba(169,195,198,.5)}
 #dens-tip{position:absolute;z-index:5;pointer-events:none;padding:3px 7px;background:var(--glass);border-left:2px solid #a9c3c6;font:500 10.5px var(--mono);color:#eef1ee;white-space:nowrap}#dens-tip[hidden]{display:none}
@@ -664,7 +672,7 @@ header.top .btn[aria-pressed="false"]{color:#5f6967;text-decoration:line-through
 <div class="shell">
   <header class="top" id="top"></header>
   <div class="game">
-    <div class="view" id="view"><div class="adv" id="adv" hidden></div><div class="stage" id="stage"><canvas id="gl" aria-hidden="true"></canvas><canvas id="cv" aria-label="Harekât sahası"></canvas><div id="wx"></div><button id="fitbtn" class="btn" aria-pressed="false" title="Tüm haritayı göster (F); tekrar basınca geri döner">Tüm harita <kbd>F</kbd></button><div id="dens-tip" hidden></div><div id="rng"></div><div id="toasts"></div><div id="threats" hidden></div><div class="hint" id="hint"></div><div id="flash"></div><div class="icard" id="icard" hidden></div><div class="qa" id="qa" hidden></div>
+    <div class="view" id="view"><div class="adv" id="adv" hidden></div><div class="stage" id="stage"><canvas id="gl" aria-hidden="true"></canvas><canvas id="cv" aria-label="Harekât sahası"></canvas><div id="wx"></div><button id="fitbtn" class="btn" aria-pressed="false" title="Tüm haritayı göster (F); tekrar basınca geri döner">Tüm harita <kbd>F</kbd></button><div id="mapbar"><button id="thrb" class="btn" aria-pressed="false" title="Gelen her füze ve İHA nereye gidiyor, nerede önlenecek (G)">Gelenler <kbd>G</kbd></button><div id="tacf" role="group" aria-label="Taktik haritada göster" hidden><button data-tf="all" class="on">Hepsi</button><button data-tf="ad">Hava savunma</button><button data-tf="fac">Tesisler</button><button data-tf="atk">Rampalar</button></div></div><div id="thrsum" hidden></div><div id="dens-tip" hidden></div><div id="rng"></div><div id="toasts"></div><div id="threats" hidden></div><div class="hint" id="hint"></div><div id="flash"></div><div class="icard" id="icard" hidden></div><div class="qa" id="qa" hidden></div>
       <div class="con" id="con" hidden></div></div></div>
     <aside class="side" id="side"></aside>
   </div>
@@ -1017,12 +1025,12 @@ function loadSamples(){fetch('sfx/manifest.json').then(r=>r.ok?r.json():{}).then
 // ---------------------------------------------------------------- sound: distance, air absorption, echo
 // Every sound gets a dry path (low-passed with distance — far explosions lose their crack) and a reverb send
 // (more of it the farther away), and big sounds arrive late, like a real report rolling in.
-const SYN=new Set(['boom','air','sam','ciws','ignite','hgvlaunch','cmlaunch','dronelaunch','launchboom','drone','missile','jet','laser']);
-const GAP={boom:.035,air:.05,sam:.07,ciws:.1,ignite:.25,hgvlaunch:.3,cmlaunch:.2,dronelaunch:.12,launchboom:.3,drone:.1,missile:.2,jet:.8,laser:.3};
+const SYN=new Set(['blast','boom','air','sam','ciws','ignite','hgvlaunch','cmlaunch','dronelaunch','launchboom','drone','missile','jet','laser']);
+const GAP={blast:.4,boom:.035,air:.05,sam:.07,ciws:.1,ignite:.25,hgvlaunch:.3,cmlaunch:.2,dronelaunch:.12,launchboom:.3,drone:.1,missile:.2,jet:.8,laser:.3};
 function sfx(type,x,y,size){if(!SND.ctx||SND.muted||G&&G.silent)return;if(!SMP[type]&&!SYN.has(type))return sfxOld(type,x,y,size);
   const a=SND.ctx,now=a.currentTime;const gp=GAP[type]||0;if(gp&&now-(SND.last[type]??-9)<gp)return;SND.last[type]=now;
   let d=0,pan=0;if(x!=null&&G){const sx=(x-cam.x)*cam.z,sy=(y-cam.y)*cam.z;d=clamp(hyp(sx,sy)/(CW*.75),0,2.5);pan=clamp(sx/(CW/2),-.85,.85)*.8;d+=clamp(Math.log2(.6/Math.max(cam.z,.02))*.18,0,.6)}
-  const vol=clamp(1.1-d*.42,.08,1),cut=clamp(16000*Math.pow(1-Math.min(d,2.2)/2.6,2.4),380,16000),late=type==='boom'||type==='ignite'||type==='hgvlaunch'?Math.min(.45,d*.16):0;
+  const vol=clamp(1.1-d*.42,.08,1),cut=clamp(16000*Math.pow(1-Math.min(d,2.2)/2.6,2.4),380,16000),late=type==='boom'||type==='blast'||type==='ignite'||type==='hgvlaunch'?Math.min(.45,d*.16):0;
   const P=a.createStereoPanner?a.createStereoPanner():a.createGain();if(P.pan)P.pan.value=pan;const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=cut;lp.Q.value=.5;
   const V=a.createGain();V.gain.value=vol;const S=a.createGain();S.gain.value=clamp(.12+d*.32,.12,.85)*(type==='laser'?.3:1);P.connect(lp);lp.connect(V);V.connect(SND.out);if(SND.verb){lp.connect(S);S.connect(SND.verb)}
   const t0=now+late;
@@ -1038,6 +1046,22 @@ function synth(type,a,now,P,size,d){
   // irregular crackle: a gain that flickers at random — rocket motors, burning debris, propellant
   const crackle=(t0,dur,rate,depth)=>{const g=Gn(0);let t=t0;while(t<t0+dur){g.gain.setValueAtTime(Math.random()<.5?depth*(.4+Math.random()*.6):.0001,t);t+=1/rate*(.4+Math.random()*1.2)}g.gain.setValueAtTime(0,t0+dur);return g};
   switch(type){
+    case 'blast':{// a facility going up: hard crack, a pressure wave you feel, a long roll of thunder,
+      // then secondary explosions and the roar of the fire (oil: bigger; ammunition depot: a run of cook-offs)
+      const K=size||1,oil=K>=3,dep=K===2,T=5+K*1.6,ws=a.createWaveShaper();{const c=new Float32Array(1024);for(let i=0;i<1024;i++){const x=i/511.5-1;c[i]=Math.tanh(x*3.2)}ws.curve=c}ws.connect(P);
+      {const n=nz(.09),f=F('highpass',1400),g=Gn();env(g,now,.001,1.2,.08);ch(n,f,g,ws)}
+      {const o=osc('sine',58,17,now,2.2),g=Gn();env(g,now,.004,1.5,2.2);ch(o,g,P)}
+      {const o=osc('triangle',41,22,now+.04,1.6),g=Gn();env(g,now+.04,.01,.8,1.6);ch(o,g,P)}
+      {const n=nz(3.4),f=F('lowpass',4200),g=Gn();f.frequency.setValueAtTime(4200,now);f.frequency.exponentialRampToValueAtTime(55,now+3.2);env(g,now,.005,1.3,3.2);ch(n,f,g,ws)}
+      {const n=nz(T,true),f=F('lowpass',150),g=Gn();env(g,now+.12,.6,1,T,.5);ch(n,f,g,P)}
+      {const n=nz(T*.8,true),f=F('bandpass',90,1.2),g=Gn();env(g,now+.4,1.2,.6,T*.8,.5);ch(n,f,g,P)}
+      const nsec=oil?6:dep?14:3;for(let i=0;i<nsec;i++){const t=now+.5+Math.random()*(dep?5:oil?3.5:2),v=dep?.35+Math.random()*.4:.55+Math.random()*.45,d=dep?.35:.9;
+        {const n=nz(.05,false,t),f=F('highpass',1600),g=Gn();env(g,t,.001,v*.8,.04);ch(n,f,g,P)}
+        {const n=nz(d,false,t),f=F('lowpass',dep?2200:1500),g=Gn();f.frequency.setValueAtTime(dep?2200:1500,t);f.frequency.exponentialRampToValueAtTime(80,t+d);env(g,t,.004,v,d);ch(n,f,g,P)}
+        {const o=osc('sine',dep?90:60,26,t,d),g=Gn();env(g,t,.006,v*.8,d*.8);ch(o,g,P)}}
+      {const n=nz(T,false,now+.6),f=F('bandpass',oil?700:1100,.6),cr=crackle(now+.6,T-.6,oil?30:22,oil?.5:.3),g=Gn();env(g,now+.6,1.2,oil?.8:.45,T,.4);ch(n,f,cr,g,P)}
+      {const n=nz(T,true,now+.8),f=F('lowpass',oil?420:300),g=Gn();env(g,now+.8,1.5,oil?.7:.4,T,.4);ch(n,f,g,P)}
+      break}
     case 'boom':{const s=size,big=s>16,dur=.9+s*.07;
       // crack: very short broadband transient (lost with distance by the low-pass)
       {const n=nz(.06),f=F('highpass',1800),g=Gn();env(g,now,.0015,big?.9:.6,.05);ch(n,f,g,P)}
@@ -1280,7 +1304,9 @@ function updAir(o,dt){
       const zc=o.zc+(o.kind==='cruise'?DM.sin(G.time*.9+o.id)*.012:0);o.z+=(zc-o.z)*Math.min(1,dt*(o.kind==='cruise'?1.2:o.kind==='balloon'?.09:.6));
       if(o.mother&&o.splitD&&hyp(o.tx-o.x,o.ty-o.y)<o.splitD){motherSplit(o);return}
       if(o.kind==='cruise'&&!o.staged&&age>o.boostT){o.staged=1;G.deb.push({x:o.x,y:o.y,z:o.z+.05,vx:DM.cos(o.hd)*8,vy:DM.sin(o.hd)*8,vz:.2,m:0,stage:1})}
-      if(o.kind==='cruise'&&o.ri===o.route.length-1){const p=o.route[o.ri],d=hyp(p.x-o.x,p.y-o.y);if(o.hyp){if(d<400)o.z=Math.max(.05,o.zc*d/400)}else if(d<90)o.z=d>40?.05+(90-d)/50*.3:.35*(d/40)}
+      if(o.kind==='cruise'&&o.ri===o.route.length-1){const p=o.route[o.ri],d=hyp(p.x-o.x,p.y-o.y);if(o.hyp){if(d<400)o.z=Math.max(0,o.zc*d/400)}else if(d<90)o.z=d>40?.05+(90-d)/50*.3:.35*(d/40)}
+      // terminal dive: drones come all the way down onto the target and burst on contact
+      if((o.kind==='drone'||o.kind==='armd'||o.kind==='mald')&&o.ri===o.route.length-1&&!(o.loiter>0&&!o.home)){const p=o.route[o.ri],d=hyp(p.x-o.x,p.y-o.y);if(d<70)o.z=Math.min(o.z,o.zc*d/70)}
       if((o.kind==='drone'||o.kind==='armd')&&!o.ew&&(o.jsd=jammedAt(o.x,o.y,o.side))){o.ew=1;if(srnd()<.6/AXF(o.side,'uav')*AXF(o.jsd,'ew')){const p=o.route[o.route.length-1];p.x+=RN()*180;p.y+=RN()*180;o.lost=1}}
       if(o.kind==='armd'&&o.ri===o.route.length-1&&!o.home){const r=G.ents.filter(e=>e.alive&&e.side!==o.side&&e.cat==='site'&&e.emit&&SITE[e.t].emit&&e.mode!=='off'&&hyp(e.x-o.x,e.y-o.y)<700).sort((a,b)=>hyp(a.x-o.x,a.y-o.y)-hyp(b.x-o.x,b.y-o.y))[0];if(r){o.home=r.id;o.route[o.ri]={x:r.x,y:r.y}}}
       if(o.home){const r=ent(o.home);if(r&&r.alive&&r.emit&&r.mode!=='off'){o.route[o.ri]={x:r.x,y:r.y}}}
@@ -1381,9 +1407,10 @@ function hurt(e,dm,by,civ){
   if(!e.alive)return;const v=e.cat==='asset'?ASSET_DEF[e.t].v:costOf(e.side,e.t);const before=e.hp;e.hp-=dm;e.hit=.4;const lost=(Math.min(before,dm)/e.max)*v;
   if(by&&by!==e.side){G.score[by].dmg+=lost;if(civ)G.score[by].civ+=lost;G.suf[e.side]+=lost;const gr=G.grudge[e.side];gr[by]=(gr[by]||0)+lost}else if(civ)G.score[e.side].civ+=lost;
   if(e.cat==='asset'&&e.hp<e.max*.6)e.burn=1;
+  if(e.cat==='asset'&&dm>=30&&e.hp>0){const oil=OILF[e.t];e.fireK=oil?1.25:clamp(dm/300,.3,.9);e.fireT=G.time;if(oil&&!G.silent)G.fx.push({k:'fball',x:e.x,y:e.y,r:e.r*(V7?SC7:1)*1.5,t:0,life:2.6,rot:Math.random()*6.283})}
   aiHurt(e,dm);
   if(e.side===ME){G.alertT=8;if(e.cat==='asset'&&e.hp>0)voice('own_hit',e.t)}
-  if(e.hp<=0){if(HITLID&&by&&by!==e.side){const L=ent(HITLID);if(L&&L.side===by)(L.km=L.km||[]).push(e.cat==='asset'?e.t:'~'+e.t)}e.alive=false;e.hp=0;if(e.side===ME)voice(e.cat==='asset'?'own_destroyed':'battery_lost',e.cat==='asset'?e.t:null);boom(e.x,e.y,e.r*1.3,true);if(e.cat==='asset'){e.dead=true;const ru={...e,id:uid++,ruin:true,alive:false,orig:e.id};G.ents.push(ru);e.ruinId=ru.id;e.deadT=G.time;toast(e.side===ME?`${e.nm} yıkıldı.`:`${G.quad?natOf(e.side).n+': ':'Düşman '}${e.nm} yıkıldı.`,e.side===ME?'E':'W');if(e.t==='HQ'){if(G.quad)eliminate(e.side,by);else{G.over=true;G.winner=other(e.side)}}}
+  if(e.hp<=0){if(HITLID&&by&&by!==e.side){const L=ent(HITLID);if(L&&L.side===by)(L.km=L.km||[]).push(e.cat==='asset'?e.t:'~'+e.t)}e.alive=false;e.hp=0;if(e.side===ME)voice(e.cat==='asset'?'own_destroyed':'battery_lost',e.cat==='asset'?e.t:null);boom(e.x,e.y,e.r*1.3,true);if(e.cat==='asset'){e.dead=true;const ru={...e,id:uid++,ruin:true,alive:false,orig:e.id,deadAt:G.time};G.ents.push(ru);e.ruinId=ru.id;e.deadT=G.time;if(!G.silent)facilityBlast(e);toast(e.side===ME?`${e.nm} yıkıldı.`:`${G.quad?natOf(e.side).n+': ':'Düşman '}${e.nm} yıkıldı.`,e.side===ME?'E':'W');if(e.t==='HQ'){if(G.quad)eliminate(e.side,by);else{G.over=true;G.winner=other(e.side)}}}
     else if(e.side===ME){toast(`${nameOf(ME,e.t)} kaybedildi.`,'E')}
     if(G.sel===e.id)G.sel=null}
 }
@@ -1394,6 +1421,26 @@ function eliminate(s,by){if(G.out[s])return;G.out[s]=1;
   const left=G.sides.filter(x=>!G.out[x]);
   toast(s===ME?'<b>Komuta merkezi düştü</b>Harekât dışı kaldın.':`<b>${esc(natOf(s).n)} saf dışı</b>${by&&by!==s?esc(natOf(by).n)+' komuta merkezini yıktı. ':''}Kalan: ${left.map(x=>esc(natOf(x).n)).join(', ')}.`,s===ME?'E':'W',true);
   if(s==='W'){G.over=true;G.winner=left.length===1?left[0]:null}else if(left.length===1){G.over=true;G.winner=left[0]}}
+// ---------------- facility fires and blasts (visual only: Math.random is fine here, the sim never reads these)
+const OILF={REFN:1,FUEL:1};
+function fireLvl(e){if(e.cat!=='asset')return 0;const oil=OILF[e.t];
+  if(e.ruin){const t=G.time-(e.deadAt??G.time),T=oil?200:e.t==='DEPO'||e.t==='PWR'?110:70;return Math.max(0,(oil?1.7:1.05)*(1-t/T))}
+  if(!e.alive)return 0;let l=e.burn?Math.max(.25,1-e.hp/e.max)*(oil?1.25:.8):0;
+  if(e.fireT!=null){const t=G.time-e.fireT,T=oil?110:40;if(t<T)l=Math.max(l,(e.fireK||1)*(1-t/T)*(oil?1.1:.6))}return l}
+function facilityBlast(e){const oil=OILF[e.t],dep=e.t==='DEPO',R=e.r*(V7?SC7:1);
+  boom(e.x,e.y,e.r*1.6,true,Math.min(600,ASSET_DEF[e.t].v*1.6));
+  const n=oil?10:dep?14:6;for(let i=0;i<n;i++){const a=Math.random()*6.283,d=Math.random()*R*.9,dl=.2+Math.random()*(oil?3.5:dep?5.5:2.2),x=e.x+DM.cos(a)*d,y=e.y+DM.sin(a)*d,D=oil?160+Math.random()*220:dep?50+Math.random()*90:90+Math.random()*90,fr=(6+Math.sqrt(D)*2.2)/M_U*(V7?SC7*1.4:1);
+    G.fx.push({k:'flash2',x,y,fr,t:-dl,life:.35,D});G.fx.push({k:'boom',x,y,r:fr,t:-dl,life:1.1+D/400,D,rot:Math.random()*6.283});if(i%2===0)G.fx.push({k:'smk',x,y,fr,t:-dl,life:30+Math.random()*20,D,rot:Math.random()*6.283,sp:.8+Math.random()*.6})}
+  if(oil)G.fx.push({k:'fball',x:e.x,y:e.y,r:R*5,t:0,life:5.5,rot:Math.random()*6.283});G.fx.push({k:'shock',x:e.x,y:e.y,r:R*.8,t:0,life:1.5,D:600});
+  for(let i=0;i<(oil?44:26);i++){const a=Math.random()*6.283,v=R*(1.2+Math.random()*4);G.parts.push({k:'spark',x:e.x,y:e.y,z:0,vx:DM.cos(a)*v,vy:DM.sin(a)*v,vz:.15+Math.random()*.45,drag:1.3,t:0,life:1.2+Math.random()*2,r:2.6,col:Math.random()<.55?'255,170,80':'62,52,42'})}
+  if(hyp(e.x-cam.x,e.y-cam.y)<1800/cam.z)shake(oil?1.5:1.1);sfx('blast',e.x,e.y,oil?3:dep?2:1)}
+function drawFires(time,V){for(const e of G.ents){if(e.cat!=='asset'||!(e.alive||e.ruin)||!inView(V,e.x,e.y,240))continue;const l=fireLvl(e);if(l<.03)continue;
+  const oil=OILF[e.t],S=vr(e),r=mulberry(e.id*31+7),n=oil?11:5;ctx.save();ctx.globalCompositeOperation='lighter';
+  {const R=S*(oil?2.6:1.4)*Math.min(1.4,.5+l*.6),fl=.85+.15*DM.sin(time*3.1+e.id);const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,R);g.addColorStop(0,`rgba(255,150,60,${.3*Math.min(1,l)*fl})`);g.addColorStop(1,'rgba(255,90,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,R,0,7);ctx.fill()}
+  for(let i=0;i<n;i++){const a=r()*6.283,d=Math.sqrt(r())*S*(oil?.7:.42),x=e.x+DM.cos(a)*d,y=e.y+DM.sin(a)*d,ph=r()*20;const fl=.65+.35*DM.sin(time*(8+i*1.7)+ph)*DM.sin(time*(5.1+i)+ph*.7);const R=Math.max(S*(oil?.62:.3)*Math.min(1.6,l)*(.75+.35*fl),pxf(5));
+    const g=ctx.createRadialGradient(x,y,0,x,y,R);g.addColorStop(0,`rgba(255,248,215,${.85*fl})`);g.addColorStop(.3,`rgba(255,182,72,${.7*fl})`);g.addColorStop(.7,`rgba(232,82,22,${.35*fl})`);g.addColorStop(1,'rgba(160,30,10,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.fill();
+    if(ready('e5')){ctx.globalAlpha=.5*fl*Math.min(1,l);ctx.save();ctx.translate(x,y);ctx.rotate(time*.4*(i%2?1:-1)+ph);ctx.drawImage(IMG.e5,-R*1.25,-R*1.25,R*2.5,R*2.5);ctx.restore();ctx.globalAlpha=1}}
+  ctx.restore()}}
 function boom(x,y,r,big,dmg){const D=dmg||(big?200:50),fr=(6+Math.sqrt(D)*2.2)/M_U*(V7?SC7*1.4:1),sp=Math.min(24,8+D/12);
   G.fx.push({k:'flash2',x,y,fr,t:0,life:.35,D});G.fx.push({k:'boom',x,y,r:fr,t:0,life:1.1+D/400,D,rot:Math.random()*6.283});G.fx.push({k:'shock',x,y,r:fr,t:0,life:.8,D});G.fx.push({k:'dust',x,y,fr,t:0,life:3.5,D});
   const ns=big?3:2;for(let i=0;i<ns;i++)G.fx.push({k:'smk',x:x+gauss()*fr*.5,y:y+gauss()*fr*.5,fr,t:-(i*.25),life:(big?40:22)+Math.random()*10,D,rot:Math.random()*6.283,sp:.7+Math.random()*.6});
@@ -1712,7 +1759,9 @@ function update(dt){
   for(let g=0;g<4;g++){const due=G.later.filter(q=>q.at<=G.time);if(!due.length)break;G.later=G.later.filter(q=>q.at>G.time);for(const q of due)q.fn()}
   for(const s of G.sides){if(G.out[s])continue;G.cash[s]+=income(s)*dt;G.prod[s]=Math.min(capOf(s),G.prod[s]+prodRate(s)*dt);for(const a of G.air4[s])if(a.st==='rearm'){a.t-=dt;if(a.t<=0)a.st='ready'}}
   for(const e of G.ents){if(!e.alive)continue;if(e.bt>0)e.bt-=dt;if(e.rl>0)e.rl-=dt;if(e.hit>0)e.hit-=dt;if(e.flash>0)e.flash-=dt;
-    if(e.burn&&Math.random()<dt*3){const q=V7?SC7*2.2:1;G.parts.push({k:'smoke',x:e.x+gauss()*e.r*.4*q,y:e.y+gauss()*e.r*.4*q,z:.02,vx:G.wx.wind.x,vy:G.wx.wind.y,vz:.06,t:0,life:8,r:5*q,gr:3*q,a:.45,dark:1,fire:1})}}
+  }
+  if(!G.silent)for(const e of G.ents){if(e.cat!=='asset'||!(e.alive||e.ruin))continue;const l=fireLvl(e);if(l<.03||Math.random()>dt*(2+l*(OILF[e.t]?10:4)))continue;const q=V7?SC7*2.2:1,w=.6+Math.random()*.6;
+    G.parts.push({k:'smoke',x:e.x+gauss()*e.r*.35*q,y:e.y+gauss()*e.r*.35*q,z:.02,vx:G.wx.wind.x*w,vy:G.wx.wind.y*w,vz:.06+l*.1,t:0,life:7+l*6,r:(3+l*2.5)*q,gr:(1.1+l*1.3)*q,a:Math.min(.9,.55+.25*l),dark:1,fire:1})}
   for(const o of G.air)if(o.alive)updAir(o,dt);
   if(G.frame%120===0)G.air=G.air.filter(o=>o.alive);G.frame=(G.frame||0)+1;
   updDebris(dt);
@@ -1844,7 +1893,7 @@ const P7={RAD:[['S_RAD_base',0,0,2000],['S_RAD_ant',20,-320,1300,0,'spin',.5,.5]
  IDR:[['S_IDR',0,0,1900]],EW:[['S_EW_base',0,0,2000],['S_EW_ant',40,-400,1200,0,'spin2',.48,.5]],
  DEC:[['S_DEC',-470,0,1700,-.22],['S_DEC',480,140,1700,.25]],
  TEL:[['S_TEL_down',0,0,2100,-Math.PI/2,'tel']],DLN:[['S_DLN_closed',0,0,2000,0,'dln']],
- HPM:[['S_HPM_base',0,0,2000],['S_HPM_ant',40,-380,1100,0,'aim',.5,.5]],
+ HPM:[['S_HPM_base',0,0,2000],['S_HPM_ant',-20,-160,700,0,'aim',.33,.5]],
  GPI:[['S_GPI_rad',0,-700,1700],['S_GPI_ln',-640,520,1800,-.28],['S_GPI_ln',660,560,1800,.3]]};
 // new systems keep a stand-in look until their own pictures are added
 const P7FB={HPM:[['S_EW_base',0,0,2000],['S_LASER_tur',40,-380,700,0,'aim',.48,.52]],GPI:P7.UPPER};
@@ -2268,7 +2317,7 @@ function render(time){
   // assets & sites: photographs at true size, map symbols when too small to read
   const STK=G.phase==='war'?strikeMap():null;
   for(const e of G.ents){const R0=visR(e);if(!inView(V,e.x,e.y,Math.max(90,R0*1.3)))continue;
-    if(!e.alive&&!e.ruin)continue;
+    if(!e.alive&&!e.ruin)continue;if(!tacShow(e))continue;
     if(e.alive&&e.side!==ME&&e.cat==='site'&&!G.ghost[ME].has(e.id)&&!G.revealAll)continue;
     if(e.alive&&e.side!==ME&&e.cat==='site'){const g=G.ghost[ME].get(e.id);if(g&&g.src==='ELINT'&&!G.revealAll)continue}
     const Spx=R0*2*cam.z,pa=TAC()?0:smooth(16,44,Spx);
@@ -2291,7 +2340,7 @@ function render(time){
     if(e.km&&e.km.length&&e.side===ME&&e.cat==='site')drawKills(e);
     if(STK&&e.side!==ME){const t=strikeTxt(STK.get(e.id));if(t&&(t[2]||cam.z>.16||G.sel===e.id))mono(t[0],e.x,e.y-vr(e)-px(14),t[1],10.5,'center')}}
   // ghosts of enemy sites
-  for(const g of G.ghost[ME].values()){const e=ent(g.id);if(!e||!e.alive||e.cat==='asset')continue;if(!inView(V,g.x,g.y,60))continue;const age=G.time-g.at;const b=Math.max(visRT('site',g.t,0),px(15))+px(6);
+  for(const g of G.ghost[ME].values()){const e=ent(g.id);if(!e||!e.alive||e.cat==='asset')continue;if(TAC()&&TACF!=='all'&&!tacShow({cat:'site',t:g.t}))continue;if(!inView(V,g.x,g.y,60))continue;const age=G.time-g.at;const b=Math.max(visRT('site',g.t,0),px(15))+px(6);
     const gc=SCOL[gS(g)];ctx.strokeStyle=`rgba(${gc},${age<10?.95:.6})`;ctx.lineWidth=px(1.3);for(const [sx,sy] of [[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.beginPath();ctx.moveTo(g.x+sx*b,g.y+sy*b-sy*px(7));ctx.lineTo(g.x+sx*b,g.y+sy*b);ctx.lineTo(g.x+sx*b-sx*px(7),g.y+sy*b);ctx.stroke()}
     if(g.src==='ELINT'){ctx.fillStyle=`rgba(${gc},.12)`;ctx.beginPath();ctx.arc(g.x,g.y,b*1.4,0,7);ctx.fill()}
     if(cam.z>.3)label(`${G.quad?natOf(gS(g)).n+', ':''}${nameOf(gS(g),g.t)} (${g.src}${age>8?', '+Math.round(age)+' sn önce':''})`,g.x,g.y+b+px(12),G.quad?SHEX[gS(g)]:'#ff9d90',11)}
@@ -2317,7 +2366,7 @@ function render(time){
   if(TAC())tacFX(time);else{for(const o of air)drawPlume(o,time,1+nk);drawFX(time,nk);}
   ctx.globalCompositeOperation='source-over';
   // overlays: tracks, impact points, interceptor lines
-  drawTrackOverlay(air,time);
+  drawTrackOverlay(air,time);drawThreats(time);
   drawSelectionHUD();
   drawCursor(V);drawAdvWorld(time);drawTutWorld(time);
   if(G.phase==='prep'){ctx.strokeStyle='rgba(159,208,220,.5)';ctx.lineWidth=px(2);ctx.setLineDash([px(12),px(8)]);ctx.beginPath();if(G.quad){ctx.moveTo(MW/2,MH/2);ctx.lineTo(MW/2,MH);ctx.moveTo(0,MH/2);ctx.lineTo(MW/2,MH/2)}else{ctx.moveTo(mx-DM.cos(ang)*11000,my-DM.sin(ang)*11000);ctx.lineTo(mx+DM.cos(ang)*11000,my+DM.sin(ang)*11000)}ctx.stroke();ctx.setLineDash([])}
@@ -2372,7 +2421,9 @@ function drawSmoke(){if(!ready('s1'))return;const wa=DM.atan2(G.wx.wind.y,G.wx.w
     const a=(f.z?.5:.78)*Math.min(1,f.t*3)*DM.pow(1-k,1.4);if(a<.01)continue;ctx.save();ctx.globalCompositeOperation='source-over';ctx.globalAlpha=a;ctx.translate(f.x+dx+DM.cos(wa)*S*.25,f.y+dy+DM.sin(wa)*S*.25-L);ctx.rotate(wa+Math.PI*.75+f.rot*.25);
     const sk='s'+(1+((f.rot*100|0)%4));const sm=f.z?tinted(sk,'grayscale(1) brightness(1.7)'):IMG[sk];ctx.drawImage(sm,-S/2,-S/2,S,S);ctx.restore()}}
 function drawFX(time,nk){drawSmoke();for(const f of G.fx){const k=f.t/f.life;
-  if(f.k==='smk')continue;
+  if(f.k==='smk'||f.t<0)continue;
+  if(f.k==='fball'){const g1=DM.pow(Math.min(1,k*2.2),.5),R=f.r*(.35+.75*g1),a=DM.pow(1-k,1.3);ctx.save();ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,R);g.addColorStop(0,`rgba(255,245,215,${a})`);g.addColorStop(.25,`rgba(255,196,96,${.9*a})`);g.addColorStop(.6,`rgba(240,96,30,${.6*a})`);g.addColorStop(1,'rgba(150,30,10,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.x,f.y,R,0,7);ctx.fill();
+    if(ready('e2')){ctx.globalCompositeOperation='source-over';ctx.globalAlpha=a*.85;for(let i=0;i<3;i++){ctx.save();ctx.translate(f.x,f.y);ctx.rotate((f.rot||0)+i*2.1+k*.6);const q=R*(.75+i*.17);ctx.drawImage(IMG.e2,-q,-q,q*2,q*2);ctx.restore()}}ctx.restore();continue}
   if(f.k==='flash2'){const R=Math.max(f.fr*7,pxf(30+f.D/8))*(.6+k);const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,R);g.addColorStop(0,`rgba(255,250,235,${1-k})`);g.addColorStop(.3,`rgba(255,200,120,${.7*(1-k)})`);g.addColorStop(1,'rgba(255,140,60,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.x,f.y,R,0,7);ctx.fill();continue}
   if(f.k==='dust'){const R=Math.max(f.fr*6,pxf(22+f.D/10))*(.35+1.1*DM.pow(k,.5));ctx.save();ctx.globalCompositeOperation='source-over';const g=ctx.createRadialGradient(f.x,f.y,R*.55,f.x,f.y,R);g.addColorStop(0,'rgba(138,117,96,0)');g.addColorStop(.6,`rgba(138,117,96,${.32*(1-k)})`);g.addColorStop(1,'rgba(138,117,96,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.x,f.y,R,0,7);ctx.fill();ctx.restore();continue}
   if(f.k==='ember'){const fl=.55+.45*DM.sin(time*13+f.x)*DM.sin(time*7.3+f.y);const R=Math.max(f.fr*1.4,pxf(4+f.D/60));const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,R);const a=(1-k)*(.5+.5*fl);g.addColorStop(0,`rgba(255,190,90,${a})`);g.addColorStop(.5,`rgba(255,90,30,${a*.6})`);g.addColorStop(1,'rgba(200,40,10,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.x,f.y,R,0,7);ctx.fill();continue}
@@ -2390,8 +2441,7 @@ function drawFX(time,nk){drawSmoke();for(const f of G.fx){const k=f.t/f.life;
   else if(f.k==='satband'){drawSatelliteBand(f,k)}
   else if(f.k==='emp'||f.k==='graf')drawProtoFX(f,k,time)}
   drawProtoStatus(time);
-  for(const e of G.ents)if(e.alive&&e.burn&&ready('s1')){const S=Math.max(vr(e)*2.4,pxf(40));const wa=DM.atan2(G.wx.wind.y,G.wx.wind.x);ctx.save();ctx.globalCompositeOperation='source-over';ctx.globalAlpha=.75;ctx.translate(e.x+DM.cos(wa)*S*.25,e.y+DM.sin(wa)*S*.25);ctx.rotate(wa+Math.PI*.75);ctx.drawImage(IMG['s'+(1+e.id%4)],-S/2,-S/2,S,S);ctx.restore();ctx.globalCompositeOperation='lighter'}
-  for(const e of G.ents)if(e.alive&&e.burn){const fl=.6+.4*DM.sin(time*8+e.id);const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,vr(e)*.7);g.addColorStop(0,`rgba(255,150,60,${.5*fl})`);g.addColorStop(1,'rgba(255,80,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,vr(e)*.7,0,7);ctx.fill()}}
+  drawFires(time,worldView())}
 const ABBR={ucav:'İSU',balloon:'Balon',drone:'İHA',armd:'Anti-radar İHA',mald:'Seyir?',recon:'Keşif',cruise:'Seyir',bm:'Balistik',decoy:'Balistik',hgv:'Hipersonik',ftr:'Uçak',glide:'Bomba',arm:'Anti-radar'};
 function drawProtoFX(f,k,time){if(f.k==='emp'){for(let i=0;i<3;i++){const q=clamp(k*1.4-i*.18,0,1);if(q<=0||q>=1)continue;ctx.strokeStyle=`rgba(150,205,255,${.75*(1-q)})`;ctx.lineWidth=px(2-i*.5);ctx.beginPath();ctx.arc(f.x,f.y,f.r*q,0,7);ctx.stroke()}
     ctx.fillStyle=`rgba(150,205,255,${.08*(1-k)})`;ctx.beginPath();ctx.arc(f.x,f.y,f.r*Math.min(1,k*1.4),0,7);ctx.fill()}
@@ -2412,15 +2462,47 @@ function glyph(kind,x,y,sz,col){ctx.save();ctx.translate(x,y);ctx.scale(sz/10,sz
   else if(kind==='mald'){ctx.moveTo(-6,0);ctx.lineTo(6,0);ctx.moveTo(0,-3.5);ctx.lineTo(0,3.5);ctx.stroke()}
   else{ctx.arc(0,0,2.5,0,7);ctx.fill()}ctx.restore()}
 function chip(kind,txt,x,y,col,size=11){ctx.font=`600 ${px(size)}px "Archivo Cond",sans-serif`;ctx.textAlign='left';ctx.textBaseline='middle';const w=ctx.measureText(txt).width,g=px(size+2);ctx.fillStyle='rgba(6,8,10,.8)';ctx.fillRect(x-px(2),y-px(size*.75),w+g+px(6),px(size*1.5));glyph(kind,x+g/2,y,px(size*.95),col);ctx.fillStyle=col;ctx.fillText(txt,x+g+px(2),y);return w+g+px(6)}
+// ---------------- threat picture (G): where every inbound weapon is going and where, with what is built now, it will be met
+let THR={on:false,t:-9,list:[]},TACF=(()=>{try{return localStorage.getItem('gok.tacf')||'all'}catch(e){return 'all'}})();
+function updMapbar(){const b=$('#thrb');if(b){b.classList.toggle('on',THR.on);b.setAttribute('aria-pressed',THR.on)}const f=$('#tacf');if(f){f.hidden=!TAC();f.querySelectorAll('[data-tf]').forEach(x=>x.classList.toggle('on',x.dataset.tf===TACF))}const sm=$('#thrsum');if(sm&&!THR.on)sm.hidden=true}
+function toggleThreats(){THR.on=!THR.on;THR.t=-9;updMapbar();if(THR.on)sfx('beep',null,null,760)}
+const tacShow=e=>{if(!TAC()||TACF==='all')return true;if(e.cat==='asset')return TACF==='fac';const d=SITE[e.t];if(!d)return true;return TACF==='atk'?!!d.off:TACF==='ad'?!d.off:false};
+function futPos(o,dt){if(o.kind==='bm'||o.kind==='decoy'){const s=Math.min(1,(G.time+dt-o.t0)/o.T);return bmPos(o,s)}if(o.kind==='hgv'){const s=Math.min(1,(G.time+dt-o.t0)/o.T);return hgvPos(o,s)}
+  if(o.route){let left=(o.spd||50)*dt,px_=o.x,py=o.y;for(let i=o.ri;i<o.route.length;i++){const p=o.route[i],d=hyp(p.x-px_,p.y-py);if(d>=left)return{x:px_+(p.x-px_)/d*left,y:py+(p.y-py)/d*left,z:o.hyp?o.zc:o.z};left-=d;px_=p.x;py=p.y}return{x:px_,y:py,z:0}}
+  if(o.tx!=null){const d=hyp(o.tx-o.x,o.ty-o.y)||1,st=Math.min(d,(o.spd||50)*dt);return{x:o.x+(o.tx-o.x)/d*st,y:o.y+(o.ty-o.y)/d*st,z:o.z*(1-st/d)}}return{x:o.x,y:o.y,z:o.z}}
+function meetOf(o,eta){const B=sites(ME).filter(e=>{const d=SITE[e.t];return d.rng&&!d.ew&&e.mode!=='off'&&(PK[e.t]||{})[o.kind]&&(d.gun||d.laser||d.hpm||e.mag>0||d.rl)});if(!B.length)return null;
+  const N=Math.min(90,Math.max(6,Math.ceil(eta)));for(let i=0;i<=N;i++){const t=eta*i/N,p=futPos(o,t);for(const e of B){const d=SITE[e.t];if((e.bt||0)>t||p.z<d.a0||p.z>d.a1)continue;const dd=hyp(p.x-e.x,p.y-e.y);if(dd>rngOf(ME,e.t))continue;
+      const tof=d.spd?dd/d.spd:0,q=futPos(o,Math.min(eta,t+tof*.8));return{x:q.x,y:q.y,z:q.z,t:Math.min(eta,t+tof*.8),by:e,pk:pkOf(e,o),n:B.filter(b=>{const db=SITE[b.t];return p.z>=db.a0&&p.z<=db.a1&&hyp(p.x-b.x,p.y-b.y)<=rngOf(ME,b.t)}).length}}}return null}
+function threatScan(){const out=new Map();for(const o of G.air){if(!o.alive||o.side===ME||o.kind==='icp'||o.kind==='ftr'||o.kind==='recon'||o.kind==='balloon'||!G.trk[ME].has(o.id))continue;
+    const ip=impactPt(o)||(o.kind==='bm'||o.kind==='decoy'||o.kind==='hgv'?null:null);const eta=etaOf(o);const tg=ip&&G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);
+    const key=ip?(tg?'e'+tg.id:'p'+Math.round(ip.x/40)+','+Math.round(ip.y/40))+':'+threatCls(o):'u'+o.id;let g=out.get(key);if(!g){g={ip,tg,n:0,cls:threatCls(o),kinds:{},eta:1e9,meet:[],free:0,list:[]};out.set(key,g)}
+    g.n++;g.kinds[trkName(o)]=(g.kinds[trkName(o)]||0)+1;g.eta=Math.min(g.eta,eta);g.list.push(o);const m=ip?meetOf(o,eta):null;if(m){m.o=o;g.meet.push(m)}else g.free++}
+  return [...out.values()].sort((a,b)=>b.cls-a.cls||a.eta-b.eta)}
+function drawThreats(time){if(!THR.on||!G||G.phase!=='war')return;if(performance.now()-THR.t>400){THR.t=performance.now();THR.list=threatScan();updThrSum()}
+  const seenM=new Set();for(const g of THR.list){const col=g.cls===3?'255,90,70':g.cls===2?'255,130,100':'255,170,140';
+    for(const o of g.list){if(!o.alive)continue;const y=o.y-LIFT(o.z);if(!g.ip){mono('hedef henüz belli değil',o.x,y-px(18),'#ffb1a8',9.5,'center');continue}
+      ctx.strokeStyle=`rgba(${col},${g.cls===1?.35:.6})`;ctx.lineWidth=px(g.cls===3?1.6:1);ctx.setLineDash([px(5),px(5)]);ctx.lineDashOffset=-time*14;ctx.beginPath();ctx.moveTo(o.x,y);ctx.lineTo(g.ip.x,g.ip.y);ctx.stroke();ctx.setLineDash([])}
+    if(!g.ip)continue;const R=Math.max(g.list[0].r||16,px(9)),x=g.ip.x,y=g.ip.y;ctx.strokeStyle=`rgba(${col},.95)`;ctx.lineWidth=px(g.cls===3?2:1.4);ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(x-R*1.35,y);ctx.lineTo(x-R*.55,y);ctx.moveTo(x+R*.55,y);ctx.lineTo(x+R*1.35,y);ctx.moveTo(x,y-R*1.35);ctx.lineTo(x,y-R*.55);ctx.moveTo(x,y+R*.55);ctx.lineTo(x,y+R*1.35);ctx.stroke();
+    const what=Object.entries(g.kinds).map(([n,k])=>`${k>1?k+' ':''}${n}`).join(', ');mono(`${g.tg?(g.tg.cat==='asset'?g.tg.nm:nameOf(ME,g.tg.t)):'Boş arazi'}: ${what}, ${Math.ceil(g.eta)} sn`,x,y+R+px(14),g.tg?'#ffd0c8':'#9aa3a8',11,'center');
+    if(g.free&&g.tg)mono(g.free===g.n?'Engelleyecek hiçbir şey yok':`${g.free} tanesini engelleyecek bir şey yok`,x,y+R+px(29),'#ff8a7e',11,'center');
+    let nl=0;for(const m of g.meet){const q=m.by.id+':'+Math.round(m.x/60)+','+Math.round(m.y/60);if(seenM.has(q))continue;seenM.add(q);nl++;const my=m.y-LIFT(m.z);ctx.strokeStyle='rgba(159,232,244,.95)';ctx.lineWidth=px(1.5);ctx.beginPath();for(let i=0;i<6;i++){const a=i/6*6.283+Math.PI/6;ctx.lineTo(m.x+DM.cos(a)*px(7),my+DM.sin(a)*px(7))}ctx.closePath();ctx.stroke();
+      ctx.strokeStyle='rgba(159,232,244,.35)';ctx.setLineDash([px(2),px(4)]);ctx.beginPath();ctx.moveTo(m.by.x,m.by.y);ctx.lineTo(m.x,my);ctx.stroke();ctx.setLineDash([]);
+      if(nl<=2)mono(`Önleme ~${Math.max(1,Math.round(m.t))} sn: ${nameOf(ME,m.by.t)}, %${Math.round(m.pk*100)}${m.n>1?`, ${m.n} batarya`:''}`,m.x+px(10),my-px(10),'#bff3fa',10,'left')}}}
+function updThrSum(){const el=$('#thrsum');if(!el)return;const L=THR.list.filter(g=>g.ip);if(!THR.on||!L.length){el.hidden=true;return}
+  const n=L.reduce((a,g)=>a+g.n,0),fr=L.reduce((a,g)=>a+(g.tg?g.free:0),0),bad=L.filter(g=>g.tg&&g.free).slice(0,4);
+  el.innerHTML=`<p><b>${n} tehdit geliyor.</b> ${fr?`<span class="no">${fr} tanesini mevcut bataryaların karşılayamıyor.</span>`:'<span class="ok">Hepsi en az bir bataryanın menzilinden geçiyor.</span>'}</p>${bad.map(g=>`<p class="no">${esc(g.tg.cat==='asset'?g.tg.nm:nameOf(ME,g.tg.t))}: ${g.free} ${esc(Object.keys(g.kinds)[0])}, ${Math.ceil(g.eta)} sn. Engelleyecek bir şey yok.</p>`).join('')}`;el.hidden=false}
+const threatCls=o=>HEAVY.has(o.kind)||o.hyp?3:(o.kind==='cruise'||o.kind==='ftr'||o.kind==='ucav'||o.kind==='arm'||o.kind==='glide')?2:1;
 function drawTrackOverlay(air,time){
   let hv=null;if(hover){let bd=1e9;for(const o of air){if(o.side===ME||o.kind==='icp')continue;const d=hyp(sX(o.x)-hover.sx,sY(o.y-LIFT(o.z))-hover.sy);if(d<20&&d<bd){bd=d;hv=o}}}
   const LB=[];const free=(x,y,w)=>{const sx=x*cam.z,sy=y*cam.z;for(const b of LB)if(Math.abs(b[0]-sx)<(w+b[2])/2+8&&Math.abs(b[1]-sy)<17)return false;LB.push([sx+w/2,sy,w]);return true};
   // cluster hostile tracks of the same weapon that sit close together on screen
   const H=air.filter(o=>o.side!==ME&&o.kind!=='icp').map(o=>({o,n:trkName(o),sx:sX(o.x),sy:sY(o.y-LIFT(o.z))}));const used=new Set(),groups=[];
   for(const a of H){if(used.has(a))continue;const g=[a];used.add(a);for(const b of H)if(!used.has(b)&&b.n===a.n&&(!G.quad||b.o.side===a.o.side)&&hyp(b.sx-a.sx,b.sy-a.sy)<54){g.push(b);used.add(b)}groups.push(g)}
-  for(const o of air){if(o.side===ME||o.kind==='icp')continue;const L=LIFT(o.z),y=o.y-L;const sel=G.selTrk===o.id,isH=hv===o;const hvK=HEAVY.has(o.kind);
-    const col=G.quad?(sel||isH?'#ffd27a':SHEX[o.side]):sel?'#ffd27a':isH?'#ffb1a8':'rgba(255,96,80,.95)';const b=px(sel||isH?10:hvK?8.5:7);{const k=(time*.9+o.id*.13)%1;ctx.fillStyle=`rgba(${G.quad?(sel||isH?'255,210,122':SCOL[o.side]):'255,80,60'},${hvK?.22:.14})`;ctx.beginPath();ctx.arc(o.x,y,b*1.9,0,7);ctx.fill();ctx.strokeStyle=`rgba(${G.quad?(sel||isH?'255,210,122':SCOL[o.side]):'255,90,70'},${.7*(1-k)})`;ctx.lineWidth=px(1.3);ctx.beginPath();ctx.arc(o.x,y,b*(1.4+k*1.6),0,7);ctx.stroke()}
-    ctx.strokeStyle=col;ctx.lineWidth=px(sel?2:1.4);ctx.beginPath();ctx.moveTo(o.x,y-b);ctx.lineTo(o.x+b,y);ctx.lineTo(o.x,y+b);ctx.lineTo(o.x-b,y);ctx.closePath();ctx.stroke();
+  for(const o of air){if(o.side===ME||o.kind==='icp')continue;const L=LIFT(o.z),y=o.y-L;const sel=G.selTrk===o.id,isH=hv===o;const tc=threatCls(o),hvK=tc===3;
+    // weight follows the threat: a ballistic missile shouts, a small drone whispers
+    const col=G.quad?(sel||isH?'#ffd27a':SHEX[o.side]):sel?'#ffd27a':isH?'#ffb1a8':tc===3?'#ff5a46':tc===2?'rgba(255,110,92,.95)':'rgba(255,160,130,.7)';const b=px(sel||isH?10:tc===3?11:tc===2?7:4);
+    if(tc>1||sel||isH){const k=(time*(hvK?1.3:.9)+o.id*.13)%1;const rc=G.quad?(sel||isH?'255,210,122':SCOL[o.side]):'255,80,60';ctx.fillStyle=`rgba(${rc},${hvK?.28:.12})`;ctx.beginPath();ctx.arc(o.x,y,b*(hvK?2.2:1.8),0,7);ctx.fill();ctx.strokeStyle=`rgba(${rc},${(hvK?.9:.6)*(1-k)})`;ctx.lineWidth=px(hvK?2:1.2);ctx.beginPath();ctx.arc(o.x,y,b*(1.4+k*(hvK?2.4:1.4)),0,7);ctx.stroke()}
+    ctx.strokeStyle=col;ctx.lineWidth=px(sel?2:hvK?2.4:tc===2?1.4:1);ctx.beginPath();ctx.moveTo(o.x,y-b);ctx.lineTo(o.x+b,y);ctx.lineTo(o.x,y+b);ctx.lineTo(o.x-b,y);ctx.closePath();ctx.stroke();if(hvK){ctx.fillStyle='rgba(255,90,70,.55)';ctx.fill()}
     const vx=o.x-o.px,vy=(o.y-L)-(o.py-LIFT(o.pz||0)),vl=hyp(vx,vy);if(vl>1e-4){ctx.beginPath();ctx.moveTo(o.x+vx/vl*b,y+vy/vl*b);ctx.lineTo(o.x+vx/vl*(b+px(TAC()?30:16)),y+vy/vl*(b+px(TAC()?30:16)));ctx.stroke()}
     const ip=impactPt(o);if(ip&&TAC()&&!(sel||isH)){ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,96,80'},.35)`;ctx.lineWidth=px(1);ctx.setLineDash([px(3),px(5)]);ctx.beginPath();ctx.moveTo(o.x,y);ctx.lineTo(ip.x,ip.y);ctx.stroke();ctx.setLineDash([]);const ir=Math.max((o.r||20),px(6));ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,96,80'},.6)`;ctx.beginPath();ctx.moveTo(ip.x-ir*.5,ip.y-ir*.5);ctx.lineTo(ip.x+ir*.5,ip.y+ir*.5);ctx.moveTo(ip.x+ir*.5,ip.y-ir*.5);ctx.lineTo(ip.x-ir*.5,ip.y+ir*.5);ctx.stroke()}
     if(ip&&(sel||isH)){ctx.strokeStyle=G.quad?'#ffd27a':'rgba(226,114,91,.85)';ctx.lineWidth=px(1.3);ctx.setLineDash([px(4),px(4)]);ctx.beginPath();ctx.ellipse(ip.x,ip.y,(o.r||20)+px(4),((o.r||20)+px(4))*.75,0,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(o.x,y);ctx.lineTo(ip.x,ip.y);ctx.stroke();ctx.setLineDash([]);
@@ -2428,7 +2510,7 @@ function drawTrackOverlay(air,time){
     if(o.jamOn){const k=(time*.6)%1;ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,120,90'},${.35*(1-k)})`;ctx.lineWidth=px(1.2);ctx.beginPath();ctx.arc(o.x,o.y,JAMR*k,0,7);ctx.stroke();ctx.strokeStyle=`rgba(${G.quad?SCOL[o.side]:'255,120,90'},.25)`;ctx.setLineDash([px(3),px(6)]);ctx.beginPath();ctx.arc(o.x,o.y,JAMR,0,7);ctx.stroke();ctx.setLineDash([])}}
   for(const g of groups){const a=g.find(q=>G.selTrk===q.o.id||hv===q.o)||g[0],o=a.o,y=o.y-LIFT(o.z),sel=G.selTrk===o.id||hv===o;const eta=Math.min(...g.map(q=>etaOf(q.o)));
     const txt=`${a.n}${g.length>1?' ×'+g.length:''}, ${Math.ceil(eta)} sn${sel||(TAC()&&HEAVY.has(o.kind))?', '+f1(o.z)+' km':''}`;const w=(txt.length*7+22);
-    if(free(o.x+px(12),y,w)||sel)chip(o.kind,txt,o.x+px(12),y,sel?'#ffd27a':G.quad?SHEX[o.side]:'#ffb1a8',sel?11.5:10.5)}
+    const tc=threatCls(o);if(free(o.x+px(12),y,w)||sel||tc===3)chip(o.kind,txt,o.x+px(tc===3?16:12),y,sel?'#ffd27a':G.quad?SHEX[o.side]:tc===3?'#ffd0c8':tc===2?'#ffb1a8':'#d9a79c',sel?11.5:tc===3?12:tc===2?10.5:9.5)}
   // own weapons in flight: cyan ring + name
   const OW=air.filter(o=>o.side===ME&&o.kind!=='icp'&&o.kind!=='decoy');const ou=new Set();
   for(const o of OW){const y=o.y-LIFT(o.z);ctx.strokeStyle='rgba(159,208,220,.85)';ctx.lineWidth=px(1.2);ctx.beginPath();ctx.arc(o.x,y,px(HEAVY.has(o.kind)?8:5),0,7);ctx.stroke();
@@ -2543,7 +2625,7 @@ const MDESC={DRN:'Ucuz ve yavaş; sürü halinde gelip pahalı önleyicileri tü
 
 // ================================================================ top bar
 let tab='K';
-function setView(v){if(v===VIEW)return;VIEW=v;try{localStorage.setItem('gok.view',v)}catch(e){}renderTop();updTop();if(typeof drawMinimap==='function')drawMinimap()}
+function setView(v){if(v===VIEW)return;VIEW=v;try{localStorage.setItem('gok.view',v)}catch(e){}renderTop();updTop();updMapbar();if(typeof drawMinimap==='function')drawMinimap()}
 function renderTop(){
   topEl.innerHTML=`<div class="brand">Menzil<small>Gök</small></div>${G?`<div class="clock" id="clk"></div><div class="score" id="scr"></div><div id="power" aria-label="Tarafların güç barometresi"></div>`:'<div style="margin-left:auto"></div>'}
   <div class="top-r">${G&&G.phase==='prep'?(G.ready&&G.ready[ME]?'<button class="btn" disabled>Rakip bekleniyor</button>':'<button class="btn pri" data-t="go">Hazırım</button>'):''}${G?'<button class="btn" data-t="sat">Uydu iste</button>'+(G.net?'':'<button class="btn" data-t="pause">Duraklat</button><button class="btn'+(G.speed>1?' on':'')+'" data-t="speed">'+(G.speed>1?G.speed:2)+'×</button>')+'':''}${G&&G.phase!=='prep'?'':'<button class="btn ghost" data-t="how">Nasıl oynanır</button>'}${G?`<div class="vsw" role="group" aria-label="Görünüm"><button class="btn sm ${VIEW==='sat'?'on':''}" data-t="view" data-v="sat" title="Uydu görüntüsü (V)">Uydu</button><button class="btn sm ${VIEW==='tac'?'on':''}" data-t="view" data-v="tac" title="Taktik ekran (V)">Taktik</button></div>`:''}${G?`<button class="btn ${G.cov?'on':'ghost'}" data-t="cov" title="Bataryaların menzil çemberlerini göster">Menziller</button>`:''}<button class="btn ghost" data-t="mute" aria-pressed="${!SND.muted}">${SND.muted?'Ses kapalı':'Ses'}</button><button class="btn ghost" data-t="radio" aria-pressed="${!VOICE.off}" title="Telsiz anonslarını aç ya da kapat">${VOICE.off?'Telsiz kapalı':'Telsiz'}</button>${G?'<button class="btn ghost" data-t="quit">Çık</button>':''}</div>`;if(G)try{updTop()}catch(e){}}
@@ -2701,7 +2783,7 @@ function buildRng(){const el=$('#rng');if(!el||!G)return;const h=RALT[RG.ai];el.
     RGROUP.map(([k,n,ts,c])=>{const cnt=rangeCount(k,ts);return `<button class="rl${cnt&&rangeOn(k)?' on':''}" title="${esc(n)}${cnt?'':(k==='ENEMY'?': bilgi yok':': kurulu değil')}" data-rg="${k}" aria-pressed="${!!cnt&&rangeOn(k)}" style="--c:${c}"><i></i><span>${n}</span><small>${cnt||(k==='ENEMY'?'bilgi yok':'yok')}</small></button>`}).join('')+
     (RG.on.DENS?`<div class="lg"><span>KORUYAN</span><i class="d1"></i>1<i class="d2"></i>2<i class="d3"></i>3<i class="d4"></i>4+</div>`:'')+`<div class="alt"><div class="av"><span>Hedef irtifası</span><b>${altTxt(h)}</b></div><input type="range" min="0" max="${RALT.length-1}" step="1" value="${RG.ai}" aria-label="Hedef irtifası"><div class="ad">${altNote(h)}</div></div><div class="summary"></div>`;updateRangeSummary()}
 let rngSig='';function updRng(){if(!G)return;const sig=!!G.cov+'|'+G.sides.join(',')+'|'+RGROUP.map(([k,,ts])=>rangeCount(k,ts)).join(',');if(sig!==rngSig){rngSig=sig;buildRng()}}
-document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#fitbtn')){fitAll();return}});
+document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#fitbtn')){fitAll();return}if(ev.target.closest&&ev.target.closest('#thrb')){toggleThreats();return}const tf=ev.target.closest&&ev.target.closest('[data-tf]');if(tf){TACF=tf.dataset.tf;try{localStorage.setItem('gok.tacf',TACF)}catch(e){}updMapbar()}});
 document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('#rng [data-rg]');if(!b||!G)return;const k=b.dataset.rg;
   if(k==='min')RG.min=!RG.min;else if(k==='all'||k==='none'){for(const [key,,ts] of RGROUP)RG.on[key]=k==='all'&&rangeCount(key,ts)?1:0;if(G.cov){G.cov=false;renderTop()}}else{const row=RGROUP.find(g=>g[0]===k);if(!rangeCount(k,row[2])){hint(k==='ENEMY'?'Önce keşif ya da uydu ile düşman bataryalarını tespit et.':`Önce sağ panelden ${nameOf(ME,k==='SWEEP'||k==='RAD'?'RAD':row[2][0])} kur.`,1);return}if(G.cov&&!['RAD','SWEEP','DENS'].includes(k)){for(const [key] of RGROUP)if(!['RAD','SWEEP','DENS'].includes(key))RG.on[key]=1;G.cov=false;renderTop()}RG.on[k]=RG.on[k]?0:1}rgSave();buildRng()});
 document.addEventListener('input',ev=>{if(!ev.target.matches('#rng input[type="range"]'))return;RG.ai=+ev.target.value;rgSave();const h=RALT[RG.ai],el=$('#rng');el.querySelector('.av b').textContent=altTxt(h);el.querySelector('.ad').textContent=altNote(h);rangeSummary.key='';updateRangeSummary()});
@@ -3210,6 +3292,7 @@ addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(!G||!
   if(k===' '){e.preventDefault();if(!conEl.hidden&&FCS.armed){if(!e.repeat)holdStart()}else if(!TUT.on&&!G.net){G.paused=!G.paused;updTop()}return}
   if(k==='enter'&&!conEl.hidden&&gcsOn()){e.preventDefault();gcsPress();return}
   if(k==='escape'){if(WPOP)weaponPop(null);GCS.stage=0;mode=null;G.powerSide=null;renderPower();hint('');clearSelection();if(!conEl.hidden)renderCon();if(FCS.armed)setArm(false);renderSide();return}
+  if(k==='g'){toggleThreats();return}
   if(k==='c'){G.cov=!G.cov;renderTop();return}if(k==='v'){setView(VIEW==='tac'?'sat':'tac');return}if(k==='f'){e.preventDefault();fitAll();return}if(k==='t'){e.preventDefault();if(conEl.hidden||G.con.mode!=='atk'){openCon('atk')}mode=mode?.k==='target'?null:{k:'target'};closeInfo();qaClose();hint(mode?'Haritada hedefi işaretle. Shift ile ara nokta eklersin, Esc ile bitirirsin.':'');renderCon();return}if(k==='h'){camPrev=null;fitBtn();cam.x=HQPOS[ME].x+300*(ME==='E'?-1:1);cam.y=HQPOS[ME].y-250;camClamp();return}
   if(k==='a'&&!conEl.hidden){setArm(!FCS.armed);return}});
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys[k]=false;if(k===' '&&FCS.holding)holdEnd()});
@@ -3343,7 +3426,7 @@ const rawDt=now-lastT;const dt=Math.min(.05,rawDt/1000);lastT=now;
     if(pan||panY||ex||ey){cam.x+=(pan+ex)*dt*800/cam.z;cam.y+=(panY+ey)*dt*800/cam.z;camClamp()}
     if(G.follow){const o=airById(G.follow);if(o&&o.alive){cam.x+=(o.x-cam.x)*Math.min(1,dt*6);cam.y+=(o.y-LIFT(o.z)-cam.y)*Math.min(1,dt*6);camClamp()}else G.follow=null}
     camTick(dt);tickFire(dt);tutTick(dt);placeTrkPop();
-    uiT+=dt;if(uiT>.25){uiT=0;try{ambTick()}catch(e){}updPad();updDensTip();if(!conEl.hidden)updGcs();if(camPrev&&!camTw&&Math.abs(cam.z/cam.minZ-1)>.01)camGo(MW/2,MH/2,cam.minZ);camClamp();if(QA){if(QA.kind==='trk'){const o=airById(QA.ref);if(o&&o.alive){QA.sx=sX(o.x);QA.sy=sY(o.y-LIFT(o.z))}}else{const e=ent(QA.ref);if(e){QA.sx=sX(e.x);QA.sy=sY(e.y)}}qaRender()}$('#cash').textContent=money(G.cash[ME]);$('#inc').textContent=`+${money(income(ME))}/sn`;updProd();renderSide();updTop();advisor();updHUD();if(G.sel||G.selTrk||infoKey)renderSel();trkInfo();if(!conEl.hidden){if(G.con.mode==='def'||Math.random()<.3)renderCon();else updFire()}if(hintT>0){hintT-=.25;if(hintT<=0)hintEl.innerHTML=''}}
+    uiT+=dt;if(uiT>.25){uiT=0;try{ambTick()}catch(e){}updPad();updDensTip();if(!conEl.hidden)updGcs();if(camPrev&&!camTw&&Math.abs(cam.z/cam.minZ-1)>.01)camGo(MW/2,MH/2,cam.minZ);camClamp();if(QA){if(QA.kind==='trk'){const o=airById(QA.ref);if(o&&o.alive){QA.sx=sX(o.x);QA.sy=sY(o.y-LIFT(o.z))}}else{const e=ent(QA.ref);if(e){QA.sx=sX(e.x);QA.sy=sY(e.y)}}qaRender()}$('#cash').textContent=money(G.cash[ME]);$('#inc').textContent=`+${money(income(ME))}/sn`;updProd();updMapbar();renderSide();updTop();advisor();updHUD();if(G.sel||G.selTrk||infoKey)renderSel();trkInfo();if(!conEl.hidden){if(G.con.mode==='def'||Math.random()<.3)renderCon();else updFire()}if(hintT>0){hintT-=.25;if(hintT<=0)hintEl.innerHTML=''}}
     mmT+=dt;if(mmT>.3){mmT=0;drawMinimap()}}
     }catch(e){diagErr('döngü',e)}
   TM.ui=performance.now()-t0;t0=performance.now();
