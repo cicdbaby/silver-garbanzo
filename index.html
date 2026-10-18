@@ -519,13 +519,30 @@ header.top .btn[aria-pressed="false"]{color:#5f6967;text-decoration:line-through
 /* side panel */
 .money{padding:14px 16px 4px}
 .money small{font:500 12.5px var(--sans);color:#9fc7a6}
-.prod{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"l b" "t t";gap:3px 10px;align-items:center;padding:2px 16px 10px;font:500 12px var(--sans);color:var(--mute)}
-.prod span{grid-area:l}
-.prod i{grid-area:b;display:block;height:3px;background:rgba(220,230,226,.1)}
-.prod i b{display:block;height:100%;background:#d6d0bf}
-.prod em{grid-area:t;font-style:normal;color:#b9c1bf}
-.tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:12px 16px 0;border-bottom:1px solid var(--hair)}
-.tabs .btn{border:0;border-bottom:2px solid transparent;background:none;color:#8c9694;font:500 14px var(--sans);padding:10px 4px 9px;margin:0 0 -1px}
+.prod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 14px;padding:4px 16px 10px;cursor:pointer;border-radius:0}
+.prod:hover .sc span,.prod:focus-visible .sc span{color:#dfe5e2}.prod:focus-visible{outline:1px solid var(--acc);outline-offset:-1px}
+.prod .sc{display:grid;gap:2px;min-width:0}
+.prod .sc span{font:500 11.5px var(--sans);color:var(--mute)}
+.prod .sc b{font:600 15px/1.1 var(--cond);color:#e9ecea;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod .sc i,.st-row i,.fac i{display:block;height:3px;background:rgba(220,230,226,.1)}
+.prod .sc u,.st-row u,.fac u{display:block;height:100%;background:#b9c4bf}
+.prod .warn u,.st-row.warn u,.fac.warn u{background:#d6b25e}.prod .bad u,.st-row.bad u{background:#e2725b}
+.prod .warn b{color:#f0dca0}.prod .bad b{color:#ffa597}
+.prod p{grid-column:1/-1;margin:2px 0 0;font:400 12px/1.35 var(--sans);color:#8c9694}
+.prod p.warn{color:#e8d7a6}.prod p.bad{color:#ffb2a6}.prod p b{font-weight:600;color:inherit}
+.st-row{grid-column:1/-1;display:grid;gap:4px;padding:8px 0;border-bottom:1px solid var(--line)}
+.st-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.st-h b{font:500 13px var(--sans);color:#dfe5e2}.st-h span{font:600 14px var(--cond);color:#e9ecea;font-variant-numeric:tabular-nums}
+.st-row.warn .st-h span{color:#f0dca0}.st-row.bad .st-h span{color:#ffa597}
+.st-row em{font:400 12px/1.35 var(--sans);font-style:normal;color:#e8d7a6}.st-row.bad em{color:#ffb2a6}
+.st-row small{font:400 12px/1.35 var(--sans);color:var(--dim)}
+.fac{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.fac:hover{background:rgba(220,230,226,.03)}
+.fac b{display:block;font:600 14px var(--cond);color:#e9ecea}.fac em{display:block;font:400 11.5px/1.35 var(--sans);font-style:normal;color:var(--mute);margin-bottom:3px}
+.fac.dead b{color:#a59b98;text-decoration:line-through;text-decoration-color:rgba(226,114,91,.7)}.fac.dead em{color:#c99a90}
+.rb-p{display:block;width:72px;height:4px;background:rgba(220,230,226,.1)}.rb-p i{display:block;height:100%;background:#d6b25e}
+.tabs{grid-template-columns:repeat(5,auto);justify-content:space-between;gap:0 6px;padding:12px 16px 0;border-bottom:1px solid var(--hair)}
+.tabs .btn{border:0;border-bottom:2px solid transparent;background:none;color:#8c9694;font:500 13px var(--sans);padding:10px 0 9px;margin:0 0 -1px;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .tabs .btn+.btn{margin-left:0}
 .tabs .btn:hover:not([disabled]){background:none;color:#eef1ee;border-color:transparent;border-bottom-color:rgba(220,230,226,.3)}
 .tabs .btn.on{background:none;color:#eef1ee;border-bottom-color:#dfe5e2}
@@ -554,6 +571,7 @@ header.top .btn[aria-pressed="false"]{color:#5f6967;text-decoration:line-through
 .bat b,.stat span{font:500 13px var(--sans);color:#dfe5e2}
 .bat span{font:400 12px var(--sans);color:var(--mute)}
 .bat em{font:500 12px var(--cond);font-style:normal;color:#8c9694}
+.bat .star{font-style:normal;color:#ffd27a;font-size:12px}
 .stat b{font:500 13px var(--sans);color:#b9c1bf;text-align:right}
 .side-act{grid-column:1/-1;display:flex;gap:6px;margin-top:12px}
 .side-act .btn{flex:1;padding:10px}
@@ -753,7 +771,13 @@ const sideAlive=s=>!G.out[s];
 const mir=p=>({x:MW-p.x,y:MH-p.y});
 const ASSET_DEF={HQ:{n:'Komuta Merkezi',hp:3000,v:200,inc:.6,r:40},CITY:{n:'Şehir',hp:1500,v:320,inc:1.5,r:78},PWR:{n:'Enerji Santrali',hp:520,v:120,inc:.8,r:30},REFN:{n:'Rafineri',hp:620,v:160,inc:1.3,r:34},AIRB:{n:'Hava Üssü',hp:760,v:180,inc:.4,r:62},FAB:{n:'Fabrika',hp:520,v:140,inc:.6,r:34},DEPO:{n:'Cephanelik',hp:420,v:110,inc:.15,r:30},FUEL:{n:'Yakıt Deposu',hp:380,v:90,inc:.35,r:26},COMM:{n:'Haberleşme Merkezi',hp:300,v:100,inc:.2,r:22},MIL:{n:'Kışla',hp:600,v:120,inc:.1,r:40}};
 const LAYOUT_W=[{t:'HQ',x:1040,y:3880},{t:'CITY',x:2000,y:3080},{t:'CITY',x:2760,y:4220},{t:'CITY',x:1350,y:2250},{t:'PWR',x:1520,y:3480},{t:'PWR',x:3700,y:4250,nm:'Kıyı Santrali'},{t:'REFN',x:3120,y:3520},{t:'REFN',x:2250,y:4520,nm:'Liman Rafinerisi'},{t:'AIRB',x:660,y:2960},{t:'AIRB',x:3300,y:2700,nm:'İleri Hava Üssü'},{t:'CITY',x:500,y:1300},{t:'CITY',x:3200,y:4650},{t:'FAB',x:2400,y:3700,nm:'Motor Fabrikası'},{t:'FAB',x:1800,y:1500,nm:'Çelik Fabrikası'},{t:'DEPO',x:700,y:3300},{t:'DEPO',x:2900,y:3100,nm:'Mühimmat Deposu'},{t:'FUEL',x:1900,y:4300},{t:'FUEL',x:4200,y:4600,nm:'Kıyı Yakıt Deposu'},{t:'COMM',x:1500,y:2900},{t:'COMM',x:3500,y:3300,nm:'Röle İstasyonu'},{t:'MIL',x:1900,y:2600},{t:'MIL',x:600,y:4500,nm:'Sahil Kışlası'}];
-const CITYNAMES={W:['Akyaka','Başkale','Yeşilova','Dağyolu','Kumsal'],E:['Karasu','Ilıca','Dereli','Tepecik','Sahilköy'],N:['Kayalı','Çamlık','Gölbaşı','Ardıç','Poyraz'],S:['Lodos','Bademli','Taşlık','Uluova','Kıyıköy']};
+// real cities of each nation, with a rounded population (thousands) used by the status panel
+const CITIES={TR:[['Konya',2300],['Kayseri',1450],['Samsun',1380],['Eskişehir',920],['Trabzon',820],['Malatya',810],['Erzurum',750],['Sivas',650]],
+ US:[['Denver',715],['El Paso',680],['Albuquerque',560],['Omaha',485],['Tulsa',410],['Wichita',395],['Boise',235],['Spokane',230]],
+ RU:[['Kazan',1300],['Samara',1160],['Ufa',1150],['Rostov',1140],['Voronej',1050],['Perm',1030],['Volgograd',1020],['Saratov',900]],
+ IL:[['Hayfa',290],['Aşdod',225],['Netanya',225],['Beerşeba',210],['Hadera',100],['Nasıra',78],['Afula',60],['Eilat',55]],
+ CN:[['Çengdu',16000],['Vuhan',13700],['Şian',13000],['Hefei',9600],['Nanning',8900],['Kunming',8600],['Guiyang',6400],['Lanzhou',4400]]};
+function cityOf(s,i){const n=G.nat[s]||'TR',L=CITIES[n]||CITIES.TR,dup=G.sides.slice(0,G.sides.indexOf(s)).filter(x=>G.nat[x]===n).length;return L[(dup*5+i)%L.length]}
 // four-side layout for the bottom-left quarter; the other quarters are mirror images
 const LAYOUT_Q=[{t:'HQ',x:700,y:5300},{t:'CITY',x:1500,y:4300},{t:'CITY',x:600,y:4100},{t:'CITY',x:1900,y:5500},{t:'PWR',x:1200,y:5000},{t:'REFN',x:2100,y:4000},{t:'AIRB',x:1000,y:4600},{t:'FAB',x:1700,y:4900},{t:'DEPO',x:450,y:5650},{t:'FUEL',x:2200,y:5100},{t:'COMM',x:1300,y:3800},{t:'MIL',x:400,y:4800},{t:'PWR',x:2300,y:4500,nm:'Kıyı Santrali'}];
 const qmap=(s,p)=>s==='W'?{x:p.x,y:p.y}:s==='N'?{x:p.x,y:MH-p.y}:s==='E'?{x:MW-p.x,y:MH-p.y}:{x:MW-p.x,y:p.y};
@@ -777,19 +801,23 @@ const SITE={
  IDR:{n:'Önleyici İHA',role:'dronu ucuza avlar',c:25,hp:100,r:13,rng:320,a0:0,a1:3,mag:12,rl:5,ic:.1,cd:1,spd:55,boost:.3,launch:'drone',sens:300,mast:6,d:'Dronu dronla avlar: kamikaze İHA\'ya karşı en ucuz takas.'},
  EW:{n:'Elektronik Harp',role:'dronların yönünü şaşırtır',c:40,hp:100,r:13,ew:1,rng:340,emit:1,d:'340 u (17 km) içinde dronların uydu konumunu bozar, seyir füzesinin isabetini düşürür.'},
  DEC:{n:'Şişme Maket',role:'sahte batarya, ateş çeker',c:.2,hp:1,r:20,decoy:1,emit:1,d:'Rakibin elektronik dinlemesine uzun menzil HS gibi görünür; SEAD ve füze çeker. $200K.'},
+ HPM:{n:'Mikrodalga HS',role:'İHA sürüsünü tek darbede düşürür',c:90,hp:120,r:14,hpm:1,rng:120,a0:0,a1:3,mag:999,ic:.002,cd:2.2,sens:130,mast:6,emit:1,d:'Yüksek güçlü mikrodalga darbesi 6 km içindeki bütün İHA\'ların elektroniğini yakar. Sürüyü tek atışta temizler, füzeye karşı zayıftır. Yayın yaptığı için yeri belli olur.'},
+ GPI:{n:'Süzülme Evresi Önleyici',role:'hipersonik füzeyi süzülürken vurur',c:720,hp:200,r:20,rng:2600,a0:20,a1:70,mag:4,rl:30,ic:20,cd:2.6,spd:320,boost:1.2,launch:'vls',sens:3000,mast:14,emit:1,salvo:2,d:'Hipersonik füzeyi 20–70 km irtifada, süzülürken vurur. Balistik füzeye de işler ama asıl işi hipersonik. Önleyicisi çok pahalı.'},
  TEL:{n:'Füze Rampası',role:'balistik, seyir ve hipersonik füze atar',c:120,hp:160,r:16,off:1,rl:22,d:'Mobil fırlatıcı. Her rampa bir füze atar, sonra 22 sn yeniden dolar. Salvo için birden çok rampa kur.'},
  DLN:{n:'İHA Rampası',role:'İHA sürüsü, aldatıcı ve keşif',c:50,hp:110,r:14,off:1,rl:10,d:'Kamikaze İHA, anti-radar İHA, aldatıcı füze ve keşif İHA fırlatır. Bir seferde 6 adede kadar.'},
 };
 // seconds from order to ready: a launcher or a long-range battery is not dropped in place in a moment
-const BUILD_T={RAD:10,CIWS:6,SHORAD:8,MRAD:14,LRAD:22,UPPER:30,LASER:12,IDR:8,EW:8,DEC:2,TEL:16,DLN:10};
+const BUILD_T={RAD:10,CIWS:6,SHORAD:8,MRAD:14,LRAD:22,UPPER:30,LASER:12,IDR:8,EW:8,DEC:2,TEL:16,DLN:10,HPM:12,GPI:34};
 const PK={
- CIWS:{jam:.5,drone:.75,armd:.7,cruise:.55,mald:.6,glide:.45,arm:.5,recon:.7},
- SHORAD:{jam:.6,drone:.85,armd:.8,cruise:.75,mald:.8,glide:.5,arm:.45,ftr:.4,recon:.85},
- MRAD:{jam:.7,drone:.9,armd:.85,cruise:.88,mald:.9,glide:.6,arm:.6,ftr:.75,recon:.9,bm:.2,decoy:.2},
- LRAD:{balloon:.75,jam:.75,cruise:.86,mald:.9,ftr:.85,glide:.55,arm:.55,bm:.78,decoy:.78,hgv:.22,recon:.9},
+ CIWS:{ucav:.3,jam:.5,drone:.75,armd:.7,cruise:.55,mald:.6,glide:.45,arm:.5,recon:.7},
+ SHORAD:{ucav:.45,jam:.6,drone:.85,armd:.8,cruise:.75,mald:.8,glide:.5,arm:.45,ftr:.4,recon:.85},
+ MRAD:{ucav:.7,jam:.7,drone:.9,armd:.85,cruise:.88,mald:.9,glide:.6,arm:.6,ftr:.75,recon:.9,bm:.2,decoy:.2},
+ LRAD:{ucav:.75,balloon:.75,jam:.75,cruise:.86,mald:.9,ftr:.85,glide:.55,arm:.55,bm:.78,decoy:.78,hgv:.22,recon:.9},
  UPPER:{bm:.86,decoy:.86,hgv:.12},
  LASER:{jam:.7,drone:.92,armd:.9,cruise:.45,mald:.5,recon:.9},
  IDR:{jam:.5,drone:.8,armd:.75,recon:.6},
+ HPM:{drone:.8,armd:.75,jam:.6,recon:.7,mald:.35,ucav:.15},
+ GPI:{hgv:.62,bm:.55,decoy:.55,cruise:.6},
 };
 const MUN={
  DRN:{n:'Kamikaze İHA',kind:'drone',c:.05,from:'DLN',spd:46,z:.7,dmg:45,r:16,rcs:.25,val:.05,max:6},
@@ -810,9 +838,9 @@ const PROTO_FAIL=.12,EMP_T=30,BLACK_T=60;
 // ---- weapon variants: same flight model as their family (cls), different trade-offs
 const VAR={
  BM:[['BM_L','Kısa menzil','K',{c:4.5,dmg:150,r:34,cep:12,dec:0,apo:55,spdK:1.3}],['BM','Standart','',{cep:10,dec:2,apo:90}],['BM_H','Ağır başlık','A',{c:13,dmg:380,r:62,cep:16,dec:0,apo:110,spdK:.9}],['BM_M','Manevralı','M',{c:17,dmg:220,r:42,cep:5,dec:1,man:.4,apo:80}],['BM_C','Misketli','Ç',{c:11,dmg:70,r:30,cl:6,cep:14,dec:0,apo:90}],['BM_D','Aldatıcılı','D',{c:12,dmg:200,r:44,cep:11,dec:6,apo:95}]],
- CM:[['CM_L','Hafif','H',{c:2.8,dmg:100,r:26,cep:6}],['CM','Standart','',{cep:5}],['CM_S','Gizli','G',{c:10,dmg:170,r:30,rcs:.12,cep:4}],['CM_P','Sığınak delici','B',{c:9,dmg:300,r:24,pen:1,cep:4}],['CM_X','Süpersonik','S',{c:12,dmg:160,r:30,spd:190,cep:6}]],
+ CM:[['CM_L','Hafif','H',{c:2.8,dmg:100,r:26,cep:6}],['CM','Standart','',{cep:5}],['CM_S','Gizli','G',{c:10,dmg:170,r:30,rcs:.12,cep:4}],['CM_P','Sığınak delici','B',{c:9,dmg:300,r:24,pen:1,cep:4}],['CM_X','Süpersonik','S',{c:12,dmg:160,r:30,spd:190,cep:6}],['CM_HX','Hipersonik, 25 km irtifa','X',{n:'Hipersonik seyir füzesi',c:42,dmg:240,r:34,spd:300,z:25,rcs:.3,hyp:1,cep:5,fut:1}]],
  HGV:[['HGV_L','Hafif','H',{c:30,dmg:190,r:40,cep:8}],['HGV','Standart','',{cep:7}],['HGV_H','Ağır','A',{c:80,dmg:420,r:64,cep:9}]],
- DRN:[['DRN','Hızlı kamikaze','',{cep:4}],['DRN_L','Uzun menzil','U',{c:.03,dmg:60,r:18,spd:36,cep:6}],['DRN_J','Jet kamikaze','J',{c:.25,dmg:55,r:18,spd:105,cep:5}]],
+ DRN:[['DRN','Hızlı kamikaze','',{cep:4}],['DRN_L','Uzun menzil','U',{c:.03,dmg:60,r:18,spd:36,cep:6}],['DRN_J','Jet kamikaze','J',{c:.25,dmg:55,r:18,spd:105,cep:5}],['DRN_S','Sürü, 12 İHA','S',{n:'Sürü İHA',c:.6,dmg:16,r:9,spd:62,z:.3,rcs:.06,swarm:12,max:2,cep:4,fut:1}]],
  SUP:[['JAM','Karıştırıcı','',{}],['ARMD','Anti-radar','',{}],['MALD','Aldatıcı','',{}],['RCN','Keşif','',{}]],
  XP:[['EMP','prototip, radarları susturur','',{}],['GRAF','prototip, elektriği keser','',{}],['MOTH','prototip, 8 İHA bırakır','',{}],['BAL','prototip, 30 km irtifada','',{}]],
 };
@@ -839,8 +867,9 @@ function wStats(k){const M=MUN[k];if(!M)return null;const kind=M.kind;
   let surv=kind==='bm'?.45:kind==='hgv'?.85:kind==='cruise'?.4:kind==='drone'?.15:.3;surv+=Math.min(.3,(M.dec||0)*.05)+(M.man||0)*.7+(M.rcs&&M.rcs<.3&&kind==='cruise'?.3:0)+(kind==='cruise'&&(M.spd||0)>150?.25:0);
   const area=M.cl?Math.min(1,(M.r*2.6)/120):Math.min(1,(M.r||0)/70);
   return [['Hasar',Math.min(1,(M.cl?M.dmg*M.cl*.6:M.dmg)/420)],['Etki alanı',area],['İsabet',M.cep?clamp(1-M.cep/22,0,1):0],['Hız',clamp(spd,0,1)],['Beka',clamp(surv,0,1)]]}
-const SORT={SEAD:{n:'SEAD görevi',d:'Uçak 80 km açıktan iki anti-radyasyon füzesi atar; yayın yapan radara kilitlenir.'},GLIDE:{n:'Süzülen bomba',d:'Uçak 60 km açıktan iki süzülen bomba bırakır, hava savunmaya girmeden döner.'}};
-const KNAME={balloon:'Keşif balonu',jam:'Karıştırıcı İHA',drone:'Kamikaze İHA',armd:'Anti-radar İHA',mald:'Aldatıcı',recon:'Keşif İHA',cruise:'Seyir füzesi',bm:'Balistik füze',decoy:'Balistik füze',hgv:'Hipersonik',ftr:'Savaş uçağı',glide:'Süzülen bomba',arm:'Anti-radar füze'};
+const SORT={SEAD:{n:'SEAD görevi',c:.5,d:'Uçak 80 km açıktan iki anti-radyasyon füzesi atar; yayın yapan radara kilitlenir.'},GLIDE:{n:'Süzülen bomba',c:.5,d:'Uçak 60 km açıktan iki süzülen bomba bırakır, hava savunmaya girmeden döner.'},
+ WING:{n:'Sadık kanat',c:6,d:'Uçak 120 km açıkta kalır, iki insansız savaş uçağı salar. Onlar radarda zor görünür, hedefe 26 km yaklaşıp ikişer süzülen bomba bırakır ve döner. Düşerlerse pilot kaybı yok.'}};
+const KNAME={ucav:'İnsansız savaş uçağı',balloon:'Keşif balonu',jam:'Karıştırıcı İHA',drone:'Kamikaze İHA',armd:'Anti-radar İHA',mald:'Aldatıcı',recon:'Keşif İHA',cruise:'Seyir füzesi',bm:'Balistik füze',decoy:'Balistik füze',hgv:'Hipersonik',ftr:'Savaş uçağı',glide:'Süzülen bomba',arm:'Anti-radar füze'};
 const HEAVY=new Set(['bm','decoy','hgv']);
 // real-world-ish specification sheets
 const SPEC={
@@ -868,22 +897,26 @@ const SPEC={
  MOTH:{Taşıma:'8 kamikaze İHA',Ayrılma:'yolun yarısında',Hız:'160 km/sa',İrtifa:'1,6 km',Durum:'prototip, %12 arıza ihtimali'},
  BAL:{İrtifa:'30 km (stratosfer)',Hız:'≈ 50 km/sa',Sensör:'geniş alan EO + SAR',Görüş:'40 km çevre, 120 sn',Önleme:'yalnızca uzun menzilli HS',Durum:'prototip, %12 arıza ihtimali'},
  HGV:{Boy:'8 m',Hız:'Mach 10',Menzil:'1.800 km',Süzülme:'35–45 km',Başlık:'manevralı süzülme aracı',Özellik:'iki savunma katmanının arasından geçer'},
+ HPM:{Tür:'yüksek güçlü mikrodalga',Menzil:'6 km',İrtifa:'0–3 km',Atış:'2 sn\'de bir darbe',Maliyet:'atış başına birkaç bin dolar',Zayıf:'füze ve uçak'},
+ GPI:{Tür:'süzülme evresi önleyici',Menzil:'130 km',İrtifa:'20–70 km',Hız:'Mach 8+',Güdüm:'iki kademeli, uzay tabanlı izlemeyle',Durum:'2030\'lara girecek nesil'},
+ CM_HX:{Motor:'scramjet',Hız:'Mach 5–6',İrtifa:'25 km seyir, son 20 km dalış',Başlık:'240 birim',Özellik:'alçak katmanların üstünden geçer, önleme şansı üçte bir'},
+ DRN_S:{Adet:'tek fırlatmada 12 İHA',Boy:'0,6 m',Başlık:'küçük, 16 birim',Özellik:'radarda çok geç görünür; topçu tek tek uğraşır, mikrodalga topluca düşürür'},
 };
 const NAT={
  US:{n:'ABD',trait:'Hassas vuruş ve katmanlı savunma. THAAD + Patriot ikilisi balistiğe karşı en güçlüsü; F-35 radarda zor görünür. Her şey biraz pahalı.',
-  names:{RAD:'AN/TPY-2',CIWS:'Centurion C-RAM',SHORAD:'Avenger (Stinger)',MRAD:'NASAMS',LRAD:'Patriot PAC-3',UPPER:'THAAD',LASER:'DE M-SHORAD',IDR:'Coyote Blok 2',EW:'EW Birliği',DRN:'LUCAS',ARMD:'Harpy tipi',MALD:'ADM-160 MALD',RCN:'RQ-20 Puma',CM:'Tomahawk',BM:'PrSM',HGV:'Dark Eagle',FTR:'F-35A',EMP:'CHAMP',GRAF:'BLU-114/B',ICP_LRAD:'PAC-3 MSE',ICP_UPPER:'THAAD',ICP_MRAD:'AIM-120 AMRAAM',ICP_SHORAD:'FIM-92 Stinger'},
+  names:{RAD:'AN/TPY-2',CIWS:'Centurion C-RAM',SHORAD:'Avenger (Stinger)',MRAD:'NASAMS',LRAD:'Patriot PAC-3',UPPER:'THAAD',LASER:'DE M-SHORAD',IDR:'Coyote Blok 2',EW:'EW Birliği',DRN:'LUCAS',ARMD:'Harpy tipi',MALD:'ADM-160 MALD',RCN:'RQ-20 Puma',CM:'Tomahawk',BM:'PrSM',HGV:'Dark Eagle',FTR:'F-47',UCAV:'YFQ-42A',HPM:'Leonidas',GPI:'GPI',CM_HX:'HACM',DRN_S:'Sürü İHA',EMP:'CHAMP',GRAF:'BLU-114/B',ICP_LRAD:'PAC-3 MSE',ICP_UPPER:'THAAD',ICP_MRAD:'AIM-120 AMRAAM',ICP_SHORAD:'FIM-92 Stinger'},
   cost:1.1,pk:{LRAD:{bm:.07,decoy:.07}},stealth:.65},
  RU:{n:'Rusya',trait:'Menzili uzun hava savunma ve ağır balistik. S-400 ve S-500 geniş alanı kapatır, Iskander son evrede manevra yapar.',
-  names:{RAD:'Nebo-M',CIWS:'Pantsir-S1',SHORAD:'Tor-M2',MRAD:'Buk-M3',LRAD:'S-400',UPPER:'S-500',LASER:'Zadira',IDR:'Önleyici İHA',EW:'Krasukha-4',DRN:'Geran-2',ARMD:'Lancet-3',MALD:'Gerbera tuzak İHA',RCN:'Orlan-10',CM:'Kalibr',BM:'Iskander-M',HGV:'Kinzhal',FTR:'Su-34',ICP_LRAD:'48N6',ICP_UPPER:'77N6',ICP_MRAD:'9M317M',ICP_SHORAD:'9M338'},
-  cost:1,range:{LRAD:1.15,UPPER:1.1,MRAD:1.1},evade:{bm:.1}},
+  names:{RAD:'Nebo-M',CIWS:'Pantsir-S1',SHORAD:'Tor-M2',MRAD:'Buk-M3',LRAD:'S-400',UPPER:'S-500',LASER:'Zadira',IDR:'Önleyici İHA',EW:'Krasukha-4',DRN:'Geran-2',ARMD:'Lancet-3',MALD:'Gerbera tuzak İHA',RCN:'Orlan-10',CM:'Kalibr',BM:'Iskander-M',HGV:'Kinzhal',FTR:'Su-57M',UCAV:'S-70 Ohotnik',HPM:'Mikrodalga HS',GPI:'S-550',CM_HX:'Zirkon',DRN_S:'Sürü İHA',ICP_LRAD:'48N6',ICP_UPPER:'77N6',ICP_MRAD:'9M317M',ICP_SHORAD:'9M338'},
+  cost:1,range:{LRAD:1.15,UPPER:1.1,MRAD:1.1},evade:{bm:.1},stealth:.8},
  TR:{n:'Türkiye',trait:'İHA gücü ve elektronik harp. Kamikaze ve anti-radar İHA ucuz, Koral daha geniş alanı karıştırır, Korkut dronlara karşı çok etkili.',
-  names:{RAD:'ALP 300-G',CIWS:'Korkut',SHORAD:'Hisar-A+',MRAD:'Hisar-O+',LRAD:'Siper Blok-1',UPPER:'Siper Blok-2',LASER:'Alka',IDR:'Önleyici İHA',EW:'Koral',DRN:'Kargu-2',ARMD:'Anti-radar İHA',MALD:'Aldatıcı İHA',RCN:'Bayraktar Mini',CM:'Kara Atmaca',BM:'Tayfun',HGV:'Tayfun Blok-4',FTR:'F-16 Blok 70',ICP_LRAD:'Siper füzesi',ICP_UPPER:'Siper Blok-2 füzesi',ICP_MRAD:'Hisar-O füzesi',ICP_SHORAD:'Hisar-A füzesi'},
-  cost:1,cheap:{DRN:.6,ARMD:.6,IDR:.8,EW:.7},ew:1.35,pk:{CIWS:{drone:.08,armd:.08}}},
+  names:{RAD:'ALP 300-G',CIWS:'Korkut',SHORAD:'Hisar-A+',MRAD:'Hisar-O+',LRAD:'Siper Blok-1',UPPER:'Siper Blok-2',LASER:'Alka',IDR:'Önleyici İHA',EW:'Koral',DRN:'Kargu-2',ARMD:'Anti-radar İHA',MALD:'Aldatıcı İHA',RCN:'Bayraktar Mini',CM:'Kara Atmaca',BM:'Tayfun',HGV:'Tayfun Blok-4',FTR:'KAAN',UCAV:'Kızılelma',HPM:'Mikrodalga HS',GPI:'Siper Blok-3',CM_HX:'Hipersonik seyir füzesi',DRN_S:'Kargu sürüsü',ICP_LRAD:'Siper füzesi',ICP_UPPER:'Siper Blok-2 füzesi',ICP_MRAD:'Hisar-O füzesi',ICP_SHORAD:'Hisar-A füzesi'},
+  cost:1,cheap:{DRN:.6,ARMD:.6,IDR:.8,EW:.7},ew:1.35,stealth:.7,pk:{CIWS:{drone:.08,armd:.08}}},
  IL:{n:'İsrail',trait:'Dünyanın en sık sınanmış katmanlı savunma ağı: Demir Kubbe, Davud\'un Sapanı, Arrow. Keşif ve sensörde çok güçlü, kamikaze ve anti-radar İHA\'da ileri; balistik saldırısı sınırlı.',
-  names:{RAD:'EL/M-2084',SHORAD:'Demir Kubbe',MRAD:'Davud\'un Sapanı',LRAD:'Arrow 2',UPPER:'Arrow 3',LASER:'Demir Işın',DRN:'Hero-120',ARMD:'Harop',MALD:'Aldatıcı İHA',RCN:'Skylark',CM:'Delilah',BM:'LORA',FTR:'F-35I Adir',ICP_SHORAD:'Tamir',ICP_MRAD:'Stunner',ICP_LRAD:'Arrow 2',ICP_UPPER:'Arrow 3'},stealth:.7},
+  names:{RAD:'EL/M-2084',SHORAD:'Demir Kubbe',MRAD:'Davud\'un Sapanı',LRAD:'Arrow 2',UPPER:'Arrow 3',LASER:'Demir Işın',DRN:'Hero-120',ARMD:'Harop',MALD:'Aldatıcı İHA',RCN:'Skylark',CM:'Delilah',BM:'LORA',FTR:'F-35I Adir',UCAV:'Sadık kanat İHA',HPM:'Mikrodalga HS',GPI:'Arrow 4',CM_HX:'Hipersonik seyir füzesi',DRN_S:'Sürü İHA',ICP_SHORAD:'Tamir',ICP_MRAD:'Stunner',ICP_LRAD:'Arrow 2',ICP_UPPER:'Arrow 3'},stealth:.7},
  CN:{n:'Çin',trait:'Füze kütlesi. Balistik, seyir ve hipersonik füzeler ucuz; DF-17 zor durdurulur.',
-  names:{RAD:'JY-27A',CIWS:'LD-2000',SHORAD:'HQ-17',MRAD:'HQ-16',LRAD:'HQ-9B',UPPER:'HQ-19',LASER:'Silent Hunter',IDR:'Önleyici İHA',EW:'EW Birliği',DRN:'CH-901',ARMD:'ASN-301',MALD:'Aldatıcı füze',RCN:'ASN-209',CM:'CJ-10',BM:'DF-15B',HGV:'DF-17',FTR:'J-16',ICP_LRAD:'HQ-9 füzesi',ICP_UPPER:'HQ-19 füzesi',ICP_MRAD:'HQ-16 füzesi',ICP_SHORAD:'HQ-17 füzesi'},
-  cost:1,cheap:{BM:.7,CM:.75,HGV:.6,TEL:.8}},
+  names:{RAD:'JY-27A',CIWS:'LD-2000',SHORAD:'HQ-17',MRAD:'HQ-16',LRAD:'HQ-9B',UPPER:'HQ-19',LASER:'Silent Hunter',IDR:'Önleyici İHA',EW:'EW Birliği',DRN:'CH-901',ARMD:'ASN-301',MALD:'Aldatıcı füze',RCN:'ASN-209',CM:'CJ-10',BM:'DF-15B',HGV:'DF-17',FTR:'J-35A',UCAV:'FH-97A',HPM:'Hurricane 3000',GPI:'HQ-29',CM_HX:'CJ-1000',DRN_S:'Sürü İHA',ICP_LRAD:'HQ-9 füzesi',ICP_UPPER:'HQ-19 füzesi',ICP_MRAD:'HQ-16 füzesi',ICP_SHORAD:'HQ-17 füzesi'},
+  cost:1,cheap:{BM:.7,CM:.75,HGV:.6,TEL:.8},stealth:.75},
 };
 const DIFF={easy:{n:'Kolay',d:'Rakip küçük dalgalarla, seyrek saldırır; savunması dağınık.',bud:.7,inc:.6,gap:1.8,sz:.6,doc:'all'},
  med:{n:'Orta',d:'Dengeli rakip: dronla doyurur, arkasından füze gönderir.',bud:.95,inc:.9,gap:1.25,sz:1,doc:'sel'},
@@ -898,7 +931,7 @@ const AXF=(s,a)=>1+(axV(s,a)-3)*.08;
 const AX_SITE={CIWS:'ad',SHORAD:'ad',MRAD:'ad',LRAD:'ad',UPPER:'ad',LASER:'ad',IDR:'ad',RAD:'sen',EW:'ew',DLN:'uav'};
 const axOf=k=>{if(SITE[k])return AX_SITE[k]||null;const M=MUN[k];if(!M)return null;return M.kind==='bm'?'bm':M.kind==='cruise'||M.kind==='hgv'?'cm':M.kind==='recon'||M.kind==='balloon'?'sen':['drone','armd','mald','jam'].includes(M.kind)?'uav':null};
 const profBars=(k,cls='pf')=>`<span class="${cls}" aria-label="${AXES.map(([a,n])=>n+' '+NPROF[k][a]).join(', ')}">${AXES.map(([a,n])=>`<i title="${n}: ${NPROF[k][a]}/5" style="--v:${NPROF[k][a]}"></i>`).join('')}</span>`;
-const nameOf=(s,k)=>{const M=MUN[k];if(M&&M.custom)return M.n;if(M&&M.cls&&M.cls!==k)return (natOf(s).names[M.cls]||MUN[M.cls].n)+(M.suf?' '+M.suf:'');return natOf(s).names[k]||(SITE[k]||MUN[k]||{}).n||k};
+const nameOf=(s,k)=>{const M=MUN[k];if(M&&M.custom)return M.n;if(M&&M.cls&&M.cls!==k)return natOf(s).names[k]||(M.fut?M.n:(natOf(s).names[M.cls]||MUN[M.cls].n)+(M.suf?' '+M.suf:''));return natOf(s).names[k]||(SITE[k]||MUN[k]||{}).n||k};
 const costOf=(s,k)=>{const d=SITE[k]||MUN[k];const a=axOf(k);return d.c/(a?AXF(s,a):1)};
 const rngOf=(s,t)=>SITE[t].rng*(t==='EW'?DM.pow(AXF(s,'ew'),1.6):AX_SITE[t]==='ad'?Math.sqrt(AXF(s,'ad')):1);
 const sensOf=(s,t)=>(SITE[t].sens||0)*(SITE[t].emit?AXF(s,'sen'):1);
@@ -1124,7 +1157,7 @@ function newGame(mode,opts={}){
   for(const k in MUN)for(const s of SD)G.stock[s][k]=0;
   TOWNS.length=0;PTS.length=0;
   SD.forEach((s,si)=>{let ci=0;for(const a of (quad?LAYOUT_Q:LAYOUT_W)){const p0=quad?qmap(s,a):s==='W'?{x:a.x,y:a.y}:mir(a);const d=ASSET_DEF[a.t];const vv=a.t==='CITY'?(ci+si*2)%5:0;const pk=(piecesFor('asset',a.t,vv)[0]||[])[0];const vrr=Math.max(visRT('asset',a.t,vv),8);const p=landSpot(p0.x,p0.y,vrr,s,G.ents.filter(q=>q.side===s).map(q=>({x:q.x,y:q.y,r:Math.max(visR(q),8)})),WATERSIDE[pk]);
-    const e=addE(s,'asset',a.t,p.x,p.y);if(a.t==='CITY')e.var=(ci+si*2)%5;e.nm=a.t==='CITY'?CITYNAMES[s][ci++]:a.nm||d.n;if(a.t==='HQ')HQPOS[s]={x:p.x,y:p.y};if(a.t==='CITY')TOWNS.push({x:p.x,y:p.y,r:d.r,n:e.nm});else PTS.push(p)}
+    const e=addE(s,'asset',a.t,p.x,p.y);if(a.t==='CITY')e.var=(ci+si*2)%5;if(a.t==='CITY'){const c=cityOf(s,ci++);e.nm=c[0];e.pop=c[1]}else e.nm=a.nm||d.n;if(a.t==='HQ')HQPOS[s]={x:p.x,y:p.y};if(a.t==='CITY')TOWNS.push({x:p.x,y:p.y,r:d.r,n:e.nm});else PTS.push(p)}
     for(let i=0;i<4;i++)G.air4[s].push({id:i,st:'ready',t:0})});
   G.publicAssets=per(s=>assets(s).map(a=>({t:a.t,x:a.x,y:a.y})));G.power=null;G.powerSide=null;
   G.wx.t=60+srnd()*60;G.wx.wind={x:6+srnd()*6,y:-2+srnd()*4};genMap((srnd()*1e9)|0);
@@ -1180,11 +1213,26 @@ function build(s,t,x,y){const c=costOf(s,t);if(G.cash[s]<c)return 'Kasa yetersiz
 // Missiles fired from launchers come off a production line: a base output plus every factory (scaled by its damage).
 // Money alone cannot buy an endless salvo; hitting the rival's factories slows theirs.
 const PROD_CAP=24,PROD_BASE=4/60,PROD_FAB=4/60;
-const prodUnits=k=>{const M=MUN[k];if(!M||M.from!=='TEL')return 0;return M.kind==='hgv'?3:M.proto?2:1};
-function prodRate(s){let r=PROD_BASE;for(const a of assets(s))if(a.t==='FAB')r+=PROD_FAB*(a.hp/a.max);return r}
+const prodUnits=k=>{const M=MUN[k];if(!M||M.from!=='TEL')return 0;return M.kind==='hgv'?3:(M.proto||M.hyp)?2:1};
+function prodRate(s){let r=PROD_BASE;for(const a of assets(s))if(a.t==='FAB')r+=PROD_FAB*(a.hp/a.max);return r*energyF(s)}
+// supporting facilities: power keeps the production lines running, depots hold finished missiles,
+// refineries and fuel depots keep the aircraft turning round. share() = surviving fraction of that kind (dark = 20%).
+function share(s,t){let h=0,m=0;for(const e of G.ents){if(e.cat!=='asset'||e.ruin||e.side!==s||e.t!==t)continue;m+=e.max;if(e.alive)h+=e.hp*(e.blackT>G.time?.2:1)}return m?h/m:1}
+const energyF=s=>.5+.5*share(s,'PWR');
+const capOf=s=>12+12*share(s,'DEPO');
+const fuelF=s=>.5+.25*share(s,'REFN')+.25*share(s,'FUEL');
+const REARM_T=45;
+// destroyed facilities can be rebuilt: costly, and the site stays a ruin until the work is done
+const rebuildCost=t=>Math.round(ASSET_DEF[t].v*.8);
+const rebuildTime=t=>Math.round(40+ASSET_DEF[t].v*.18);
+function rebuild(s,id){const e=ent(id);if(!e||e.cat!=='asset'||e.ruin||e.side!==s||!e.dead||G.out[s])return 'Yeniden kurulacak tesis yok.';if(e.t==='HQ')return 'Komuta merkezi yeniden kurulamaz.';if(e.rbAt)return 'Zaten yapılıyor.';
+  const c=rebuildCost(e.t);if(G.cash[s]<c)return 'Kasa yetersiz.';G.cash[s]-=c;G.score[s].sp+=c;e.rbT0=G.time;e.rbAt=G.time+rebuildTime(e.t);if(s===ME&&!G.silent)sfx('ok');return ''}
+function rebuildTick(){const done=G.ents.filter(e=>e.rbAt&&G.time>=e.rbAt);for(const e of done){e.rbAt=0;e.alive=true;e.dead=false;e.hp=e.max*.7;e.burn=0;e.marks=[];e.blackT=0;const rid=e.ruinId;e.ruinId=0;if(rid)G.ents=G.ents.filter(r=>r.id!==rid);
+  if(e.side===ME)toast(`<b>Yeniden kuruldu</b>${esc(e.nm)} yeniden çalışıyor.`,'W',true);else toast(`${G.quad?esc(natOf(e.side).n)+': ':'Düşman '}${esc(e.nm)} yeniden kurdu.`,'')}}
 function buy(s,k,n=1){const c=costOf(s,k)*n;if(G.cash[s]<c)return 'Kasa yetersiz.';const u=prodUnits(k)*n;if(u&&(G.prod[s]||0)<u-1e-9){const m=Math.floor((G.prod[s]||0)/prodUnits(k));return m?`Fabrikalar şu an ${m} adet yetiştirebiliyor.`:`Fabrikalar yetişmiyor; sıradaki füze ${Math.ceil((u-(G.prod[s]||0))/prodRate(s)/n)} sn sonra.`}
   if(u)G.prod[s]-=u;G.cash[s]-=c;G.stock[s][k]=(G.stock[s][k]||0)+n;return ''}
-function income(s){if(G.phase!=='war')return 0;let i=0;for(const a of assets(s))i+=ASSET_DEF[a.t].inc*(a.hp/a.max)*(a.blackT>G.time?.2:1);if(G.blackS&&G.blackS[s]>G.time)i*=.85;if(!HUM(s))i*=DIFF[G.diff].inc;return i}
+function income(s){return G.phase!=='war'?0:incomeRate(s)}
+function incomeRate(s){let i=0;for(const a of assets(s))i+=ASSET_DEF[a.t].inc*(a.hp/a.max)*(a.blackT>G.time?.2:1);if(G.blackS&&G.blackS[s]>G.time)i*=.85;if(!HUM(s))i*=DIFF[G.diff].inc;return i}
 function later(dt,fn){G.later.push({at:G.time+dt,fn})}
 
 // ================================================================ air objects
@@ -1195,12 +1243,14 @@ function bmPos(o,s){const f=s<.12?.03*((s/.12)*(s/.12)):.03+.97*((s-.12)/.88);le
   const nx=-(o.y1-o.y0)/o.dist,ny=(o.x1-o.x0)/o.dist;return{x:o.x0+(o.x1-o.x0)*f+nx*ev,y:o.y0+(o.y1-o.y0)*f+ny*ev,z:Math.max(0,z)}}
 function hgvPos(o,s){let f,z;if(s<.15){f=.05*((s/.15)*(s/.15));z=45*DM.pow(s/.15,1.3)}else if(s<.85){f=.05+.95*((s-.15)/.85);z=45-12*((s-.15)/.7)}else{f=.05+.95*((s-.15)/.85);z=33*DM.pow(1-(s-.85)/.15,1.6)}
   const w=s>.2&&s<.88?DM.sin(s*15)*42:0;const nx=-(o.y1-o.y0)/o.dist,ny=(o.x1-o.x0)/o.dist;return{x:o.x0+(o.x1-o.x0)*Math.min(1,f)+nx*w,y:o.y0+(o.y1-o.y0)*Math.min(1,f)+ny*w,z:Math.max(0,z)}}
-function spawnMun(s,k,x0,y0,tx,ty,wp,lid){const o=spawnMun0(s,k,x0,y0,tx,ty,wp,lid),M=MUN[k];if(!o||!M.proto)return o;
+function spawnMun(s,k,x0,y0,tx,ty,wp,lid){const o=spawnMun0(s,k,x0,y0,tx,ty,wp,lid),M=MUN[k];if(o&&lid)o.lid=lid;
+  if(o&&M.swarm){o.kids=[];for(let i=1;i<M.swarm;i++){const a=i/M.swarm*6.283,c=spawnMun0(s,k,x0+RN()*3,y0+RN()*3,tx+DM.cos(a)*(10+srnd()*22),ty+DM.sin(a)*(10+srnd()*22),wp&&wp.map(p=>({x:p.x+RN()*25,y:p.y+RN()*25})),lid);if(c){c.lid=lid;o.kids.push(c)}}}
+  if(!o||!M.proto)return o;
   const T=o.T||(hyp(tx-x0,ty-y0)/(o.spd||40));if(srnd()<PROTO_FAIL)o.failAt=G.time+T*(.15+srnd()*.55);
   if(M.mother)o.splitD=hyp(tx-x0,ty-y0)*.5;return o}
 function spawnMun0(s,k,x0,y0,tx,ty,wp,lid){
   const M=MUN[k],d=hyp(tx-x0,ty-y0)||1;
-  const cep=(M.cep||6)/(M.kind==='bm'?AXF(s,'bm'):1),ex={man:(M.man||0)+(M.kind==='bm'&&axV(s,'bm')>=5?.1:0),cl:M.cl||0,pen:M.pen||0,emp:M.emp||0,graf:M.graf||0,mother:M.mother||0,proto:M.proto||0};
+  const cep=(M.cep||6)/(M.kind==='bm'?AXF(s,'bm'):1),ex={hyp:M.hyp||0,man:(M.man||0)+(M.kind==='bm'&&axV(s,'bm')>=5?.1:0),cl:M.cl||0,pen:M.pen||0,emp:M.emp||0,graf:M.graf||0,mother:M.mother||0,proto:M.proto||0};
   if(M.kind==='bm'){const o=addAir({side:s,kind:'bm',k,x:x0,y:y0,x0,y0,x1:tx+RN()*cep,y1:ty+RN()*cep,dist:d,T:(12+d/170)/(M.spdK||1),apo:Math.min(135,(45+d/80)*(M.apo||90)/90),dmg:M.dmg,r:M.r,val:M.val,rcs:M.rcs,evade:axV(s,'bm')>=5,dec:M.dec!=null?M.dec:2,...ex});return o}
   if(M.kind==='hgv')return addAir({side:s,kind:'hgv',k,x:x0,y:y0,x0,y0,x1:tx+RN()*cep,y1:ty+RN()*cep,dist:d,T:(9+d/260)/(M.spdK||1)/AXF(s,'cm'),dmg:M.dmg,r:M.r,val:M.val,rcs:M.rcs/AXF(s,'cm'),...ex});
   const route=[...(wp||[]).map(p=>({x:p.x,y:p.y})),{x:tx+RN()*cep*.6,y:ty+RN()*cep*.6}];
@@ -1230,7 +1280,7 @@ function updAir(o,dt){
       const zc=o.zc+(o.kind==='cruise'?DM.sin(G.time*.9+o.id)*.012:0);o.z+=(zc-o.z)*Math.min(1,dt*(o.kind==='cruise'?1.2:o.kind==='balloon'?.09:.6));
       if(o.mother&&o.splitD&&hyp(o.tx-o.x,o.ty-o.y)<o.splitD){motherSplit(o);return}
       if(o.kind==='cruise'&&!o.staged&&age>o.boostT){o.staged=1;G.deb.push({x:o.x,y:o.y,z:o.z+.05,vx:DM.cos(o.hd)*8,vy:DM.sin(o.hd)*8,vz:.2,m:0,stage:1})}
-      if(o.kind==='cruise'&&o.ri===o.route.length-1){const p=o.route[o.ri],d=hyp(p.x-o.x,p.y-o.y);if(d<90)o.z=d>40?.05+(90-d)/50*.3:.35*(d/40)}
+      if(o.kind==='cruise'&&o.ri===o.route.length-1){const p=o.route[o.ri],d=hyp(p.x-o.x,p.y-o.y);if(o.hyp){if(d<400)o.z=Math.max(.05,o.zc*d/400)}else if(d<90)o.z=d>40?.05+(90-d)/50*.3:.35*(d/40)}
       if((o.kind==='drone'||o.kind==='armd')&&!o.ew&&(o.jsd=jammedAt(o.x,o.y,o.side))){o.ew=1;if(srnd()<.6/AXF(o.side,'uav')*AXF(o.jsd,'ew')){const p=o.route[o.route.length-1];p.x+=RN()*180;p.y+=RN()*180;o.lost=1}}
       if(o.kind==='armd'&&o.ri===o.route.length-1&&!o.home){const r=G.ents.filter(e=>e.alive&&e.side!==o.side&&e.cat==='site'&&e.emit&&SITE[e.t].emit&&e.mode!=='off'&&hyp(e.x-o.x,e.y-o.y)<700).sort((a,b)=>hyp(a.x-o.x,a.y-o.y)-hyp(b.x-o.x,b.y-o.y))[0];if(r){o.home=r.id;o.route[o.ri]={x:r.x,y:r.y}}}
       if(o.home){const r=ent(o.home);if(r&&r.alive&&r.emit&&r.mode!=='off'){o.route[o.ri]={x:r.x,y:r.y}}}
@@ -1238,9 +1288,9 @@ function updAir(o,dt){
         if(o.kind==='recon')revealAround(o.side,o.x,o.y,420);if(o.kind==='balloon'&&((o.rv=(o.rv||0)+dt)>.5)){o.rv=0;revealAround(o.side,o.x,o.y,800)}if(o.kind==='jam')o.jamOn=1;if(o.lt>o.loiter){if(o.kind==='recon'||o.kind==='jam'||o.kind==='balloon'){o.alive=false;return}o.loiter=0}break}
       if(stepRoute(o,dt*(o.kind==='drone'&&G.wx.rain>.5?.85:1)*Math.min(1,.35+age/o.boostT))){if(o.kind==='jam'){o.loiter=45;break}if(o.kind==='recon'){o.loiter=25*AXF(o.side,'sen');break}if(o.kind==='balloon'){o.loiter=120*AXF(o.side,'sen');if(o.side===ME)toast('<b>Balon görevde</b>30 km irtifadan 40 km çevreyi 2 dakika izleyecek.','W',true);break}impact(o);return}
       break}
-    case 'ftr':{const base=o.base;if(o.st==='out'){const d=hyp(o.rx-o.x,o.ry-o.y),st=o.spd*dt;o.hd=DM.atan2(o.ry-o.y,o.rx-o.x);if(d<=st){release(o);o.st='back'}else{o.x+=(o.rx-o.x)/d*st;o.y+=(o.ry-o.y)/d*st}}
-      else{const d=hyp(base.x-o.x,base.y-o.y),st=o.spd*dt;o.hd=DM.atan2(base.y-o.y,base.x-o.x);if(d<=st){o.alive=false;const a=G.air4[o.side].find(a=>a.id===o.slot);if(a){a.st='rearm';a.t=45}}else{o.x+=(base.x-o.x)/d*st;o.y+=(base.y-o.y)/d*st}}
-      o.z+=(8-o.z)*dt*.5;break}
+    case 'ftr':case 'ucav':{const base=o.base;if(o.st==='out'){const d=hyp(o.rx-o.x,o.ry-o.y),st=o.spd*dt;o.hd=DM.atan2(o.ry-o.y,o.rx-o.x);if(d<=st){release(o);o.st='back'}else{o.x+=(o.rx-o.x)/d*st;o.y+=(o.ry-o.y)/d*st}}
+      else{const d=hyp(base.x-o.x,base.y-o.y),st=o.spd*dt;o.hd=DM.atan2(base.y-o.y,base.x-o.x);if(d<=st){o.alive=false;const a=G.air4[o.side].find(a=>a.id===o.slot);if(a){a.st='rearm';a.t=REARM_T/fuelF(o.side)}}else{o.x+=(base.x-o.x)/d*st;o.y+=(base.y-o.y)/d*st}}
+      o.z+=((o.kind==='ucav'?6:8)-o.z)*dt*.5;break}
     case 'glide':{const d=hyp(o.tx-o.x,o.ty-o.y),st=o.spd*dt;o.hd=DM.atan2(o.ty-o.y,o.tx-o.x);if(d<=st){impact(o);return}o.x+=(o.tx-o.x)/d*st;o.y+=(o.ty-o.y)/d*st;o.z=o.z0*Math.min(1,d/o.d0);break}
     case 'arm':{const r=ent(o.home);if(r&&r.alive&&r.emit&&r.mode!=='off'&&!o.lost){o.tx=r.x;o.ty=r.y}else if(!o.lost){o.lost=1;o.tx+=RN()*60;o.ty+=RN()*60}
       const d=hyp(o.tx-o.x,o.ty-o.y),st=o.spd*dt;o.hd=DM.atan2(o.ty-o.y,o.tx-o.x);if(d<=st){impact(o);return}o.x+=(o.tx-o.x)/d*st;o.y+=(o.ty-o.y)/d*st;o.z=Math.max(0,o.z0*Math.min(1,d/o.d0));break}
@@ -1250,7 +1300,9 @@ function updAir(o,dt){
   emitTrail(o,dt,age);
 }
 function release(o){const s=o.side;
-  if(o.m==='GLIDE'){for(let i=0;i<2;i++){const tx=o.tx+(i-.5)*24,ty=o.ty+RN()*6;addAir({side:s,kind:'glide',x:o.x,y:o.y,z:o.z,z0:o.z,tx,ty,d0:hyp(tx-o.x,ty-o.y),spd:30,dmg:120,r:26,val:.1,rcs:.2})}}
+  if(o.m==='WING'){for(let i=0;i<2;i++){const tx=o.tx+(i-.5)*60,ty=o.ty+RN()*20,d=hyp(tx-o.x,ty-o.y)||1,k=Math.max(0,(d-520)/d);addAir({side:s,kind:'ucav',x:o.x+(i-.5)*8,y:o.y+(i-.5)*8,z:o.z,base:o.base,m:'UB',tx,ty,rx:o.x+(tx-o.x)*k,ry:o.y+(ty-o.y)*k,spd:95,st:'out',rcs:.12,val:25})}
+    if(s===ME)toast(`<b>Sadık kanat</b>İki ${esc(nameOf(s,'UCAV'))} hedefe ayrıldı.`,'W',true)}
+  else if(o.m==='GLIDE'||o.m==='UB'){for(let i=0;i<2;i++){const tx=o.tx+(i-.5)*24,ty=o.ty+RN()*6;addAir({side:s,kind:'glide',x:o.x,y:o.y,z:o.z,z0:o.z,tx,ty,d0:hyp(tx-o.x,ty-o.y),spd:30,dmg:120,r:26,val:.1,rcs:.2})}}
   else{const tg=G.ents.filter(e=>e.alive&&e.side!==s&&e.cat==='site'&&SITE[e.t].emit&&e.emit&&e.mode!=='off'&&hyp(e.x-o.tx,e.y-o.ty)<900).sort((a,b)=>['LRAD','UPPER','RAD','MRAD','DEC','EW'].indexOf(a.t)-['LRAD','UPPER','RAD','MRAD','DEC','EW'].indexOf(b.t));
     for(let i=0;i<2;i++){const t=tg[i%Math.max(1,tg.length)];if(!t){if(s===ME)toast('SEAD: hedef bölgede yayın yapan radar yok; füzeler atılmadı.','W');break}addAir({side:s,kind:'arm',x:o.x,y:o.y,z:o.z,z0:o.z,tx:t.x,ty:t.y,home:t.id,d0:hyp(t.x-o.x,t.y-o.y),spd:120,dmg:70,r:16,val:.8,rcs:.15})}}
   sfx('missile',o.x,o.y);
@@ -1266,7 +1318,7 @@ function fireIcp(site,tgt){site.aim=DM.atan2(tgt.y-site.y,tgt.x-site.x);site.aim
 function spendIc(s,c){G.cash[s]-=c;G.score[s].sp+=c;G.icp[s].n++;G.icp[s].cost+=c}
 function pkOf(site,t){const s=site.side,tab=PK[site.t]||{};let pk=tab[t.kind]||0;pk+=(axV(s,'ad')-3)*.03;
   const wx=G.wx.rain;if(site.t==='LASER')pk*=1-.65*wx-.25*G.wx.cover*(t.z>CLOUD_Z?1:0);if(SITE[site.t].ir)pk*=1-.25*wx;
-  if(t.kind==='ftr'&&natOf(t.side).stealth)pk*=natOf(t.side).stealth;if(t.kind==='bm'&&t.evade&&t.s>.86)pk-=.1;if(t.man&&t.s>.7)pk-=t.man;if(site.jam)pk*=.55;return clamp(pk,0,.97)}
+  if(t.kind==='ftr'&&natOf(t.side).stealth)pk*=natOf(t.side).stealth;if(t.hyp&&site.t!=='GPI')pk*=.35;if(t.kind==='bm'&&t.evade&&t.s>.86)pk-=.1;if(t.man&&t.s>.7)pk-=t.man;if(site.jam)pk*=.55;return clamp(pk,0,.97)}
 function updIcp(o,dt,age){
   const t=airById(o.tgt);
   if(!t||!t.alive){const alt=G.air.find(q=>q.alive&&q.side!==o.side&&q.kind!=='icp'&&(PK[o.bt]||{})[q.kind]&&q.eng<1&&hyp(q.x-o.x,q.y-o.y)<300);if(alt&&!o.retarget){o.tgt=alt.id;alt.eng++;o.retarget=1;return}o.die=(o.die||0)+dt;if(o.die>.6){o.alive=false;G.fx.push({k:'puff',x:o.x,y:o.y,z:o.z,t:0,life:.6})}}
@@ -1285,6 +1337,7 @@ function kill(t,by){if(t.ord)ordEv(t.ord,'down');if(by&&by.side===ME&&HEAVY.has(
   const site=ent(by.site);if(site)site.kills++;
   G.fx.push({k:'kill',x:t.x,y:t.y,z:t.z,t:0,life:.9,big:HEAVY.has(t.kind)});G.fx.push({k:'smk',x:t.x,y:t.y,z:t.z,fr:(HEAVY.has(t.kind)?14:7)/M_U,t:.05,life:HEAVY.has(t.kind)?16:9,D:HEAVY.has(t.kind)?120:40,rot:Math.random()*6.283,sp:.8+Math.random()*.4});for(let i=0;i<(HEAVY.has(t.kind)?14:7);i++){const a=Math.random()*6.283,v=.3+Math.random()*1.4;G.parts.push({k:'spark',x:t.x,y:t.y,z:t.z,vx:DM.cos(a)*v*KMU*.4,vy:DM.sin(a)*v*KMU*.4,vz:-.15-Math.random()*.4,t:0,life:1.2+Math.random()*1.5,r:1.6,col:'255,210,150'})}sfx('air',t.x,t.y);if(HEAVY.has(t.kind))sfx('boom',t.x,t.y,20);
   if(t.kind!=='decoy'){G.score[s].dmg+=0;}
+  if(t.side!==s&&t.kind==='ucav'){G.score[s].dmg+=20;toast(t.side===ME?`${esc(nameOf(ME,'UCAV'))} düşürüldü (−$20M).`:`Düşman ${esc(nameOf(t.side,'UCAV'))} düşürüldü.`,t.side===ME?'E':'W')}
   if(t.side!==s&&t.kind==='ftr'){G.score[s].dmg+=80;const a=G.air4[t.side].find(a=>a.id===t.slot);if(a)a.st='lost';toast(t.side===ME?`${nameOf(ME,'FTR')} düşürüldü (-$80M).`:`Düşman ${nameOf(t.side,'FTR')} düşürüldü!`,t.side===ME?'E':'W')}
   // debris
   if(t.z<9&&t.kind!=='decoy'){const n=HEAVY.has(t.kind)?6:3;for(let i=0;i<n;i++)G.deb.push({x:t.x,y:t.y,z:t.z,vx:(t.vx||0)*.25+RN()*8,vy:(t.vy||0)*.25+RN()*8,vz:0,m:(t.dmg||20)*.12,side:t.side,hot:1})}
@@ -1295,7 +1348,7 @@ function protoFail(o){if(o.ord)ordEv(o.ord,'fail');o.alive=false;burnup(o);G.fx.
   if(o.side===ME)toast(`<b>Prototip arızası</b>${esc(nameOf(ME,o.k))} uçuşta arızalandı ve düştü.`,'E',true)}
 function motherSplit(o){o.alive=false;if(o.ord){const r=ordOf(o.ord);if(r)r.n+=o.mother-1,r.sp+=o.mother-1}const D=MUN.DRN;G.fx.push({k:'puff',x:o.x,y:o.y,z:o.z,t:0,life:1});
   for(let i=0;i<o.mother;i++){const a=i/o.mother*6.283,tx=o.tx+DM.cos(a)*(18+srnd()*26),ty=o.ty+DM.sin(a)*(18+srnd()*26);
-    const ch=addAir({side:o.side,kind:'drone',k:'DRN',x:o.x+RN()*2,y:o.y+RN()*2,z:o.z,hd:o.hd+RN()*.5,route:[{x:tx,y:ty}],ri:0,spd:D.spd*(.94+srnd()*.12),zc:D.z,dmg:D.dmg,r:D.r,val:D.val,rcs:D.rcs,tx,ty,loiter:0,boostT:.01,man:0,cl:0,pen:0});if(o.ord)ch.ord=o.ord}
+    const ch=addAir({side:o.side,lid:o.lid,kind:'drone',k:'DRN',x:o.x+RN()*2,y:o.y+RN()*2,z:o.z,hd:o.hd+RN()*.5,route:[{x:tx,y:ty}],ri:0,spd:D.spd*(.94+srnd()*.12),zc:D.z,dmg:D.dmg,r:D.r,val:D.val,rcs:D.rcs,tx,ty,loiter:0,boostT:.01,man:0,cl:0,pen:0});if(o.ord)ch.ord=o.ord}
   if(o.side===ME)toast(`<b>Ana gemi ayrıldı</b>${o.mother} kamikaze İHA hedefe dağıldı.`,'W',true);else if(G.trk[ME].has(o.id))toast('<b>Ana gemi ayrıldı</b>Tek iz sekiz İHA\'ya bölündü.','E',true)}
 // EMP: high-power microwave pulse silences hostile batteries, radars and launchers for 30 s
 function empBurst(o){let n=0,mine=0;G.fx.push({k:'emp',x:o.x,y:o.y,r:o.emp,t:0,life:1.6});
@@ -1311,7 +1364,9 @@ function grafBurst(o){const x=o.x,y=o.y,R=o.r||96,hit=[];G.fx.push({k:'graf',x,y
 const isDark=e=>e.blackT>G.time||(e.side&&G.blackS&&G.blackS[e.side]>G.time);
 function burnup(o){for(let i=0;i<5;i++)G.parts.push({k:'spark',x:o.x,y:o.y,z:o.z,vx:gauss()*10,vy:gauss()*10,vz:-.3,t:0,life:.8,r:1.2,col:'255,200,140'})}
 // ---------------- impacts
-function impact(o){const _d0=G.score[o.side]?G.score[o.side].dmg:0;impact0(o);if(o.ord)ordEv(o.ord,'arr',(G.score[o.side]?G.score[o.side].dmg:0)-_d0)}
+// kill marks: what a launcher's munitions destroyed is credited to that launcher
+let HITLID=0;
+function impact(o){const _d0=G.score[o.side]?G.score[o.side].dmg:0;HITLID=o.lid||0;try{impact0(o)}finally{HITLID=0}const dd=(G.score[o.side]?G.score[o.side].dmg:0)-_d0;if(o.lid&&dd>0){const L=ent(o.lid);if(L)L.hits=(L.hits||0)+1}if(o.ord)ordEv(o.ord,'arr',dd)}
 function impact0(o){
   o.alive=false;const x=o.x,y=o.y;
   if(o.emp)empBurst(o);if(o.graf){grafBurst(o);return}
@@ -1328,7 +1383,7 @@ function hurt(e,dm,by,civ){
   if(e.cat==='asset'&&e.hp<e.max*.6)e.burn=1;
   aiHurt(e,dm);
   if(e.side===ME){G.alertT=8;if(e.cat==='asset'&&e.hp>0)voice('own_hit',e.t)}
-  if(e.hp<=0){e.alive=false;e.hp=0;if(e.side===ME)voice(e.cat==='asset'?'own_destroyed':'battery_lost',e.cat==='asset'?e.t:null);boom(e.x,e.y,e.r*1.3,true);if(e.cat==='asset'){e.dead=true;G.ents.push({...e,id:uid++,ruin:true,alive:false});toast(e.side===ME?`${e.nm} yıkıldı.`:`${G.quad?natOf(e.side).n+': ':'Düşman '}${e.nm} yıkıldı.`,e.side===ME?'E':'W');if(e.t==='HQ'){if(G.quad)eliminate(e.side,by);else{G.over=true;G.winner=other(e.side)}}}
+  if(e.hp<=0){if(HITLID&&by&&by!==e.side){const L=ent(HITLID);if(L&&L.side===by)(L.km=L.km||[]).push(e.cat==='asset'?e.t:'~'+e.t)}e.alive=false;e.hp=0;if(e.side===ME)voice(e.cat==='asset'?'own_destroyed':'battery_lost',e.cat==='asset'?e.t:null);boom(e.x,e.y,e.r*1.3,true);if(e.cat==='asset'){e.dead=true;const ru={...e,id:uid++,ruin:true,alive:false,orig:e.id};G.ents.push(ru);e.ruinId=ru.id;e.deadT=G.time;toast(e.side===ME?`${e.nm} yıkıldı.`:`${G.quad?natOf(e.side).n+': ':'Düşman '}${e.nm} yıkıldı.`,e.side===ME?'E':'W');if(e.t==='HQ'){if(G.quad)eliminate(e.side,by);else{G.over=true;G.winner=other(e.side)}}}
     else if(e.side===ME){toast(`${nameOf(ME,e.t)} kaybedildi.`,'E')}
     if(G.sel===e.id)G.sel=null}
 }
@@ -1348,7 +1403,7 @@ function boom(x,y,r,big,dmg){const D=dmg||(big?200:50),fr=(6+Math.sqrt(D)*2.2)/M
 }
 function padBlast(x,y,k){for(let i=0;i<14*k;i++){const a=Math.random()*6.28,v=25+Math.random()*45*k;G.parts.push({k:'smoke',x,y,ox:x,oy:y,z:0,vx:DM.cos(a)*v,vy:DM.sin(a)*v*.75,vz:Math.random()*.06,drag:1.8,t:0,life:3+Math.random()*3,r:5,gr:5*k,a:.38})}for(let i=0;i<8*k;i++){const a=Math.random()*6.28,v=40+Math.random()*60;G.parts.push({k:'spark',x,y,ox:x,oy:y,z:0,vx:DM.cos(a)*v,vy:DM.sin(a)*v,vz:.05,drag:3,t:0,life:.5+Math.random()*.4,r:2.2,col:'255,190,90'})}G.fx.push({k:'flash',x,y,t:0,life:.5,r:44*k})}
 function emitTrail(o,dt,age){if(o.kind==='balloon')return;
-  o.tt=(o.tt||0)+dt;const rate=o.kind==='icp'?.03:HEAVY.has(o.kind)?(o.boost?.025:.08):o.kind==='cruise'?.12:o.kind==='ftr'?.2:o.kind==='arm'?.05:o.kind==='glide'?1:.5;
+  o.tt=(o.tt||0)+dt;const rate=o.kind==='icp'?.03:HEAVY.has(o.kind)?(o.boost?.025:.08):o.kind==='cruise'?(o.hyp?.05:.12):o.kind==='ftr'||o.kind==='ucav'?.2:o.kind==='arm'?.05:o.kind==='glide'?1:.5;
   if(o.tt<rate)return;o.tt=0;
   if(HEAVY.has(o.kind)&&!o.boost&&o.z>60)return;// exo-atmospheric: no smoke
   const boost=o.boost||(o.kind==='icp'&&age<o.boost)||o.kind==='icp';
@@ -1374,7 +1429,7 @@ function sense(){
       const rc=DM.pow(o.rcs||.5,.25);for(const [e,R,m] of sens){const lim=Math.min(R*rc,horizon(m,o.z));const dx=o.x-e.x,dy=o.y-e.y;if(Math.abs(dx)<lim&&Math.abs(dy)<lim&&dx*dx+dy*dy<lim*lim){now.set(o.id,tr.get(o.id)||G.time);break}}}
     for(const o of G.air)if(o.alive&&o.side!==s&&o.kind==='recon'&&false);
     G.trk[s]=now;
-    if(s===ME)for(const [id,t0] of now)if(!tr.has(id)){const o=airById(id);if(o&&o.side!==ME){if(o.kind==='bm'){eva('Uyarı. Balistik füze','bm',5);siren()}else if(o.kind==='hgv'){eva('Uyarı. Hipersonik füze','hgv',5);siren()}else if(o.kind==='ftr')eva('Düşman uçağı','ftr',10);else if(o.kind==='cruise')eva('Seyir füzesi','cm',10);else if(o.kind==='drone')eva('İHA sürüsü','dr',15)}}
+    if(s===ME)for(const [id,t0] of now)if(!tr.has(id)){const o=airById(id);if(o&&o.side!==ME){if(o.kind==='bm'){eva('Uyarı. Balistik füze','bm',5);siren()}else if(o.kind==='hgv'){eva('Uyarı. Hipersonik füze','hgv',5);siren()}else if(o.kind==='ftr')eva('Düşman uçağı','ftr',10);else if(o.kind==='ucav')eva('İnsansız savaş uçağı','ucav',15);else if(o.kind==='cruise')eva(o.hyp?'Hipersonik seyir füzesi':'Seyir füzesi',o.hyp?'hcm':'cm',10);else if(o.kind==='drone')eva('İHA sürüsü','dr',15)}}
   }
 }
 function engage(dt){
@@ -1389,6 +1444,8 @@ function engage(dt){
       if(e.mode==='sel'&&!worthIt(e,o))continue;
       const sc=etaOf(o)*(HEAVY.has(o.kind)?.5:1);if(sc<bs){bs=sc;best=o}}
     if(!best)continue;
+    if(d.hpm){e.cd=d.cd;spendIc(s,d.ic);e.spent+=d.ic;e.aimT=G.time;e.aim=DM.atan2(best.y-e.y,best.x-e.x);G.fx.push({k:'emp',x:e.x,y:e.y,r:R,t:0,life:.9});sfx('laser',e.x,e.y);revealLaunch(e);
+      for(const o of G.air){if(!o.alive||o.side===s||o.kind==='icp'||!(PK.HPM||{})[o.kind]||o.z>d.a1||hyp(o.x-e.x,o.y-e.y)>R)continue;if(srnd()<pkOf(e,o)){const t=o;later(.05+srnd()*.2,()=>{if(t.alive)kill(t,{side:s,site:e.id})})}}continue}
     if(d.gun){e.cd=d.cd;e.mag--;spendIc(s,d.ic);e.spent+=d.ic;e.aim=DM.atan2(best.y-e.y,best.x-e.x);e.aimT=G.time;G.fx.push({k:'tracer',x:e.x,y:e.y,tx:best.x,ty:best.y,tz:best.z,t:0,life:.3});sfx('ciws',e.x,e.y);revealLaunch(e);
       const pk=pkOf(e,best);if(srnd()<pk*.55){later(.15,()=>{if(best.alive)kill(best,{side:s,site:e.id})})}continue}
     if(d.laser){e.cd=d.cd;e.aim=DM.atan2(best.y-e.y,best.x-e.x);e.aimT=G.time;best.eng++;const tgt=best;G.fx.push({k:'beam',site:e.id,tgt:tgt.id,t:0,life:1.3});sfx('laser',e.x,e.y);spendIc(s,d.ic);
@@ -1427,8 +1484,8 @@ function launch(s,k,n,tx,ty,wp,delay=0,share){
   const M=MUN[k];if((G.stock[s][k]||0)<n)return 'Stok yetersiz.';
   const L=(share&&M.from==='DLN'?sites(s,'DLN').filter(e=>e.bt<=0&&!(e.empT>G.time)):launchersFor(s,k)).sort((a,b)=>hyp(a.x-tx,a.y-ty)-hyp(b.x-tx,b.y-ty));if(!L.length)return M.from==='TEL'?'Hazır füze rampası yok.':'Hazır İHA rampası yok.';
   let left=n,used=0;const ord=s===ME?newOrder(k,tx,ty,delay):null;
-  for(const l of L){if(left<=0)break;const take=M.from==='TEL'?1:Math.min(left,share?12:6);left-=take;used+=take;l.rl=SITE[l.t].rl;l.erect=1;
-    later(delay+(M.from==='TEL'?1.1:.25),()=>{if(!l.alive)return;for(let i=0;i<take;i++)later(i*.35,()=>{if(!l.alive)return;const _o=spawnMun(s,k,l.x+(M.from==='TEL'?-3.4/M_U:RN()*.15),l.y+(M.from==='TEL'?.4/M_U:RN()*.15),tx+(i?RN()*12:0),ty+(i?RN()*12:0),wp,l.id);if(ord&&_o){_o.ord=ord.id;ord.sp++}
+  for(const l of L){if(left<=0)break;const take=M.from==='TEL'?1:Math.min(left,share?12:6);left-=take;used+=take;l.rl=SITE[l.t].rl;l.erect=1;l.shots=(l.shots||0)+take;
+    later(delay+(M.from==='TEL'?1.1:.25),()=>{if(!l.alive)return;for(let i=0;i<take;i++)later(i*.35,()=>{if(!l.alive)return;const _o=spawnMun(s,k,l.x+(M.from==='TEL'?-3.4/M_U:RN()*.15),l.y+(M.from==='TEL'?.4/M_U:RN()*.15),tx+(i?RN()*12:0),ty+(i?RN()*12:0),wp,l.id);if(ord&&_o){_o.ord=ord.id;ord.sp++;for(const c of _o.kids||[]){c.ord=ord.id;ord.n++;ord.sp++}}
       sfx(M.kind==='bm'?'ignite':M.kind==='hgv'?'hgvlaunch':M.kind==='cruise'?'cmlaunch':'dronelaunch',l.x,l.y);if(M.from==='TEL'){padBlast(l.x,l.y,1.3);if(s===ME||hyp(l.x-cam.x,l.y-cam.y)<700/cam.z)shake(.35)}});l.fireT=G.time;if(M.from==='TEL')revealLaunch(l);later(4,()=>{l.erect=0})})}
   G.stock[s][k]-=used;G.score[s].sp+=M.c*used;if(ord){ord.n=used;ord.cost=costOf(s,k)*used;voice(M.from==='DLN'?'drones_launched':'launch')}
   if(s!==ME&&(k==='BM'||k==='HGV')){const ts=sideOf(tx,ty);if(!G.quad||ts===ME)toast(`Uydu uyarısı: ${natOf(s).n} ${nameOf(s,k)} fırlattı${G.quad?', hedef sensin':''}.`,'E');else if(Math.random()<.5)toast(`Uydu: ${natOf(s).n}, ${natOf(ts).n} üzerine ${nameOf(s,k)} fırlattı.`,'')}
@@ -1437,7 +1494,7 @@ function launch(s,k,n,tx,ty,wp,delay=0,share){
 function flightTime(s,k,x0,y0,tx,ty,wp){const M=MUN[k];let d=0,px=x0,py=y0;for(const p of [...(wp||[]),{x:tx,y:ty}]){d+=hyp(p.x-px,p.y-py);px=p.x;py=p.y}
   if(M.kind==='bm')return (12+hyp(tx-x0,ty-y0)/170)/(M.spdK||1);if(M.kind==='hgv')return (9+hyp(tx-x0,ty-y0)/260)/(M.spdK||1);return d/M.spd+(M.from==='TEL'?1.1:.3)}
 function sortie(s,m,tx,ty){const ab=assets(s).filter(a=>a.t==='AIRB').sort((a,b)=>hyp(a.x-tx,a.y-ty)-hyp(b.x-tx,b.y-ty))[0];if(!ab)return 'Hava üssü yok.';const a=G.air4[s].find(a=>a.st==='ready');if(!a)return 'Hazır uçak yok.';
-  const d=hyp(tx-ab.x,ty-ab.y)||1,stand=m==='SEAD'?1600:1200,k=Math.max(0,(d-stand)/d);a.st='sortie';G.cash[s]-=.5;G.score[s].sp+=.5;
+  const c=(SORT[m]||SORT.GLIDE).c;if(G.cash[s]<c)return 'Kasa yetersiz.';const d=hyp(tx-ab.x,ty-ab.y)||1,stand=m==='SEAD'?1600:m==='WING'?2400:1200,k=Math.max(0,(d-stand)/d);a.st='sortie';G.cash[s]-=c;G.score[s].sp+=c;
   addAir({side:s,kind:'ftr',x:ab.x,y:ab.y,z:.2,base:ab,slot:a.id,m,tx,ty,rx:ab.x+(tx-ab.x)*k,ry:ab.y+(ty-ab.y)*k,spd:110,st:'out',rcs:1,val:80});sfx('jet',ab.x,ab.y);return ''}
 function manualEngage(site,o){if(!site||!site.alive)return 'Batarya yok.';const d=SITE[site.t];if(!d.rng||d.ew)return 'Bu sistem önleme yapamaz.';if(site.mag<=0)return 'Şarjör boş.';
   if(!(PK[site.t]||{})[o.kind])return `${nameOf(site.side,site.t)} bu hedefe etkisiz.`;if(o.z<d.a0||o.z>d.a1)return `İrtifa zarfı dışında (${f1(o.z)} km).`;if(hyp(o.x-site.x,o.y-site.y)>rngOf(site.side,site.t))return 'Menzil dışında.';
@@ -1460,10 +1517,11 @@ const CMD={
   sell:(s,id)=>{const e=ent(id);if(!e||!e.alive||e.side!==s||e.cat!=='site')return 'Satılacak sistem yok.';G.cash[s]+=costOf(s,e.t)*.5;e.alive=false;return ''},
   designs:L=>{loadCustom(L,!!G.replay);for(const id of CUSTOM)for(const s of G.sides)if(G.stock[s][id]==null)G.stock[s][id]=0},
   auto:v=>{G.autoW=!!v},
+  rebuild:(s,id)=>rebuild(s,id),
 };
 // Side-stamped execution: the side comes from who sent the order (the server stamps it online), never from the order itself,
 // so a player can only ever build, fire or switch off their own things.
-const SIDED={build:1,buy:1,launch:1,sortie:1,sat:1,sell:1};
+const SIDED={build:1,buy:1,launch:1,sortie:1,sat:1,sell:1,rebuild:1};
 function runCmd(side,k,a){if(!CMD[k])return '';a=a||[];if(SIDED[k])a[0]=side;
   if(k==='go')return CMD.go(side);
   if(k==='engage'){const e=ent(a[0]);if(!e||e.side!==side)return 'Batarya yok.'}
@@ -1532,6 +1590,11 @@ function survOf(s,w,o,t){const M=MUN[w];if(!M)return 1;let p=1;
     if(M.kind==='bm'||M.kind==='hgv')near=hyp(g.x-t.x,g.y-t.y)<R;else{const L=hyp(t.x-o.x,t.y-o.y)||1,u=clamp(((g.x-o.x)*(t.x-o.x)+(g.y-o.y)*(t.y-o.y))/(L*L),0,1);near=hyp(o.x+(t.x-o.x)*u-g.x,o.y+(t.y-o.y)*u-g.y)<R}
     if(near)p*=1-Math.min(.9,pk*(M.dec?.6:.8))}
   return p}
+// rebuild what was lost once the dust settles, richest first, and only with money to spare
+function aiRebuild(s,K){const A=G.ai[s];A.rb=(A.rb||0)-K.think;if(A.rb>0)return;A.rb=10;if(G.ents.some(e=>e.side===s&&e.rbAt))return;
+  const val=e=>(ASSET_DEF[e.t].inc*120+(e.t==='FAB'?160:e.t==='PWR'?70:e.t==='DEPO'?40:0))/rebuildCost(e.t);
+  const L=G.ents.filter(e=>e.side===s&&e.cat==='asset'&&!e.ruin&&e.dead&&e.t!=='HQ'&&G.time-(e.deadT||0)>K.react[1]*4).sort((p,q)=>val(q)-val(p)||p.id-q.id);
+  const e=L[0];if(e&&G.cash[s]>rebuildCost(e.t)+K.reserve*2+150&&srnd()>K.mist)rebuild(s,e.id)}
 function aiHurt(e,dm){if(HUM(e.side)||!G.ai||!G.ai[e.side])return;const A=G.ai[e.side];(A.hot=A.hot||{})[e.id]=(A.hot[e.id]||0)+dm;A.hitT=G.time}
 function aiThink(s,dt){
   const A=G.ai[s],K=aiK();if(!A.th){A.th={bm:0,cm:0,dr:0};A.hot=A.hot||{};A.seen={};A.plan=[];A.cbT={};A.dt=0}
@@ -1545,12 +1608,13 @@ function aiThink(s,dt){
   if(A.plan.length>20)A.plan=A.plan.filter(P=>!P.done);
   A.t-=dt;if(A.t>0)return;A.t=K.think;const D=DIFF[G.diff];
   // perception: what is inbound, at which facility
-  for(const k in A.th)A.th[k]*=.985;for(const id in A.hot){A.hot[id]*=.97;if(A.hot[id]<1)delete A.hot[id]}
+  for(const k in A.th)A.th[k]*=.985;if(A.hg)A.hg*=.985;for(const id in A.hot){A.hot[id]*=.97;if(A.hot[id]<1)delete A.hot[id]}
   for(const id of G.trk[s].keys()){if(A.seen[id])continue;const o=airById(id);if(!o||o.side===s||o.kind==='icp'||o.kind==='recon'||o.kind==='balloon')continue;const ip=impactPt(o);if(!ip)continue;A.seen[id]=1;
-    const k=LAYER_OF(o);A.th[k]+=1;const a=assets(s).find(a=>hyp(a.x-ip.x,a.y-ip.y)<a.r+90);if(a)A.hot[a.id]=(A.hot[a.id]||0)+(k==='bm'?70:k==='cm'?45:12)}
+    const k=LAYER_OF(o);A.th[k]+=1;if(o.kind==='hgv'||o.hyp)A.hg=(A.hg||0)+1;const a=assets(s).find(a=>hyp(a.x-ip.x,a.y-ip.y)<a.r+90);if(a)A.hot[a.id]=(A.hot[a.id]||0)+(k==='bm'?70:k==='cm'?45:12)}
   if(Object.keys(A.seen).length>600)A.seen={};
   aiBuy(s,K,D);
   if(G.phase==='prep')return;
+  aiRebuild(s,K);
   aiDefend(s,K);
   if(K.cb&&srnd()<K.cb)aiCounter(s,K);
   // race: if the rival keeps hammering our capital while leaving theirs without ballistic cover, answer in kind
@@ -1566,6 +1630,7 @@ function aiDefend(s,K){const A=G.ai[s];A.dt-=K.think;if(A.dt>0)return;A.dt=K.thi
   // 1) ballistic fire at the capital: an exo-atmospheric battery first, then a second terminal layer; save up for them
   if(hq&&(A.th.bm>2.5||(A.hot[hq.id]||0)>150)){
     const rich=G.cash[s]>2000?1:0,depth=Math.min(7,K.depth+Math.floor(A.th.bm/6)+rich),ups=has('UPPER'),upWant=G.diff==='easy'?0:Math.min(4,1+(A.th.bm>12?1:0)+(A.th.bm>24?1:0)+rich);
+    if(G.diff!=='easy'&&(A.hg||0)>=2&&!has('GPI')&&put('GPI',hq))return;
     if(ups<upWant){if(put('UPPER',hq))return;if(!ups&&G.cash[s]<costOf(s,'UPPER')+R&&sites(s,'TEL').length>=2)return}
     if(near(hq,['LRAD','UPPER'])<depth){if(put('LRAD',hq))return}}
   // 2) launchers to hit back with
@@ -1574,7 +1639,8 @@ function aiDefend(s,K){const A=G.ai[s];A.dt-=K.think;if(A.dt>0)return;A.dt=K.thi
   // 3) whatever facility is being hit gets the layer that matches what hits it
   const hot=assets(s).filter(a=>(A.hot[a.id]||0)>40).sort((p,q)=>(A.hot[q.id]||0)-(A.hot[p.id]||0));
   for(const a of hot.slice(0,2)){
-    if(A.th.dr>2&&near(a,['CIWS','LASER','IDR','SHORAD'],1.3)<2&&has('CIWS')+has('IDR')<14&&put(srnd()<.35?'IDR':'CIWS',a))return;
+    if(A.th.dr>6&&G.diff!=='easy'&&near(a,['HPM'],1.2)<1&&has('HPM')<4&&put('HPM',a))return;
+    if(A.th.dr>2&&near(a,['CIWS','LASER','IDR','HPM','SHORAD'],1.3)<2&&has('CIWS')+has('IDR')<14&&put(srnd()<.35?'IDR':'CIWS',a))return;
     if(A.th.cm>1.5&&near(a,['MRAD','LRAD','SHORAD'])<1&&put(G.cash[s]>costOf(s,'MRAD')+R?'MRAD':'SHORAD',a))return;
     if(A.th.bm>2&&a.t!=='HQ'&&near(a,['LRAD','UPPER'])<1&&ASSET_DEF[a.t].v>=140&&put('LRAD',a))return}
   if(A.th.dr>8&&!has('EW')&&hq&&put('EW',hq))return;
@@ -1596,7 +1662,7 @@ function aiExec(s,P){const K=aiK();
     if(launchersFor(s,'CM').length&&G.stock[s].CM>0){launch(s,'CM',1,P.x,P.y,[]);return}
     if(launchersFor(s,'DRN').length&&G.stock[s].DRN>=3)launch(s,'DRN',4,P.x,P.y,[])}}
 function aiBuy(s,K,D){const A=G.ai[s];A.buy-=K.think;if(A.buy>0)return;A.buy=8;const fv=a=>axV(s,a)-3;const hard=G.diff==='hard',easy=G.diff==='easy';
-  const want={DRN:Math.round(12*D.sz*DM.pow(AXF(s,'uav'),3)),CM:Math.max(1,Math.round(3*D.sz+fv('cm'))),BM:Math.max(1,(easy?1:K.tel+1)+fv('bm')),MALD:easy?0:3,ARMD:hard?3:1,HGV:(hard?1:0)+(axV(s,'cm')>=4&&!easy?1:0)};
+  const want={DRN:Math.round(12*D.sz*DM.pow(AXF(s,'uav'),3)),CM:Math.max(1,Math.round(3*D.sz+fv('cm'))),BM:Math.max(1,(easy?1:K.tel+1)+fv('bm')),MALD:easy?0:3,ARMD:hard?3:1,HGV:(hard?1:0)+(axV(s,'cm')>=4&&!easy?1:0),DRN_S:easy?0:1,CM_HX:hard&&G.phase==='war'&&G.cash[s]>500?1:0};
   for(const [k,n] of Object.entries(want))if((G.stock[s][k]||0)<n&&G.cash[s]>costOf(s,k)+K.reserve*.6)buy(s,k,1);
   if(!easy&&G.phase==='war'&&srnd()<.22){const xk=['EMP','GRAF','MOTH','BAL'][(srnd()*4)|0];if(!(G.stock[s][xk]>0)&&G.cash[s]>costOf(s,xk)+80)buy(s,xk,1)}}
 function aiWave(s,K,D){const A=G.ai[s];A.wave++;A.next=(G.quad?18+srnd()*6:K.gap[0]+srnd()*(K.gap[1]-K.gap[0]))*(G.quad?D.gap:1);
@@ -1625,11 +1691,13 @@ function aiWave(s,K,D){const A=G.ai[s];A.wave++;A.next=(G.quad?18+srnd()*6:K.gap
   if(w>=3&&G.stock[s].EMP>0){const r=known.find(g=>['LRAD','RAD','UPPER','MRAD','SHORAD'].includes(g.t));if(r)pkg.unshift(['EMP',1,{x:r.x,y:r.y}])}
   if(w>=3&&G.stock[s].GRAF>0){const p=tgts.find(a=>a.t==='PWR')||tgts.find(a=>a.t==='REFN');if(p)pkg.unshift(['GRAF',1,{x:p.x,y:p.y}])}
   if(w>=2&&G.stock[s].MOTH>0)pkg.unshift(['MOTH',1,TP]);
+  if(w>=2&&G.stock[s].DRN_S>0&&launchersFor(s,'DRN_S').length)pkg.push(['DRN_S',1,TP]);
+  if(G.stock[s].CM_HX>0&&(Ta.t==='HQ'||T.sB<.5)&&launchersFor(s,'CM_HX').length)pkg.push(['CM_HX',1,TP]);
   if(G.stock[s].BAL>0&&!G.air.some(o=>o.alive&&o.side===s&&o.kind==='balloon')){const c=tgts[(srnd()*tgts.length)|0];launch(s,'BAL',1,c.x+RN()*120,c.y+RN()*120,[])}
-  const rk=known.find(g=>['LRAD','RAD','UPPER','MRAD'].includes(g.t));if(w>=3&&rk&&G.diff!=='easy')sortie(s,'SEAD',rk.x,rk.y);else if(w>=4&&srnd()<.5)sortie(s,'GLIDE',second.x,second.y);
+  const rk=known.find(g=>['LRAD','RAD','UPPER','MRAD'].includes(g.t));if(w>=3&&rk&&G.diff!=='easy')sortie(s,'SEAD',rk.x,rk.y);else if(w>=4&&srnd()<.5)sortie(s,G.diff==='hard'&&srnd()<.4?'WING':'GLIDE',second.x,second.y);
   // time-on-target for medium/hard: everything arrives together
   const fts=pkg.map(([k,n,p])=>flightTime(s,k,o0.x,o0.y,p.x,p.y,routeAround(s,k,o0,p)));const mx=Math.max(...fts,0);
-  pkg.forEach(([k,n,p],i)=>{const vs=(VAR[k]||[]).map(v=>v[0]).filter(v=>!(G.diff==='easy'&&/_(M|D|H)$/.test(v)));const v=vs.length&&srnd()<.7?vs[(srnd()*vs.length)|0]:k;if(v!==k){G.stock[s][k]-=n;G.stock[s][v]=(G.stock[s][v]||0)+n}const wp=routeAround(s,v,o0,p);launch(s,v,n,p.x,p.y,wp,G.diff==='easy'?i*6:mx-fts[i])});
+  pkg.forEach(([k,n,p],i)=>{const vs=(VAR[k]||[]).map(v=>v[0]).filter(v=>!MUN[v].fut&&!(G.diff==='easy'&&/_(M|D|H)$/.test(v)));const v=vs.length&&srnd()<.7?vs[(srnd()*vs.length)|0]:k;if(v!==k){G.stock[s][k]-=n;G.stock[s][v]=(G.stock[s][v]||0)+n}const wp=routeAround(s,v,o0,p);launch(s,v,n,p.x,p.y,wp,G.diff==='easy'?i*6:mx-fts[i])});
 }
 // cruise/drones: dog-leg around known air defence
 function routeAround(s,k,o,p){const M=MUN[k];if(M.from!=='DLN'&&M.kind!=='cruise')return [];const known=[...G.ghost[s].values()].filter(g=>['MRAD','LRAD','SHORAD'].includes(g.t));
@@ -1642,7 +1710,7 @@ function update(dt){
   if(G.replay)applyCmds();else if(G.net)netApply();G.tick++;
   if(G.phase==='prep'){if(!G.freezePrep)G.prepT-=dt;if(G.prepT<=0)startWar()}else G.time+=dt;
   for(let g=0;g<4;g++){const due=G.later.filter(q=>q.at<=G.time);if(!due.length)break;G.later=G.later.filter(q=>q.at>G.time);for(const q of due)q.fn()}
-  for(const s of G.sides){if(G.out[s])continue;G.cash[s]+=income(s)*dt;G.prod[s]=Math.min(PROD_CAP,G.prod[s]+prodRate(s)*dt);for(const a of G.air4[s])if(a.st==='rearm'){a.t-=dt;if(a.t<=0)a.st='ready'}}
+  for(const s of G.sides){if(G.out[s])continue;G.cash[s]+=income(s)*dt;G.prod[s]=Math.min(capOf(s),G.prod[s]+prodRate(s)*dt);for(const a of G.air4[s])if(a.st==='rearm'){a.t-=dt;if(a.t<=0)a.st='ready'}}
   for(const e of G.ents){if(!e.alive)continue;if(e.bt>0)e.bt-=dt;if(e.rl>0)e.rl-=dt;if(e.hit>0)e.hit-=dt;if(e.flash>0)e.flash-=dt;
     if(e.burn&&Math.random()<dt*3){const q=V7?SC7*2.2:1;G.parts.push({k:'smoke',x:e.x+gauss()*e.r*.4*q,y:e.y+gauss()*e.r*.4*q,z:.02,vx:G.wx.wind.x,vy:G.wx.wind.y,vz:.06,t:0,life:8,r:5*q,gr:3*q,a:.45,dark:1,fire:1})}}
   for(const o of G.air)if(o.alive)updAir(o,dt);
@@ -1650,7 +1718,7 @@ function update(dt){
   updDebris(dt);
   senseT+=dt;if(senseT>=.15){senseT=0;sense()}
   if(G.phase==='war')engage(dt);
-  intelT+=dt;if(intelT>=1){intelT=0;intel();satelliteAI();ordTick()}
+  intelT+=dt;if(intelT>=1){intelT=0;intel();satelliteAI();ordTick();rebuildTick()}
   for(const p of G.parts){p.t+=dt;const dr=p.drag?DM.exp(-p.drag*dt):1;p.vx*=dr;p.vy*=dr;p.x+=p.vx*dt;p.y+=p.vy*dt;p.z=Math.max(0,p.z+(p.vz||0)*dt);if(p.gr)p.r+=p.gr*dt}
   G.parts=G.parts.filter(p=>p.t<p.life);if(G.parts.length>2200)G.parts.splice(0,G.parts.length-2200);
   for(const f of G.fx)f.t+=dt;G.fx=G.fx.filter(f=>f.t<f.life);
@@ -1744,7 +1812,8 @@ const AIRK=1.2;
 // when something becomes too small on screen it turns into a map symbol.
 const V7KEYS=['S_RAD_base','S_RAD_ant','S_CIWS_base','S_CIWS_tur','S_SHORAD_base','S_SHORAD_tur','S_MRAD_ln','S_MRAD_rad','S_MRAD_cmd','S_LRAD_ln','S_LRAD_rad','S_UPPER_ln','S_UPPER_rad','S_LASER_base','S_LASER_tur','S_IDR','S_EW_base','S_EW_ant','S_DEC','S_TEL_down','S_TEL_up','S_DLN_closed','S_DLN_open',
  'T_HQ','T_REFN','T_PWR','T_AIRB','T_FAB','T_DEPO','T_FUEL','T_COMM','T_MIL','K_1','K_2','K_3','K_4','K_5','P_orman','P_tepe','P_acik','P_kiyi',
- 'H_BM','H_HGV','H_CM','H_DRN','H_ARMD','H_RCN','H_JAM','H_FTR','H_ICP','H_BAL','H_MOTH','H_GLIDE'];
+ 'H_BM','H_HGV','H_CM','H_DRN','H_ARMD','H_RCN','H_JAM','H_FTR','H_ICP','H_BAL','H_MOTH','H_GLIDE',
+ 'S_HPM_base','S_HPM_ant','S_GPI_ln','S_GPI_rad','H_KAAN','H_UCAV','H_SWRM','H_HCM'];
 const IMGKEYS=['m0','m0s','mat','m4','m4s','mat4','g1','g2','g3','g4','g5','g0','g10','g12','g13','b1','b2','b3','b4','b5','b6','b7','b8','b9','k1','k2','k3','k4','k5',
  'c1','c1n','ra','rb','c2','c3','c4a','c4b','c4c','c5a','c5b','c6a','c6b','c7','c8','c9','c10','c10e','c11','c12','d1','d2','d3','d4','d5','d6','d7','d8','d9','e1','e2','e3','e4','e5','w1','w2','w3','w4','s1','s2','s3','s4','n0','n0s',...V7KEYS.map(k=>'v7/'+k)];
 const FXALIAS={e1:'X_crater2',e2:'X_fire1',e3:'X_air',e5:'X_fire2',s1:'X_smoke1',s2:'X_smoke2',s3:'X_smoke3',s4:'X_smoke4'};
@@ -1774,7 +1843,12 @@ const P7={RAD:[['S_RAD_base',0,0,2000],['S_RAD_ant',20,-320,1300,0,'spin',.5,.5]
  LASER:[['S_LASER_base',0,0,2000],['S_LASER_tur',40,-360,660,0,'aim',.48,.52]],
  IDR:[['S_IDR',0,0,1900]],EW:[['S_EW_base',0,0,2000],['S_EW_ant',40,-400,1200,0,'spin2',.48,.5]],
  DEC:[['S_DEC',-470,0,1700,-.22],['S_DEC',480,140,1700,.25]],
- TEL:[['S_TEL_down',0,0,2100,-Math.PI/2,'tel']],DLN:[['S_DLN_closed',0,0,2000,0,'dln']]};
+ TEL:[['S_TEL_down',0,0,2100,-Math.PI/2,'tel']],DLN:[['S_DLN_closed',0,0,2000,0,'dln']],
+ HPM:[['S_HPM_base',0,0,2000],['S_HPM_ant',40,-380,1100,0,'aim',.5,.5]],
+ GPI:[['S_GPI_rad',0,-700,1700],['S_GPI_ln',-640,520,1800,-.28],['S_GPI_ln',660,560,1800,.3]]};
+// new systems keep a stand-in look until their own pictures are added
+const P7FB={HPM:[['S_EW_base',0,0,2000],['S_LASER_tur',40,-380,700,0,'aim',.48,.52]],GPI:P7.UPPER};
+function p7Of(t){const P=P7[t];if(!P||!P7FB[t])return P;return P.every(q=>ready(v7(q[0])))?P:P7FB[t]}
 const A7={HQ:['T_HQ',7200],REFN:['T_REFN',8000],PWR:['T_PWR',7600],AIRB:['T_AIRB',10000],FAB:['T_FAB',7200],DEPO:['T_DEPO',7000],FUEL:['T_FUEL',6600],COMM:['T_COMM',6200],MIL:['T_MIL',7200]};
 const SC7=1.6,PAD7=5200*SC7;
 const v7=k=>'v7/'+k;
@@ -1788,7 +1862,7 @@ function partKey(e,k,an){if(an==='tel'&&e&&(e.erect||G&&G.time-(e.fireT??-99)<5)
 function drawV7(e,x,y,alpha,ruin,time){ctx.setTransform(DPR,0,0,DPR,0,0);const z=cam.z/M_U*SC7,zp=cam.z/M_U;const sx=(x-cam.x)*cam.z+CW/2+SHX,sy=(y-cam.y)*cam.z+CH/2+SHY;
   if(e.cat==='asset'){const d=e.t==='CITY'?['K_'+(((e.var||0)%5)+1),9000]:A7[e.t];if(!d)return;const k=v7(d[0]);if(!ready(k))return;const S=d[1]*z;if(sx+S<0||sx-S>CW||sy+S<0||sy-S>CH){worldTf();return}
     ctx.globalAlpha=alpha;ctx.drawImage(ruin?ruinOf(k):IMG[k],sx-S/2,sy-S/2,S,S);ctx.globalAlpha=1;worldTf();return}
-  const parts=P7[e.t];if(!parts){worldTf();return}const pk=v7(e.pad||'P_acik'),PS=PAD7*zp;if(sx+PS<0||sx-PS>CW||sy+PS<0||sy-PS>CH){worldTf();return}
+  const parts=p7Of(e.t);if(!parts){worldTf();return}const pk=v7(e.pad||'P_acik'),PS=PAD7*zp;if(sx+PS<0||sx-PS>CW||sy+PS<0||sy-PS>CH){worldTf();return}
   const rot=siteRot(e);ctx.globalAlpha=alpha*(e.pad===undefined&&!G.slots?.6:1);if(ready(pk))ctx.drawImage(IMG[pk],sx-PS/2,sy-PS/2,PS,PS);
   const L=[];for(const [k0,dx,dy,fr,r0,an,pvx,pvy] of parts){const k=v7(partKey(e,k0,an));if(!ready(k))continue;const c=DM.cos(rot),s_=DM.sin(rot);const px_=sx+(dx*c-dy*s_)*z,py_=sy+(dx*s_+dy*c)*z;
     const a=an&&an!=='tel'&&an!=='dln'?partAngle(e,an,time):rot+(r0||0);L.push([k,px_,py_,fr*z,a,pvx??.5,pvy??.5])}
@@ -1834,7 +1908,7 @@ function drawCrew(e,a){if(a<.02)return;const now=G.time;const dt=crewT==null?0:M
     ctx.globalAlpha=a;ctx.save();ctx.translate(sx,sy+bob);if(c.flip)ctx.scale(-1,1);ctx.drawImage(im,-W/2,-H/2,W,H);ctx.restore()}
   ctx.globalAlpha=1;crewT=now;worldTf()}
 const SYMC={HQ:'KMR',CITY:'ŞHR',PWR:'ENJ',REFN:'RAF',AIRB:'HVÜ',FAB:'FAB',DEPO:'CPH',FUEL:'YKT',COMM:'HBR',MIL:'KŞL',
- RAD:'RDR',CIWS:'YST',SHORAD:'KMH',MRAD:'OMH',LRAD:'UMH',UPPER:'ÜKH',LASER:'LZR',IDR:'Öİ',EW:'EH',DEC:'MKT',TEL:'FRP',DLN:'İHA'};
+ RAD:'RDR',CIWS:'YST',SHORAD:'KMH',MRAD:'OMH',LRAD:'UMH',UPPER:'ÜKH',LASER:'LZR',IDR:'Öİ',EW:'EH',DEC:'MKT',TEL:'FRP',DLN:'İHA',HPM:'MDG',GPI:'SÖN'};
 // map symbol: friendly = rectangle, hostile = diamond (assets are larger)
 // map symbol: a small plate (friendly square, hostile diamond) carrying a pictogram of what it is
 const GLYPH={HQ:c=>{c.beginPath();for(let i=0;i<10;i++){const r=i%2?2.3:5.4,a=-Math.PI/2+i*Math.PI/5;c.lineTo(DM.cos(a)*r,DM.sin(a)*r)}c.closePath();c.fill()},
@@ -1869,10 +1943,10 @@ function drawCraters(V){if(!G.craters)return;for(const c of G.craters){const fr=
   const g=ctx.createRadialGradient(c.x,c.y,0,c.x,c.y,R);g.addColorStop(0,'rgba(14,11,8,.62)');g.addColorStop(.5,'rgba(22,17,12,.32)');g.addColorStop(1,'rgba(22,17,12,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(c.x,c.y,R,0,7);ctx.fill();
   if(ready('e1')){const S=fr*2.6;if(S*cam.z>10){ctx.save();ctx.translate(c.x,c.y);ctx.rotate(c.rot||0);ctx.drawImage(IMG.e1,-S/2,-S/2,S,S);ctx.restore()}}}}
 // air sprites: local reference length (art units) and true length in metres
-const DIMG={drone:'d1',armd:'d2',recon:'d4',jam:'d4',bm:'d5',decoy:'d5',cruise:'d6',mald:'d6',arm:'d6',glide:'d6',hgv:'d7',icp:'d8',ftr:'d9'};
+const DIMG={ucav:'d9',drone:'d1',armd:'d2',recon:'d4',jam:'d4',bm:'d5',decoy:'d5',cruise:'d6',mald:'d6',arm:'d6',glide:'d6',hgv:'d7',icp:'d8',ftr:'d9'};
 const DSPR={DRN:'d1',DRN_L:'d1',DRN_J:'d3',ARMD:'d2',RCN:'d4',JAM:'d4'};
-const AREF={balloon:18,drone:17,armd:14,recon:20,jam:20,bm:19,decoy:19,cruise:14,mald:8,arm:10,glide:7,hgv:16,icp:10,ftr:28};
-const ATRUE={balloon:30,drone:3.5,armd:2.3,recon:6,jam:6,bm:11,decoy:11,cruise:6.2,mald:2.8,arm:4,glide:3.9,hgv:8,icp:5.2,ftr:15.7};
+const AREF={ucav:20,balloon:18,drone:17,armd:14,recon:20,jam:20,bm:19,decoy:19,cruise:14,mald:8,arm:10,glide:7,hgv:16,icp:10,ftr:28};
+const ATRUE={ucav:14,balloon:30,drone:3.5,armd:2.3,recon:6,jam:6,bm:11,decoy:11,cruise:6.2,mald:2.8,arm:4,glide:3.9,hgv:8,icp:5.2,ftr:15.7};
 function airS(o,base){const k=o.kind,ref=AREF[k]||14,tru=(ATRUE[k]||5)/M_U/ref;return Math.max(tru,base*AIRK*(1+Math.min(.5,(o.z||0)/120))/cam.z)}
 const scrK=b=>Math.max(.02,b/cam.z);
 
@@ -2087,8 +2161,12 @@ function plume(c,x,len,w,k,t){ // flame behind nozzle at x, pointing -x
 // air object sprites (local coords, heading along +x)
 
 const H7={drone:'H_DRN',armd:'H_ARMD',recon:'H_RCN',jam:'H_JAM',bm:'H_BM',decoy:'H_BM',cruise:'H_CM',mald:'H_CM',arm:'H_ICP',glide:'H_GLIDE',hgv:'H_HGV',icp:'H_ICP',ftr:'H_FTR',balloon:'H_BAL'};
+function airSpr(o){const t=(k,f)=>ready(v7(k))?[v7(k),f]:null;
+  if(o.kind==='ftr'&&G.nat[o.side]==='TR')return t('H_KAAN',1);if(o.kind==='ucav')return t('H_UCAV',1)||t('H_FTR',.62);
+  if(o.k==='DRN_S')return t('H_SWRM',.5)||t('H_DRN',.45);if(o.hyp)return t('H_HCM',1.1)||t('H_HGV',.95);return null}
 function drawAirObj(c,o,t,sideCol){
-  const k=o.kind;{const hk=v7(o.k==='MOTH'?'H_MOTH':k==='hgv'&&o.boost?'H_BM':H7[k]||'');if(H7[k]&&ready(hk)){const im=IMG[hk],L=(AREF[k]||14)*(k==='balloon'?1.4:1.25),s=L/Math.max(im.naturalWidth,im.naturalHeight);if(k==='balloon')c.rotate(-(o.hd||0));c.drawImage(im,-im.naturalWidth*s/2,-im.naturalHeight*s/2,im.naturalWidth*s,im.naturalHeight*s);return}}
+  const k=o.kind;{const xs=airSpr(o);if(xs){const im=IMG[xs[0]],L=(AREF[k]||14)*1.25*xs[1],s=L/Math.max(im.naturalWidth,im.naturalHeight);c.drawImage(im,-im.naturalWidth*s/2,-im.naturalHeight*s/2,im.naturalWidth*s,im.naturalHeight*s);return}}
+  {const hk=v7(o.k==='MOTH'?'H_MOTH':k==='hgv'&&o.boost?'H_BM':H7[k]||'');if(H7[k]&&ready(hk)){const im=IMG[hk],L=(AREF[k]||14)*(k==='balloon'?1.4:1.25),s=L/Math.max(im.naturalWidth,im.naturalHeight);if(k==='balloon')c.rotate(-(o.hd||0));c.drawImage(im,-im.naturalWidth*s/2,-im.naturalHeight*s/2,im.naturalWidth*s,im.naturalHeight*s);return}}
   {const dk=(o.k&&DSPR[o.k])||(k==='hgv'&&o.boost?'d5':DIMG[k]);if(dk&&ready(dk)){const im=IMG[dk],L=AREF[k]||14,s=L/Math.max(im.naturalWidth,im.naturalHeight);c.save();c.rotate(Math.PI/2);c.drawImage(im,-im.naturalWidth*s/2,-im.naturalHeight*s/2,im.naturalWidth*s,im.naturalHeight*s);c.restore();return}}
   if(k==='bm'||k==='decoy'){drawMissile(c,{len:19,w:2.7,col:'#9a9e8e',hi:'#c8cbbd',lo:'#4f5347',stripe:'rgba(0,0,0,.28)',stripes:[.62],stage:.42,fs:2.6,tip:'#6d7163',fin:'#3e4237'})}
   else if(k==='hgv'){if(o.boost){drawMissile(c,{len:20,w:3,col:'#8f9384',hi:'#bfc2b4',lo:'#4a4e43',stage:.5,fs:2.8,fin:'#3a3e34'})}else{c.fillStyle='#24262a';c.beginPath();c.moveTo(9,0);c.lineTo(-7,-5);c.lineTo(-8,0);c.lineTo(-7,5);c.closePath();c.fill();c.fillStyle='rgba(255,160,90,.85)';c.beginPath();c.moveTo(9,0);c.lineTo(3,-2.2);c.lineTo(3,2.2);c.closePath();c.fill()}}
@@ -2160,6 +2238,18 @@ function worldView(){const hw=CW/2/cam.z,hh=CH/2/cam.z;return{x0:cam.x-hw-120,x1
 const inView=(V,x,y,m=0)=>x>V.x0-m&&x<V.x1+m&&y>V.y0-m&&y<V.y1+m;
 let hover=null,mode=null,boxSel=null,mDown=null;
 function visibleToW(o){return o.side===ME||G.trk[ME].has(o.id)}
+// what became of my strikes on each target: inbound now, and the latest finished one
+function strikeMap(){const m=new Map(),L=G.orders||[];if(!L.length)return m;for(const a of G.air){if(!a.alive||!a.ord||a.side!==ME||a.kind==='decoy')continue;const o=ordOf(a.ord);if(!o||!o.tg)continue;const r=m.get(o.tg)||{inb:0};r.inb++;m.set(o.tg,r)}
+  for(const o of L){if(!o.tg||!o.done)continue;const r=m.get(o.tg)||{inb:0};if(!r.last){r.last=o;m.set(o.tg,r)}}return m}
+function strikeTxt(r){if(!r)return null;if(r.inb)return [`Saldırı yolda: ${r.inb}`,'#ffd27a',1];const o=r.last;if(!o)return null;
+  if(!o.hit&&o.down)return [`Daha önce attın, engellendi (${o.down}/${o.n})`,'#ff9d90',0];if(!o.hit&&o.fail&&!o.arr)return ['Daha önce attın, füzeler arızalandı','#d6b25e',0];if(!o.hit)return ['Daha önce attın, ıskaladı','#c9b0aa',0];
+  return [`Son saldırı: ${o.hit} isabet${o.down?`, ${o.down} düşürüldü`:''}`,'#a8d8b4',0]}
+// kill marks over a launcher: one small symbol per facility or battery its munitions destroyed; three or more earns a star
+function drawKills(e){const n=e.km.length,show=Math.min(n,6),S=px(11),gap=px(2),star=n>=3?S+gap*2:0,w=star+show*S+(show-1)*gap+(n>6?px(16):0);let x=e.x-w/2;const y=e.y-vr(e)-px(17);
+  ctx.save();if(star){ctx.fillStyle='rgba(8,10,12,.85)';ctx.beginPath();ctx.arc(x+S/2,y,S*.62,0,7);ctx.fill();ctx.fillStyle='#ffd27a';ctx.save();ctx.translate(x+S/2,y);ctx.scale(S/13,S/13);GLYPH.HQ(ctx);ctx.restore();x+=star}
+  for(let i=0;i<show;i++){const t=e.km[n-show+i],site=t[0]==='~',g=GLYPH[site?t.slice(1):t];ctx.fillStyle='rgba(8,10,12,.8)';ctx.fillRect(x,y-S/2,S,S);ctx.fillStyle=site?'#ff9d90':'#e6c35a';ctx.save();ctx.translate(x+S/2,y);
+    if(g){ctx.scale(S/14,S/14);g(ctx)}else{ctx.beginPath();ctx.moveTo(0,-S*.3);ctx.lineTo(S*.3,0);ctx.lineTo(0,S*.3);ctx.lineTo(-S*.3,0);ctx.closePath();ctx.fill()}ctx.restore();x+=S+gap}
+  if(n>6)mono('+'+(n-6),x+px(7),y,'#e6c35a',9,'center');ctx.restore()}
 function render(time){
   ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,CW,CH);if(!G){if(GL)GL.clear();return}
   const z=cam.z,V=worldView();let shx=0,shy=0;if(shakeK>.02){shx=gauss()*shakeK*9;shy=gauss()*shakeK*9;shakeK*=.88}
@@ -2176,6 +2266,7 @@ function render(time){
   ctx.strokeStyle='rgba(226,114,91,.45)';ctx.lineWidth=px(2);ctx.setLineDash([px(14),px(10)]);ctx.beginPath();ctx.moveTo(mx-DM.cos(ang)*11000,my-DM.sin(ang)*11000);ctx.lineTo(mx+DM.cos(ang)*11000,my+DM.sin(ang)*11000);ctx.stroke();ctx.setLineDash([]);
   ctx.fillStyle='rgba(20,8,8,.18)';ctx.beginPath();ctx.moveTo(mx-DM.cos(ang)*11000,my-DM.sin(ang)*11000);ctx.lineTo(mx+DM.cos(ang)*11000,my+DM.sin(ang)*11000);ctx.lineTo(MW+11000,-11000);ctx.closePath();ctx.fill();ctx.restore()}
   // assets & sites: photographs at true size, map symbols when too small to read
+  const STK=G.phase==='war'?strikeMap():null;
   for(const e of G.ents){const R0=visR(e);if(!inView(V,e.x,e.y,Math.max(90,R0*1.3)))continue;
     if(!e.alive&&!e.ruin)continue;
     if(e.alive&&e.side!==ME&&e.cat==='site'&&!G.ghost[ME].has(e.id)&&!G.revealAll)continue;
@@ -2185,14 +2276,20 @@ function render(time){
     if(pa>.2&&!e.ruin&&!TAC()&&!v7Ready()){drawExhaust(e,pa,time);if(e.t==='RAD'&&e.alive)drawAntenna(e,pa,time)}
 
     drawSym(e,1-pa,e.ruin);
-    if(e.ruin){if(e.deadAt==null)e.deadAt=G.time;if(pa>.05&&e.cat==='site'&&!TAC())drawWreck(e,pa,time);continue}
+    if(e.ruin){if(e.deadAt==null)e.deadAt=G.time;if(pa>.05&&e.cat==='site'&&!TAC())drawWreck(e,pa,time);
+      if(e.cat==='asset'){const o=e.orig&&ent(e.orig);if(o&&!o.alive){const yb=e.y+vr(e)+px(14);if(o.rbAt){const p=clamp(1-(o.rbAt-G.time)/(o.rbAt-o.rbT0),0,1),R=Math.max(vr(e)*.8,px(18));ctx.lineWidth=px(3);ctx.strokeStyle='rgba(220,230,226,.18)';ctx.beginPath();ctx.arc(e.x,e.y,R,0,7);ctx.stroke();ctx.strokeStyle='#d6b25e';ctx.beginPath();ctx.arc(e.x,e.y,R,-Math.PI/2,-Math.PI/2+p*6.283);ctx.stroke();
+          if(cam.z>.16||G.sel===e.id)mono(`${o.nm}: yeniden yapılıyor, ${Math.ceil(o.rbAt-G.time)} sn`,e.x,yb,'#f0dca0',10.5,'center')}
+        else if(cam.z>.16||G.sel===e.id)mono(`${o.nm}: yıkık`,e.x,yb,o.side===ME?'#c9b0aa':'#d99a90',10,'center')}}
+      continue}
     if(e.hit>0){const r=vr(e)*.7;const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,r);g.addColorStop(0,`rgba(255,140,90,${e.hit*.8})`);g.addColorStop(1,'rgba(255,90,40,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,r,0,7);ctx.fill()}
     if(e.cat==='site'&&pa>.3){const S=vr(e)+px(4);const a0=-Math.PI*.75;ctx.globalAlpha=pa;ctx.strokeStyle=e.side===ME?'rgba(150,215,228,.85)':'rgba(255,120,104,.9)';ctx.lineWidth=px(1.4);for(const q of [0,1,2,3]){ctx.beginPath();ctx.arc(e.x,e.y,S,a0+q*Math.PI/2-.3,a0+q*Math.PI/2+.3);ctx.stroke()}ctx.globalAlpha=1}
     if(e.hp<e.max||G.sel===e.id)hpBar(e);
     // Selection is drawn once by drawSelectionHUD at a minimum screen radius.
     if(e.cat==='asset'&&(cam.z>.16||G.sel===e.id))label(e.nm,e.x,e.y+vr(e)+px(14),e.side===ME?'#bfeef5':(e.side==='E'||!G.quad)?'#ffc2bb':SHEX[e.side],12);
     else if(e.side===ME&&(TAC()?cam.z>.45:Spx>60))mono(nameOf(ME,e.t),e.x,e.y+vr(e)+px(14),'#9fc9d2',9.5,'center');
-    if(e.jam&&e.side===ME)mono('KARIŞTIRILIYOR',e.x,e.y-vr(e)-px(12),'#ff9d90',9.5,'center')}
+    if(e.jam&&e.side===ME)mono('KARIŞTIRILIYOR',e.x,e.y-vr(e)-px(12),'#ff9d90',9.5,'center');
+    if(e.km&&e.km.length&&e.side===ME&&e.cat==='site')drawKills(e);
+    if(STK&&e.side!==ME){const t=strikeTxt(STK.get(e.id));if(t&&(t[2]||cam.z>.16||G.sel===e.id))mono(t[0],e.x,e.y-vr(e)-px(14),t[1],10.5,'center')}}
   // ghosts of enemy sites
   for(const g of G.ghost[ME].values()){const e=ent(g.id);if(!e||!e.alive||e.cat==='asset')continue;if(!inView(V,g.x,g.y,60))continue;const age=G.time-g.at;const b=Math.max(visRT('site',g.t,0),px(15))+px(6);
     const gc=SCOL[gS(g)];ctx.strokeStyle=`rgba(${gc},${age<10?.95:.6})`;ctx.lineWidth=px(1.3);for(const [sx,sy] of [[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.beginPath();ctx.moveTo(g.x+sx*b,g.y+sy*b-sy*px(7));ctx.lineTo(g.x+sx*b,g.y+sy*b);ctx.lineTo(g.x+sx*b-sx*px(7),g.y+sy*b);ctx.stroke()}
@@ -2295,7 +2392,7 @@ function drawFX(time,nk){drawSmoke();for(const f of G.fx){const k=f.t/f.life;
   drawProtoStatus(time);
   for(const e of G.ents)if(e.alive&&e.burn&&ready('s1')){const S=Math.max(vr(e)*2.4,pxf(40));const wa=DM.atan2(G.wx.wind.y,G.wx.wind.x);ctx.save();ctx.globalCompositeOperation='source-over';ctx.globalAlpha=.75;ctx.translate(e.x+DM.cos(wa)*S*.25,e.y+DM.sin(wa)*S*.25);ctx.rotate(wa+Math.PI*.75);ctx.drawImage(IMG['s'+(1+e.id%4)],-S/2,-S/2,S,S);ctx.restore();ctx.globalCompositeOperation='lighter'}
   for(const e of G.ents)if(e.alive&&e.burn){const fl=.6+.4*DM.sin(time*8+e.id);const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,vr(e)*.7);g.addColorStop(0,`rgba(255,150,60,${.5*fl})`);g.addColorStop(1,'rgba(255,80,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,vr(e)*.7,0,7);ctx.fill()}}
-const ABBR={balloon:'Balon',drone:'İHA',armd:'Anti-radar İHA',mald:'Seyir?',recon:'Keşif',cruise:'Seyir',bm:'Balistik',decoy:'Balistik',hgv:'Hipersonik',ftr:'Uçak',glide:'Bomba',arm:'Anti-radar'};
+const ABBR={ucav:'İSU',balloon:'Balon',drone:'İHA',armd:'Anti-radar İHA',mald:'Seyir?',recon:'Keşif',cruise:'Seyir',bm:'Balistik',decoy:'Balistik',hgv:'Hipersonik',ftr:'Uçak',glide:'Bomba',arm:'Anti-radar'};
 function drawProtoFX(f,k,time){if(f.k==='emp'){for(let i=0;i<3;i++){const q=clamp(k*1.4-i*.18,0,1);if(q<=0||q>=1)continue;ctx.strokeStyle=`rgba(150,205,255,${.75*(1-q)})`;ctx.lineWidth=px(2-i*.5);ctx.beginPath();ctx.arc(f.x,f.y,f.r*q,0,7);ctx.stroke()}
     ctx.fillStyle=`rgba(150,205,255,${.08*(1-k)})`;ctx.beginPath();ctx.arc(f.x,f.y,f.r*Math.min(1,k*1.4),0,7);ctx.fill()}
   else{const R=f.r*(.4+.6*Math.min(1,k*3)),r=mulberry((f.x*7+f.y)|0);ctx.strokeStyle=`rgba(40,42,44,${.55*(1-k)})`;ctx.lineWidth=px(.8);ctx.beginPath();for(let i=0;i<46;i++){const a=r()*6.283,d=R*Math.sqrt(r()),x=f.x+DM.cos(a)*d,y=f.y+DM.sin(a)*d,b=r()*6.283,l=px(6+r()*10);ctx.moveTo(x,y);ctx.lineTo(x+DM.cos(b)*l,y+DM.sin(b)*l)}ctx.stroke()}}
@@ -2461,21 +2558,47 @@ topEl.addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)re
   else if(k==='eva'){EVA.on=!EVA.on;lsSet('gok.eva',EVA.on?'1':'0');if(EVA.on)eva('Sesli uyarılar açık','evaon',1);renderTop()}else if(k==='mute'){setMute(!SND.muted);renderTop()}else if(k==='radio'){VOICE.off=!VOICE.off;lsSet('gok.radio',VOICE.off?'0':'1');if(VOICE.off)VOICE.q.length=0;renderTop()}else if(k==='how'){ovBack=null;openHowto(0)}else if(k==='quit')intro();updTop()});
 
 // ================================================================ side panel
-const DSECT=[['Gözetleme','Görmediğin tehdidi vuramazsın.',['RAD']],['Yakın savunma','Dron, seyir füzesi ve bombayı son kilometrelerde durdurur.',['CIWS','LASER','IDR']],['Orta menzil','Uçak, seyir füzesi ve dron; 20 km irtifaya kadar.',['SHORAD','MRAD']],['Balistik savunma','Balistik ve hipersonik füzeye karşı.',['LRAD','UPPER']],['Karıştırma ve aldatma','',['EW','DEC']],['Saldırı rampaları','Füze ve İHA atmak için.',['TEL','DLN']]];
-function buildSide(){side.innerHTML=`<div class="money"><b id="cash">$0</b><small id="inc"></small></div><div class="prod" id="prod"></div><div class="mmwrap"><canvas id="mm"></canvas></div>
-  <nav class="tabs" aria-label="Komuta">${[['K','Kur'],['D','Savunma'],['A','Saldırı'],['L','Kayıt']].map(([k,n])=>`<button class="btn" data-tab="${k}">${n}</button>`).join('')}</nav>
+const DSECT=[['Gözetleme','Görmediğin tehdidi vuramazsın.',['RAD']],['Yakın savunma','Dron, seyir füzesi ve bombayı son kilometrelerde durdurur.',['CIWS','LASER','IDR','HPM']],['Orta menzil','Uçak, seyir füzesi ve dron; 20 km irtifaya kadar.',['SHORAD','MRAD']],['Balistik savunma','Balistik ve hipersonik füzeye karşı.',['LRAD','UPPER','GPI']],['Karıştırma ve aldatma','',['EW','DEC']],['Saldırı rampaları','Füze ve İHA atmak için.',['TEL','DLN']]];
+function buildSide(){side.innerHTML=`<div class="money"><b id="cash">$0</b><small id="inc"></small></div><div class="prod" id="prod" data-tab="S" role="button" tabindex="0" title="Durumu aç"></div><div class="mmwrap"><canvas id="mm"></canvas></div>
+  <nav class="tabs" aria-label="Komuta">${[['K','Kur'],['D','Savunma'],['A','Saldırı'],['S','Durum'],['L','Kayıt']].map(([k,n])=>`<button class="btn" data-tab="${k}">${n}</button>`).join('')}</nav>
   <div class="tabdesc" id="tabdesc"></div><div class="build" id="build"></div><div class="selp" id="selp"></div>`;
   mm=$('#mm');mmc=mm.getContext('2d');resize();mm.addEventListener('pointerdown',mmClick);mm.addEventListener('pointermove',e=>{if(e.buttons)mmClick(e)});renderSide();renderSel()}
 // production meter under the cash: how many launcher missiles the factories can hand over right now
-function updProd(){const el=$('#prod');if(!el||!G)return;const p=G.prod[ME]||0,r=prodRate(ME)*60;el.innerHTML=`<span>Füze üretimi</span><i><b style="width:${Math.round(p/PROD_CAP*100)}%"></b></i><em>${Math.floor(p)} hazır, dakikada ${Math.round(r)}</em>`}
+// ---- status: the few numbers that decide how long you can keep fighting, and why each one is short
+const fmtPop=k=>k>=1000?f1(k/1000)+' milyon':Math.round(k)+' bin';
+function facState(e){return !e.alive?(e.rbAt?`yeniden yapılıyor, ${Math.ceil(e.rbAt-G.time)} sn`:'yıkıldı'):e.blackT>G.time?'elektriksiz':e.hp<e.max*.985?`%${Math.round(100-e.hp/e.max*100)} hasarlı`:''}
+function statusOf(s){const all=G.ents.filter(e=>e.cat==='asset'&&!e.ruin&&e.side===s);
+  const lossOf=e=>!e.alive?1:1-(e.hp/e.max)*(e.blackT>G.time?.2:1);
+  const why=(ts,f)=>all.filter(e=>ts.includes(e.t)&&facState(e)).sort((a,b)=>lossOf(b)-lossOf(a)).slice(0,3).map(e=>`${e.nm} ${facState(e)}`+(f?f(e):''));
+  const dm=HUM(s)?1:DIFF[G.diff].inc;
+  const incMax=all.reduce((a,e)=>a+ASSET_DEF[e.t].inc,0)*dm,incNow=incomeRate(s);
+  const fabN=all.filter(e=>e.t==='FAB').length,rMax=(PROD_BASE+fabN*PROD_FAB)*60,rNow=prodRate(s)*60,en=share(s,'PWR');
+  const pWhy=why(['FAB']);if(en<.985)pWhy.push(`Elektrik %${Math.round(en*100)}, hatlar yavaş`);
+  const cap=capOf(s),pop=all.filter(e=>e.t==='CITY'),popMax=pop.reduce((a,e)=>a+(e.pop||0),0),popNow=pop.reduce((a,e)=>a+(e.alive?(e.pop||0)*e.hp/e.max:0),0);
+  const ab=all.filter(e=>e.t==='AIRB'),abUp=ab.some(e=>e.alive),A4=G.air4[s]||[],rdy=A4.filter(a=>a.st==='ready').length,lost=A4.filter(a=>a.st==='lost').length,rearm=A4.filter(a=>a.st==='rearm').length,fu=fuelF(s);
+  const aWhy=[];if(!abUp)aWhy.push(ab.length>1?'Hava üsleri yıkıldı':'Hava üssü yıkıldı');if(lost)aWhy.push(`${lost} uçak düşürüldü`);if(rearm)aWhy.push(`${rearm} uçak bakımda, ${Math.round(REARM_T/fu)} sn`);if(A4.some(a=>a.st==='sortie'))aWhy.push(`${A4.filter(a=>a.st==='sortie').length} uçak görevde`);
+  const fuel=(share(s,'REFN')+share(s,'FUEL'))/2;
+  return [
+   {k:'inc',n:'Gelir',v:money(incNow)+'/sn',f:incMax?incNow/incMax:1,fx:'Kasaya her saniye giren para',why:all.filter(e=>lossOf(e)>.015).sort((a,b)=>ASSET_DEF[b.t].inc*lossOf(b)-ASSET_DEF[a.t].inc*lossOf(a)).slice(0,3).map(e=>`${e.nm} ${facState(e)}, −${money(ASSET_DEF[e.t].inc*lossOf(e)*dm)}/sn`)},
+   {k:'prod',n:'Füze üretimi',v:`dakikada ${f1(rNow)}`,f:rMax?rNow/rMax:1,fx:'Rampadan atılan füzeler buradan çıkar',why:pWhy},
+   {k:'cap',n:'Füze deposu',v:`${Math.floor(G.prod[s]||0)} hazır, en çok ${Math.floor(cap)}`,f:cap/24,fx:'Bekleyen hazır füze sınırı',why:why(['DEPO'])},
+   {k:'pop',n:'Nüfus',v:fmtPop(popNow),f:popMax?popNow/popMax:1,fx:'Şehirlerin geliri nüfusla gider',why:why(['CITY'])},
+   {k:'pwr',n:'Elektrik',v:`%${Math.round(en*100)}`,f:en,fx:'Fabrikalar elektrikle çalışır',why:why(['PWR'])},
+   {k:'fuel',n:'Yakıt',v:`%${Math.round(fuel*100)}`,f:fuel,fx:`Uçak bakımı ${Math.round(REARM_T/fu)} sn`,why:why(['REFN','FUEL'])},
+   {k:'air',n:'Savaş uçağı',v:`${rdy} hazır, ${4-lost} elde`,f:abUp?rdy/4:0,fx:'Süzülen bomba ve SEAD görevleri',why:aWhy}]}
+// the strip under the cash: three columns always in view, and the first reason something is short
+function updProd(){const el=$('#prod');if(!el||!G)return;const S=statusOf(ME),pick=['inc','prod','pop'].map(k=>S.find(r=>r.k===k));
+  const tone=f=>f<.5?'bad':f<.85?'warn':'';const worst=S.filter(r=>r.why.length&&r.f<.97).sort((a,b)=>a.f-b.f)[0];
+  el.innerHTML=pick.map(r=>`<div class="sc ${tone(r.f)}"><span>${{inc:'Gelir',prod:'Üretim',pop:'Nüfus'}[r.k]}</span><b>${r.k==='prod'?f1(prodRate(ME)*60)+'/dk':r.v.replace(' milyon',' mn')}</b><i><u style="width:${Math.round(clamp(r.f,0,1)*100)}%"></u></i></div>`).join('')+
+   `<p class="${worst?tone(worst.f)||'warn':''}">${worst?`<b>${worst.n} düşük.</b> ${esc(worst.why[0])}`:`Füze ${Math.floor(G.prod[ME]||0)} hazır, depo ${Math.floor(capOf(ME))}`}</p>`}
 
 function mmClick(e){const r=mm.getBoundingClientRect();const wx=(e.clientX-r.left)/r.width*MW,wy=(e.clientY-r.top)/r.height*MH;camTw=null;cam.x=wx-((VPAD.l+CW-VPAD.r)/2-CW/2)/cam.z;cam.y=wy-((CH-VPAD.b)/2-CH/2)/cam.z;camClamp()}
 function card(key,opts={}){const d=SITE[key]||MUN[key]||SORT[key];const c=opts.cost!=null?opts.cost:costOf(ME,key);const off=opts.off;
-  const ph=P7[key]?v7(P7[key][P7[key].length>1&&/rad/.test(P7[key][0][0])?1:0][0]):null;
+  const PP=p7Of(key),ph=PP?v7(PP[PP.length>1&&/rad/.test(PP[0][0])?1:0][0]):null;
   return `<button class="card-b ${off?'off':''} ${mode&&mode.t===key?'on':''} ${ph?'ph':''}" data-k="${key}" data-kind="${opts.kind||'site'}">${ph?`<img src="img/${ph}.webp" alt="" loading="lazy">`:''}<b>${esc(SORT[key]?d.n:nameOf(ME,key))}</b><span>${esc(SITE[key]?SITE[key].role:'')}</span><em>${opts.ct||money(c)}</em>${opts.k!=null&&opts.k!==''?`<i>${opts.k} kurulu</i>`:''}</button>`}
 const sect=(n,e)=>`<div class="sect">${n}${e?`<em>${e}</em>`:''}</div>`;
 let sideSig='';
-function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')tab='A';const sig=[tab,mode&&mode.t,G.phase,...Object.keys(SITE).map(k=>G.cash[ME]<costOf(ME,k)?0:1),...['TEL','DLN','RAD','MRAD','LRAD','UPPER','SHORAD','CIWS','LASER','IDR','EW','DEC'].map(k=>sites(ME,k).length),...G.air4[ME].map(a=>a.st),tab!=='K'?Math.floor(G.time/(tab==='L'?1:2)):0,sites(ME).map(s=>s.mode).join('')].join('|');if(!force&&sig===sideSig)return;sideSig=sig;let h='';
+function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')tab='A';const sig=[tab,mode&&mode.t,G.phase,...Object.keys(SITE).map(k=>G.cash[ME]<costOf(ME,k)?0:1),...['TEL','DLN','RAD','MRAD','LRAD','UPPER','SHORAD','CIWS','LASER','IDR','EW','DEC','HPM','GPI'].map(k=>sites(ME,k).length),...G.air4[ME].map(a=>a.st),tab!=='K'?Math.floor(G.time/(tab==='L'||tab==='S'?1:2)):0,tab==='S'?Math.floor(G.cash[ME]/20):0,sites(ME).map(s=>s.mode).join('')].join('|');if(!force&&sig===sideSig)return;sideSig=sig;let h='';
   if(tab==='K'){for(const [n,e,ks] of DSECT){h+=sect(n,e);for(const k of ks)h+=card(k,{off:G.cash[ME]<costOf(ME,k),k:sites(ME,k).length||''})}}
   else if(tab==='D'){const gaps=defGaps();G.anal={...(G.anal||{}),gaps};const all=sites(ME).filter(s=>SITE[s.t].rng&&!SITE[s.t].ew);
     const doc=all.length&&all.every(s=>s.mode===all[0].mode)?all[0].mode:null;
@@ -2483,21 +2606,31 @@ function renderSide(force){const el=$('#build');if(!el||!G)return;if(tab==='I')t
     h+=`<div class="doc">${[['auto','Otomatik','Menzile giren her tehdide ateş eder.'],['sel','Seçici','Boşa düşecek füzeyi ve ucuz dronu pahalı önleyiciyle vurmaz.'],['off','Sessiz','Radarlar kapanır, kimse ateş etmez. Yerini ele vermez.']].map(([m,n,d])=>`<button class="${doc===m?'on':''}" data-doc="${m}"><b>${n}</b><span>${d}</span></button>`).join('')}</div>`;
     const chip=(g,k)=>`<i class="${g.miss.includes(k)?'no':'ok'}">${({bm:'Balistik',cm:'Seyir',dr:'İHA',rad:'Radar'})[k]}</i>`;
     h+=sect('Korumasız tesisler',gaps.length?`${gaps.length} tesiste açık var`:'');
-    h+=gaps.length?gaps.slice(0,6).map((g,i)=>{const D=ASSET_DEF[g.a.t];return `<div class="an-row"><div><b>${esc(g.a.nm)}</b><em>${money(D.inc)}/sn gelir getiriyor</em><span class="an-ch">${LAYERS.map(([k])=>chip(g,k)).join('')}</span></div><button class="btn sm" data-an="fix" data-i="${i}">Kapat</button></div>`}).join(''):'<div class="note">Bütün tesisler dört katmanda da kapsanıyor.</div>';
+    h+=gaps.length?gaps.slice(0,6).map((g,i)=>{const D=ASSET_DEF[g.a.t];return `<div class="an-row"><div><b>${esc(g.a.nm)}</b><em>${money(D.inc)}/sn gelir getiriyor</em><span class="an-ch">${LAYERS.map(([k])=>chip(g,k)).join('')}</span></div><button class="btn sm" data-an="fix" data-i="${i}">Koru</button></div>`}).join(''):'<div class="note">Bütün tesisler dört katmanda da kapsanıyor.</div>';
     h+=sect('Bataryaların',all.length?`${all.length} batarya`:'');
     h+=all.length?all.slice(0,14).map(s=>{const d=SITE[s.t];const st=s.bt>0?`kuruluyor, ${Math.ceil(s.bt)} sn`:s.empT>G.time?'EMP ile sustu':s.mode==='off'?'sessizde':d.mag&&d.mag<999?`şarjör ${s.mag}/${d.mag}`:'hazır';return `<button class="bat ${G.sel===s.id?'on':''}" data-bat="${s.id}"><b>${esc(nameOf(ME,s.t))}</b><span>${st}</span><em>${s.kills||0} vuruş</em></button>`}).join(''):'<div class="note">Henüz batarya yok. Kur sekmesinden başla.</div>';
     h+=`<div class="side-act"><button class="btn" data-sopen="def">Elle önleme konsolu</button></div>`}
-  else if(tab==='A'){const ops=G.phase==='war'?strikeOps():[];G.anal={...(G.anal||{}),ops};
+  else if(tab==='A'){const ops=G.phase==='war'?strikeOps():[],SKM=strikeMap();G.anal={...(G.anal||{}),ops};
     const tel=sites(ME,'TEL'),dln=sites(ME,'DLN'),ab=assets(ME).find(a=>a.t==='AIRB');
     const rd=l=>l.filter(e=>e.bt<=0&&e.rl<=0&&!(e.empT>G.time)).length;
     h+=sect('Elindeki güç','');
     h+=`<div class="stat"><span>Füze rampası</span><b>${tel.length?`${rd(tel)} hazır, ${tel.length} toplam`:'yok'}</b></div><div class="stat"><span>İHA rampası</span><b>${dln.length?`${rd(dln)} hazır, ${dln.length} toplam`:'yok'}</b></div><div class="stat"><span>Savaş uçağı</span><b>${ab?`${G.air4[ME].filter(a=>a.st==='ready').length} hazır`:'hava üssü yıkıldı'}</b></div><div class="stat"><span>Füze üretimi</span><b>${Math.floor(G.prod[ME])} hazır, dakikada ${Math.round(prodRate(ME)*60)}</b></div>`;
     if(!tel.length&&!dln.length)h+='<div class="note">Saldırmak için rampa gerekir. Kur sekmesinin en altında.</div>';
+    else{const LL=tel.concat(dln);h+=sect('Rampaların',LL.some(l=>l.km&&l.km.length)?'yıldız: üç ve fazla tesis yıktı':'');h+=LL.slice(0,10).map(l=>`<button class="bat ${G.sel===l.id?'on':''}" data-bat="${l.id}"><b>${esc(nameOf(ME,l.t))}${l.km&&l.km.length>=3?' <i class="star">★</i>':''}</b><span>${l.bt>0?`kuruluyor, ${Math.ceil(l.bt)} sn`:l.rl>0?`doluyor, ${Math.ceil(l.rl)} sn`:'hazır'}</span><em>${l.km&&l.km.length?`${l.km.length} yıkım`:`${l.shots||0} atış`}</em></button>`).join('')}
     h+=sect('Önerilen saldırılar',G.phase==='war'?'kesilen gelire göre sıralı':'');
-    h+=ops.length?ops.slice(0,5).map((op,i)=>`<div class="an-row"><div><b>${esc(op.a.nm)}</b><em class="w">${op.n} ${esc(nameOf(ME,op.k))}, ${money(op.cost)}</em><em>${op.kill?'Tesis yıkılır':'Yüzde '+Math.round(op.dmg/op.a.max*100)+' hasar'}, rakip dakikada ${money(op.inc)} kaybeder. Geçme şansı %${Math.round(op.p*100)}.</em>${op.risk.length?`<em class="rk">Yolda: ${esc(op.risk.slice(0,3).join(', '))}</em>`:''}</div><button class="btn sm pri" data-an="tgt" data-i="${i}">Hedefe al</button></div>`).join(''):`<div class="note">${G.phase==='war'?'Hazır rampa yok ya da bilinen hedef yok.':'Harekât başlayınca burada hangi silahla neyi vurmanın en çok kazandırdığı çıkar.'}</div>`;
+    h+=ops.length?ops.slice(0,5).map((op,i)=>`<div class="an-row"><div><b>${esc(op.a.nm)}</b><em class="w">${op.n} ${esc(nameOf(ME,op.k))}, ${money(op.cost)}</em><em>${op.kill?'Tesis yıkılır':'Yüzde '+Math.round(op.dmg/op.a.max*100)+' hasar'}, rakip dakikada ${money(op.inc)} kaybeder. Geçme şansı %${Math.round(op.p*100)}.</em>${op.risk.length?`<em class="rk">Yolda: ${esc(op.risk.slice(0,3).join(', '))}</em>`:''}${(t=>t?`<em style="color:${t[1]}">${esc(t[0])}</em>`:'')(strikeTxt(SKM.get(op.a.id)))}</div><button class="btn sm pri" data-an="tgt" data-i="${i}">Hedefe al</button></div>`).join(''):`<div class="note">${G.phase==='war'?'Hazır rampa yok ya da bilinen hedef yok.':'Harekât başlayınca burada hangi silahla neyi vurmanın en çok kazandırdığı çıkar.'}</div>`;
     h+=`<div class="side-act"><button class="btn pri" data-sopen="atk">Ateş konsolunu aç</button></div>`}
+  else if(tab==='S'){const S=statusOf(ME);
+    h+=sect('Ülkenin durumu','neyin eksik olduğu ve nedeni');
+    h+=S.map(r=>{const t=r.f<.5?'bad':r.f<.85?'warn':'';return `<div class="st-row ${t}"><div class="st-h"><b>${r.n}</b><span>${esc(r.v)}</span></div><i><u style="width:${Math.round(clamp(r.f,0,1)*100)}%"></u></i>${r.why.length?r.why.map(w=>`<em>${esc(w)}</em>`).join(''):`<small>${esc(r.fx)}</small>`}</div>`}).join('');
+    const F=G.ents.filter(e=>e.cat==='asset'&&!e.ruin&&e.side===ME).sort((a,b)=>(a.alive?1:0)-(b.alive?1:0)||a.hp/a.max-b.hp/b.max||a.id-b.id);
+    const nDead=F.filter(e=>!e.alive).length,nHurt=F.filter(e=>e.alive&&e.hp<e.max*.985).length;
+    h+=sect('Tesisler',`${F.length-nDead-nHurt} sağlam${nHurt?`, ${nHurt} hasarlı`:''}${nDead?`, ${nDead} yıkık`:''}`);
+    h+=F.map(e=>{const f=e.alive?e.hp/e.max:0,st=facState(e);let act='';
+      if(!e.alive&&e.t!=='HQ'){if(e.rbAt){const T=e.rbAt-e.rbT0,p=1-(e.rbAt-G.time)/T;act=`<span class="rb-p"><i style="width:${Math.round(clamp(p,0,1)*100)}%"></i></span>`}else{const c=rebuildCost(e.t);act=`<button class="btn sm${G.cash[ME]>=c?' pri':''}" data-rb="${e.id}"${G.cash[ME]>=c?'':' disabled'}>Yeniden kur</button>`}}
+      return `<div class="fac${e.alive?'':' dead'}" data-fac="${e.id}"><div><b>${esc(e.nm)}</b><em>${esc(ASSET_DEF[e.t].n)}${e.t==='CITY'&&e.pop?', '+fmtPop(e.pop*f):''}${st?', '+esc(st):''}${!e.alive&&!e.rbAt&&e.t!=='HQ'?`. ${money(rebuildCost(e.t))}, ${rebuildTime(e.t)} sn sürer`:''}</em>${e.alive?`<i><u style="width:${Math.round(f*100)}%"></u></i>`:''}</div>${act}</div>`}).join('')}
   else if(tab==='L'){const L=G.orders||[];h+=sect('Verdiğin emirler',L.length?L.length+' emir':'');h+=L.length?L.map(o=>{const pend=Math.max(0,o.n-o.hit-o.down-o.fail-(o.arr-o.hit));const seg=(n,c)=>n?`<i class="${c}" style="flex:${n}"></i>`:'';return `<div class="lg-row ${o.done?'':'live'}" data-lg="${o.id}"><div class="lg-h"><s>${mmss(o.t)}</s><b>${o.n||'?'} ${esc(nameOf(ME,o.k))}</b><span>${esc(o.lbl)}</span></div><div class="lg-bar">${seg(o.hit,'h')}${seg(o.arr-o.hit,'m')}${seg(o.down,'d')}${seg(o.fail,'f')}${seg(pend,'p')}</div><div class="lg-t">${o.done?'':'<em>Havada.</em> '}${o.hit} isabet, ${o.down} düşürüldü${o.arr-o.hit?', '+(o.arr-o.hit)+' boşa':''}${o.fail?', '+o.fail+' arıza':''}. Hasar <b>${money(o.dmg)}</b>, maliyet ${money(o.cost)}.${o.killed?' <b class="k">Tesis yıkıldı.</b>':''}</div></div>`}).join(''):'<div class="note">Henüz atış emri yok. Verdiğin her emir burada izlenir: kaçı vurdu, kaçı düşürüldü, ne kadar hasar verdi.</div>'}
-  el.innerHTML=h;$('#tabdesc').textContent={K:'Kartı seç, sonra haritada kendi tarafında bir yere tıkla.',D:'',A:'',L:''}[tab]||'';
+  el.innerHTML=h;$('#tabdesc').textContent={K:'Kartı seç, sonra haritada kendi tarafında bir yere tıkla.',D:'',A:'',S:'',L:''}[tab]||'';
   side.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));updProd()}
 let infoKey=null;
 
@@ -2549,7 +2682,7 @@ function drawExhaust(e,pa,time){const P=piecesOf(e);const wl=DM.hypot(G.wx.wind.
       const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${ph<.12?'52,50,48':'78,80,82'},${a})`);g.addColorStop(1,'rgba(78,80,82,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()}}}
 // ================================================================ range layers (left rail): per-band rings at a chosen altitude
 const RADTYPES=Object.keys(SITE).filter(t=>SITE[t].emit&&SITE[t].sens);
-const RGROUP=[['RAD','Radar görüşü',RADTYPES,'232,236,226'],['SWEEP','Tarama',RADTYPES,'170,215,225'],['NEAR','Yakın savunma',['CIWS','LASER','IDR','SHORAD'],'127,224,160'],['MID','Orta menzil',['MRAD'],'159,208,220'],['LONG','Uzun menzil',['LRAD'],'159,140,255'],['UP','Üst katman',['UPPER'],'255,170,240'],['EW','Elektronik harp',['EW'],'230,195,90'],['ENEMY','Bilinen düşman',[],'255,96,80'],['DENS','Yoğunluk',['CIWS','LASER','IDR','SHORAD','MRAD','LRAD','UPPER'],'233,236,234']];
+const RGROUP=[['RAD','Radar görüşü',RADTYPES,'232,236,226'],['SWEEP','Tarama',RADTYPES,'170,215,225'],['NEAR','Yakın savunma',['CIWS','LASER','IDR','HPM','SHORAD'],'127,224,160'],['MID','Orta menzil',['MRAD'],'159,208,220'],['LONG','Uzun menzil',['LRAD'],'159,140,255'],['UP','Üst katman',['UPPER','GPI'],'255,170,240'],['EW','Elektronik harp',['EW'],'230,195,90'],['ENEMY','Bilinen düşman',[],'255,96,80'],['DENS','Yoğunluk',['CIWS','LASER','IDR','HPM','SHORAD','MRAD','LRAD','UPPER','GPI'],'233,236,234']];
 const RALT=[0.05,0.3,1,3,5,10,15,20,32,40,60,100,150];
 const RG={on:{RAD:1,SWEEP:1,NEAR:0,MID:0,LONG:0,UP:0,EW:0,ENEMY:0,DENS:0},ai:2,min:0};
 try{const v=JSON.parse(localStorage.getItem('menzil.rng')||'null');if(v&&v.on){for(const k in RG.on)if(k in v.on)RG.on[k]=+!!v.on[k];RG.ai=clamp(v.ai|0,0,RALT.length-1);RG.min=!!v.min}}catch(e){}
@@ -2663,7 +2796,7 @@ function qaRender(){if(!QA||!G||mapBusy()){qaClose();return}let head='',opts=[];
       opts.push({id:'eng:'+c.s.id,ok:c.ok,b:`${nameOf(ME,c.s.t)} ile önle`,em:money(cost),i:c.ok?`${c.d.gun?'top atışı':c.d.laser?'lazer':n+' önleyici'}, isabet şansı %${Math.round(c.pk*100)}, ${f1(c.dist/KMU)} km`:c.why})}
     if(!cands.length)opts.push({id:'none',ok:false,b:'Bu tehdide karşı batarya yok',em:'',i:`${KNAME[o.kind]||'hedef'} için uygun sistem kurmalısın`});
     opts.push({id:'follow',ok:true,b:G.follow===o.id?'Takibi bırak':'Kamerayla takip et',em:'',i:'kamera bu izi izler'});opts.push({id:'con',ok:true,b:'Önleme konsolunu aç',em:'',i:'tüm bataryalar ve ayrıntılı plan'})}
-  else{const e=ent(QA.ref);if(!e||!e.alive){qaClose();return}const nm=e.cat==='asset'?e.nm:nameOf(e.side,e.t);head=`<b>${esc(nm)}</b>${G.quad?`<span style="color:${SHEX[e.side]}">${esc(natOf(e.side).n)}</span>`:''}<span>${f1(hyp(e.x-HQPOS[ME].x,e.y-HQPOS[ME].y)/KMU)} km</span>`;
+  else{const e=ent(QA.ref);if(!e||!e.alive){qaClose();return}const nm=e.cat==='asset'?e.nm:nameOf(e.side,e.t);head=`<b>${esc(nm)}</b>${G.quad?`<span style="color:${SHEX[e.side]}">${esc(natOf(e.side).n)}</span>`:''}<span>${f1(hyp(e.x-HQPOS[ME].x,e.y-HQPOS[ME].y)/KMU)} km</span>`;{const t=strikeTxt(strikeMap().get(e.id));if(t)head+=`<span style="color:${t[1]}">${esc(t[0])}</span>`}
     const val=e.cat==='asset'?ASSET_DEF[e.t].v*e.hp/e.max:costOf(e.side,e.t);const ks=['DRN','DRN_J','ARMD','CM','CM_S','BM','BM_H','HGV'].filter(k=>MUN[k]&&(k!=='ARMD'||(e.cat==='site'&&SITE[e.t].emit)));
     const est=ks.map(k=>strikeEst(k,e)).filter(x=>x);const ok=est.filter(x=>x.why===''&&isFinite(x.N));
     let best=null;for(const x of ok){x.score=3*x.costKill/Math.max(val,.2)+x.tAll/150+(x.p<.35?1.5:0)+(x.buy?0.08:0)+.1*(x.waves-1);if(!best||x.score<best.score)best=x}
@@ -2707,17 +2840,22 @@ function renderCard(){if(!G||mapBusy()||G.infoRequest!=='ent:'+G.sel){icEl.hidde
    <div class="hp"><i><b style="width:${f*100}%;background:${hc}"></b></i><span>${Math.round(e.hp)}/${e.max}</span></div><dl>${rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>${note}`;
   if(icEl.hidden){icEl.hidden=false;icEl.classList.remove('sw')}else if(icKey!==key&&icKey&&icKey.split(':')[0]!==String(e.id)){icEl.classList.remove('sw');void icEl.offsetWidth;icEl.classList.add('sw')}icKey=key}
 icEl.addEventListener('click',e=>{if(e.target.closest('[data-ic="x"]')&&G){closeInfo()}});
+function killSum(e){const c={};for(const t of e.km||[]){const n=t[0]==='~'?nameOf(other(ME),t.slice(1)):ASSET_DEF[t].n;c[n]=(c[n]||0)+1}return Object.entries(c).map(([n,k])=>k>1?`${k} ${n}`:n).join(', ')}
 function renderSel(){renderCard();const el=$('#selp');if(!el||!G)return;if(infoKey){el.innerHTML=specHTML(infoKey);return}
   const tr=G.selTrk&&airById(G.selTrk);if(tr&&tr.alive&&G.trk[ME].has(tr.id)){const sp=hyp(tr.vx||0,tr.vy||0,(tr.vz||0)*KMU)*50/8/340;const ip=impactPt(tr);const hit=ip&&G.ents.find(a=>a.alive&&a.side===ME&&hyp(a.x-ip.x,a.y-ip.y)<a.r+60);
     el.innerHTML=`<h4 style="color:#ff8a7e">${KNAME[tr.kind==='decoy'?'bm':tr.kind]}</h4><div class="m">İrtifa ${f1(tr.z)} km, hız yaklaşık Mach ${f1(sp)}, ${Math.ceil(etaOf(tr))} saniyede varır${hit?`. Hedef <b style="color:#fff">${hit.cat==='asset'?hit.nm:nameOf(ME,hit.t)}</b>`:ip?'. Boş araziye düşecek':''}${tr.eng?`. ${tr.eng} önleyici yolda`:''}.</div><div class="acts"><button class="btn sm pri" data-sa="engage">Elle önle</button></div>`;return}
+  const e0=G.sel&&ent(G.sel),org=e0&&e0.ruin&&e0.cat==='asset'&&e0.side===ME?ent(e0.orig):null;
+  if(org&&!org.alive){const c=rebuildCost(org.t);el.innerHTML=org.t==='HQ'?`<h4>${esc(org.nm)}</h4><div class="m">Yıkıldı.</div>`:org.rbAt?`<h4>${esc(org.nm)}</h4><div class="m">Yeniden yapılıyor, ${Math.ceil(org.rbAt-G.time)} sn kaldı. Bitince %70 dayanıklılıkla çalışmaya başlar.</div>`:`<h4>${esc(org.nm)}</h4><div class="m">Yıkıldı. Yeniden kurmak ${money(c)} tutar ve ${rebuildTime(org.t)} sn sürer; o sırada gelir getirmez.</div><div class="acts"><button class="btn sm pri" data-rb="${org.id}"${G.cash[ME]>=c?'':' disabled'}>Yeniden kur (${money(c)})</button></div>`;return}
   const e=G.sel&&ent(G.sel);if(!e||!e.alive){el.innerHTML=`<h4>Seçim yok</h4><div class="m">Kendi bataryana ya da tesisine tıklarsan bilgisi burada çıkar. Kartların üstüne gelince teknik çizimi görürsün.</div>`;return}
   if(e.cat==='asset'){el.innerHTML=`<h4>${esc(e.nm)}</h4><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div><div class="m">Dayanıklılık ${Math.round(e.hp)}/${e.max}, gelir ${money(ASSET_DEF[e.t].inc*e.hp/e.max)}/sn${e.t==='AIRB'?', 4 uçak':''}.</div>`;return}
   const d=SITE[e.t];const acts=[];
   if(d.rng&&!d.ew)acts.push(...[['auto','Otomatik'],['sel','Seçici'],['off','Sessiz']].map(([m,n])=>`<button class="btn sm ${e.mode===m?'on':''}" data-sm="${m}">${n}</button>`));
   if(e.t==='RAD'||e.t==='EW')acts.push(`<button class="btn sm ${e.emit?'on':''}" data-sa="emit">${e.emit?'Yayında':'Sessiz'}</button>`);
   acts.push(`<button class="btn sm ghost" data-sa="sell">Sat (${money(costOf(ME,e.t)*.5)})</button>`);
-  el.innerHTML=`<h4>${esc(nameOf(ME,e.t))}</h4><div class="m" style="margin:0">${esc(d.role)}</div><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div>${d.mag&&d.mag<999?`<div class="bar mg"><i style="width:${e.mag/d.mag*100}%"></i></div>`:''}<div class="m">${d.mag&&d.mag<999?`Önleyici ${e.mag}/${d.mag}, `:''}${d.rl&&d.mag?`dolum ${d.rl} sn, `:''}${d.off?`${e.rl>0?'dolumda, '+Math.ceil(e.rl)+' sn':'hazır'}, `:''}${e.kills} vuruş, harcama ${money(e.spent)}${e.bt>0?', kuruluyor':''}.${e.mode==='sel'?' <b style="color:#7fe0a0">Seçici:</b> boş araziye düşecekleri ve ucuz dronları pahalı füzeyle vurmaz':''}</div><div class="acts">${acts.join('')}</div>`}
+  el.innerHTML=`<h4>${esc(nameOf(ME,e.t))}</h4><div class="m" style="margin:0">${esc(d.role)}</div><div class="bar"><i style="width:${e.hp/e.max*100}%"></i></div>${d.mag&&d.mag<999?`<div class="bar mg"><i style="width:${e.mag/d.mag*100}%"></i></div>`:''}<div class="m">${d.mag&&d.mag<999?`Önleyici ${e.mag}/${d.mag}, `:''}${d.rl&&d.mag?`dolum ${d.rl} sn, `:''}${d.off?`${e.rl>0?'dolumda, '+Math.ceil(e.rl)+' sn':'hazır'}, `:''}${d.off?`${e.shots||0} atış, ${e.hits||0} isabet${e.km&&e.km.length?`. <b style="color:#e6c35a">Yıktıkları:</b> ${esc(killSum(e))}`:''}`:`${e.kills} vuruş, harcama ${money(e.spent)}`}${e.bt>0?', kuruluyor':''}.${e.mode==='sel'?' <b style="color:#7fe0a0">Seçici:</b> boş araziye düşecekleri ve ucuz dronları pahalı füzeyle vurmaz':''}</div><div class="acts">${acts.join('')}</div>`}
 side.addEventListener('click',e=>{if(!G)return;audioInit();const tb=e.target.closest('[data-tab]');if(tb){tab=tb.dataset.tab;renderSide(true);return}
+  const rb=e.target.closest('[data-rb]');if(rb){const r=issue('rebuild',ME,+rb.dataset.rb);if(r)hint(r,1);renderSide(true);renderSel();return}
+  const fc=e.target.closest('[data-fac]');if(fc){const f=ent(+fc.dataset.fac);if(f){const ru=f.ruinId&&ent(f.ruinId);G.sel=(ru||f).id;G.selTrk=null;camGo(f.x,f.y,Math.max(cam.z,.3));renderSel()}return}
   const so=e.target.closest('[data-sopen]');if(so){openCon(so.dataset.sopen);return}
   const bt=e.target.closest('[data-bat]');if(bt){const s=ent(+bt.dataset.bat);if(s){G.sel=s.id;G.selTrk=null;camGo(s.x,s.y,Math.max(cam.z,.35));renderSel();renderSide(true)}return}
   const dc=e.target.closest('[data-doc]');if(dc){issue('mode',sites(ME).filter(s=>SITE[s.t].rng&&!SITE[s.t].ew).map(s=>s.id),dc.dataset.doc);sfx('beep');renderSide(true);renderSel();return}
@@ -2750,9 +2888,9 @@ function buildCon(){conEl.style.setProperty('--conH',CONH+'px');conEl.style.heig
   const fb=$('#fbtn');fb.addEventListener('pointerdown',e=>{e.preventDefault();holdStart()});for(const ev of ['pointerup','pointerleave','pointercancel'])fb.addEventListener(ev,()=>holdEnd());
   renderCon()}
 const isAir=k=>!!SORT[k];
-const defN=k=>isAir(k)?1:MUN[k].from==='TEL'?1:k==='JAM'||k==='RCN'?1:k==='ARMD'?2:k==='MALD'?4:6;
+const defN=k=>isAir(k)?1:MUN[k].swarm?1:MUN[k].from==='TEL'?1:k==='JAM'||k==='RCN'?1:k==='ARMD'?2:k==='MALD'?4:6;
 function wName(k){return isAir(k)?SORT[k].n:nameOf(ME,k)}
-function planCost(items){return items.reduce((a,p)=>a+(isAir(p.w)?.5:costOf(ME,p.w)*Math.max(0,p.n)),0)}
+function planCost(items){return items.reduce((a,p)=>a+(isAir(p.w)?SORT[p.w].c:costOf(ME,p.w)*Math.max(0,p.n)),0)}
 function itemsNow(){const C=G.con;return C.pkg.length?C.pkg:C.tgt?[{w:C.w,n:C.n,x:C.tgt.x,y:C.tgt.y,wp:C.wp,lbl:C.tgt.lbl,at:0}]:[]}
 function conReady(){const C=G.con;if(G.phase!=='war')return 'savaş başlamadı';
   if(C.mode==='def'){const t=G.selTrk&&airById(G.selTrk);if(!t||!t.alive)return 'tehdit seç';const b=bestBattery(t);return b?'':'menzilde uygun batarya yok'}
@@ -2764,18 +2902,18 @@ function conReady(){const C=G.con;if(G.phase!=='war')return 'savaş başlamadı'
   if(air&&(G.air4[ME].filter(a=>a.st==='ready').length<air||!assets(ME).some(a=>a.t==='AIRB')))return 'hazır uçak yok';
   if(planCost(items)>G.cash[ME]+1e-6)return 'kasa yetersiz';return ''}
 function bestBattery(t){let best=null,bs=-1;for(const s of sites(ME)){const d=SITE[s.t];if(!d.rng||d.ew||s.mag<=0||s.bt>0)continue;if(!(PK[s.t]||{})[t.kind])continue;if(t.z<d.a0||t.z>d.a1)continue;if(hyp(t.x-s.x,t.y-s.y)>rngOf(ME,s.t))continue;const v=pkOf(s,t)-d.ic*.01;if(v>bs){bs=v;best=s}}return best}
-const KILLERS={balloon:['LRAD'],bm:['UPPER','LRAD'],hgv:['LRAD','UPPER'],cruise:['MRAD','LRAD','SHORAD','CIWS'],drone:['CIWS','LASER','IDR','SHORAD','MRAD'],armd:['CIWS','LASER','IDR','SHORAD'],mald:['MRAD','SHORAD','CIWS'],jam:['MRAD','LRAD','SHORAD'],recon:['MRAD','SHORAD','IDR']};
-function wFacts(k){if(isAir(k))return SORT[k].d;const M=MUN[k],f=[];if(M.dec)f.push(`${M.dec} sahte başlık`);if(M.man)f.push('son evrede manevra');if(M.cl)f.push(`misket ×${M.cl}`);if(M.pen)f.push('sığınak delici');if(M.rcs&&M.rcs<.2)f.push('gizli: radar geç görür');if(M.kind==='cruise'&&M.spd>150)f.push('süpersonik');if(M.kind==='jam')f.push('45 sn hedef üstünde döner, 26 km içindeki radarları körleştirir');if(M.kind==='armd')f.push('yayın yapan radara dalar');if(M.kind==='mald')f.push('radarda seyir füzesi gibi görünür, önleyici çeker');if(M.kind==='recon')f.push('20 km çevredeki bataryaları gösterir');if(M.emp)f.push('6 km içindeki radar ve rampaları 30 sn susturur');if(M.graf)f.push('santral/rafineriyi 60 sn karartır, gelir −%80');if(M.mother)f.push(`yolun yarısında ${M.mother} kamikaze İHA bırakır`);if(M.kind==='balloon')f.push('30 km irtifada 2 dk asılı kalır, 40 km çevreyi görür; yalnızca uzun menzilli HS vurabilir');if(M.proto)f.unshift('prototip, %12 arıza ihtimali');
+const KILLERS={ucav:['MRAD','LRAD','SHORAD'],balloon:['LRAD'],bm:['UPPER','LRAD','GPI'],hgv:['GPI','LRAD','UPPER'],cruise:['MRAD','LRAD','SHORAD','CIWS'],drone:['HPM','CIWS','LASER','IDR','SHORAD','MRAD'],armd:['HPM','CIWS','LASER','IDR','SHORAD'],mald:['MRAD','SHORAD','CIWS'],jam:['MRAD','LRAD','SHORAD'],recon:['MRAD','SHORAD','IDR']};
+function wFacts(k){if(isAir(k))return SORT[k].d;const M=MUN[k],f=[];if(M.swarm)f.push(`tek fırlatmada ${M.swarm} küçük İHA, radarda çok geç görünür`);if(M.hyp)f.push('25 km irtifada Mach 5, alçak katmanların üstünden geçer; yalnız uzun menzil ve süzülme önleyici yetişir');if(M.dec)f.push(`${M.dec} sahte başlık`);if(M.man)f.push('son evrede manevra');if(M.cl)f.push(`misket ×${M.cl}`);if(M.pen)f.push('sığınak delici');if(M.rcs&&M.rcs<.2)f.push('gizli: radar geç görür');if(M.kind==='cruise'&&M.spd>150)f.push('süpersonik');if(M.kind==='jam')f.push('45 sn hedef üstünde döner, 26 km içindeki radarları körleştirir');if(M.kind==='armd')f.push('yayın yapan radara dalar');if(M.kind==='mald')f.push('radarda seyir füzesi gibi görünür, önleyici çeker');if(M.kind==='recon')f.push('20 km çevredeki bataryaları gösterir');if(M.emp)f.push('6 km içindeki radar ve rampaları 30 sn susturur');if(M.graf)f.push('santral/rafineriyi 60 sn karartır, gelir −%80');if(M.mother)f.push(`yolun yarısında ${M.mother} kamikaze İHA bırakır`);if(M.kind==='balloon')f.push('30 km irtifada 2 dk asılı kalır, 40 km çevreyi görür; yalnızca uzun menzilli HS vurabilir');if(M.proto)f.unshift('prototip, %12 arıza ihtimali');
   return f.join(', ')}
-function weaponCards(cls){const C=G.con;let keys;if(cls==='AIR')keys=['SEAD','GLIDE'];else if(cls==='X')keys=[...CUSTOM];else keys=VAR[cls].map(v=>v[0]);
+function weaponCards(cls){const C=G.con;let keys;if(cls==='AIR')keys=['SEAD','GLIDE','WING'];else if(cls==='X')keys=[...CUSTOM];else keys=VAR[cls].map(v=>v[0]);
   let h=keys.map(k=>{let ok,ready;if(isAir(k)){const n=G.air4[ME].filter(a=>a.st==='ready').length;ok=n>0;ready=`${n} uçak`}else{const M=MUN[k],tot=sites(ME,M.from).length,rd=launchersFor(ME,k).length;ok=tot>0;ready=!tot?'rampa yok':rd?`${rd} hazır`:'dolumda'}
-    const M=MUN[k];return `<button class="wrow ${C.w===k?'on':''} ${ok?'':'off'}" data-w="${k}"><b>${esc(isAir(k)?SORT[k].n:M.custom?M.n:nameOf(ME,k))}</b><span>${M&&M.proto?'<s class="pt">PROTOTİP</s>':''}${esc(isAir(k)?'uçak':M.custom?'özel':M.proto?'':M.role)}</span><em>${isAir(k)?'$0,5M':money(costOf(ME,k))}</em><i class="${ok?'':'bad'}">${ready}</i>${M&&M.custom?`<u data-ed="${k}">düzenle</u>`:''}</button>`}).join('');
+    const M=MUN[k];return `<button class="wrow ${C.w===k?'on':''} ${ok?'':'off'}" data-w="${k}"><b>${esc(isAir(k)?SORT[k].n:M.custom?M.n:nameOf(ME,k))}</b><span>${M&&M.proto?'<s class="pt">PROTOTİP</s>':''}${esc(isAir(k)?(k==='WING'?nameOf(ME,'UCAV')+' ×2':nameOf(ME,'FTR')):M.custom?'özel':M.proto?'':M.role)}</span><em>${isAir(k)?money(SORT[k].c):money(costOf(ME,k))}</em><i class="${ok?'':'bad'}">${ready}</i>${M&&M.custom?`<u data-ed="${k}">düzenle</u>`:''}</button>`}).join('');
   if(cls==='X')h+=`<button class="wrow new" data-ed="new"><b>+ Yeni tasarım</b><span>harp başlığı, motor, güdüm, beka</span></button>`;return h}
 function setH(el,h){if(!el||el.__h===h)return;const keep=[...el.querySelectorAll('[data-keep]')].map(e=>[e.dataset.keep,e.scrollLeft,e.scrollTop]);el.innerHTML=h;el.__h=h;for(const [k,l,t] of keep){const e=el.querySelector(`[data-keep="${k}"]`);if(e){e.scrollLeft=l;e.scrollTop=t}}}
 // weapon details: opens beside the list when a weapon is picked, closes on a second click, Esc or a click elsewhere
 let WPOP=null;
 function weaponPop(k,anchor){if(!k||!anchor){hidePop();WPOP=null;return}WPOP=k;let h;
-  if(isAir(k))h=`<div class="spec"><h4>${esc(SORT[k].n)}</h4><div class="m">Uçak görevi, ${money(.5)}</div><div class="w">${esc(SORT[k].d)}</div><div class="w">Hava üssünde 4 uçak var. Görevden dönen uçak 45 saniye dolum yapar.</div></div>`;
+  if(isAir(k))h=`<div class="spec"><h4>${esc(SORT[k].n)}</h4><div class="m">Uçak görevi, ${money(SORT[k].c)}. Uçak: ${esc(nameOf(ME,'FTR'))}</div><div class="w">${esc(SORT[k].d)}</div><div class="w">Hava üssünde 4 uçak var. Dönen uçak ${Math.round(REARM_T/fuelF(ME))} saniye bakım yapar; yakıt tesisleri vurulursa uzar.</div></div>`;
   else{const M=MUN[k],st=wStats(k),kl=(KILLERS[M.kind]||[]).map(t=>nameOf(FOE(),t)),fx=wFacts(k);
     h=specHTML(k).replace(/<\/div>$/,'')+`<div class="bars">${st.map(([l,v])=>`<div class="br"><span>${l}</span><i><b style="width:${Math.round(v*100)}%"></b></i></div>`).join('')}</div>${fx?`<div class="w">${esc(fx)}.</div>`:''}<div class="w kill">Rakipte durdurabilen: ${esc(kl.join(', ')||'yok')}.</div></div>`}
   specPop.innerHTML=h;popKey='w:'+k;specPop.hidden=false;const c=$('#cA').getBoundingClientRect(),hh=specPop.offsetHeight;
@@ -2786,7 +2924,7 @@ function renderCon(){if(conEl.hidden||!G)return;const C=G.con,A=$('#cA'),P=$('#c
   if(C.mode==='atk'){C.cls=C.cls||'BM';
     setH(A,`<div class="chead">${md}<div class="ctabs">${WCLASS.map(([k,n])=>`<button class="${C.cls===k?'on':''}" data-cls="${k}">${n}</button>`).join('')}</div></div><div class="wlist" data-keep="wl">${weaponCards(C.cls)}</div>`);
     const k=C.w,M=MUN[k];
-    const qty=isAir(k)?`<b class="wn">${esc(SORT[k].n)}</b><span class="tc">${money(.5)}</span>`:`<b class="wn">${esc(M.custom?M.n:nameOf(ME,k))}</b><span class="qty"><button data-q="-1" aria-label="Azalt">−</button><b>${C.n}</b><button data-q="1" aria-label="Artır">+</button></span><span class="tc">toplam ${money(costOf(ME,k)*C.n)}</span>`;
+    const qty=isAir(k)?`<b class="wn">${esc(SORT[k].n)}</b><span class="tc">${money(SORT[k].c)}</span>`:`<b class="wn">${esc(M.custom?M.n:nameOf(ME,k))}</b><span class="qty"><button data-q="-1" aria-label="Azalt">−</button><b>${C.n}</b><button data-q="1" aria-label="Artır">+</button></span><span class="tc">toplam ${money(costOf(ME,k)*C.n)}</span>`;
     const t=C.tgt;let info;
     if(!t)info='Haritada rakip tarafına tıkla, orası hedef olur. Sarı çemberin içindeki her şey hasar alır. Saldırı sekmesindeki önerilerden de tek tıkla hedef alabilirsin.';
     else{const L=M?launchersFor(ME,k)[0]||sites(ME,M.from)[0]:assets(ME).find(a=>a.t==='AIRB');const o=L||HQPOS[ME];const d=hyp(t.x-o.x,t.y-o.y);const ft=M?flightTime(ME,k,o.x,o.y,t.x,t.y,C.wp):d/110;const risk=riskOf(k,o,t,C.wp);
@@ -2815,7 +2953,7 @@ conEl.addEventListener('click',e=>{if(!G)return;audioInit();const C=G.con;const 
   const cl=e.target.closest('[data-cls]');if(cl){weaponPop(null);C.cls=cl.dataset.cls;const first=C.cls==='AIR'?'SEAD':C.cls==='X'?CUSTOM[0]:(VAR[C.cls].find(v=>v[0]===C.cls)||VAR[C.cls][0])[0];if(first){C.w=first;TUT.ev.w=C.w;C.n=defN(first)}setArm(false);renderCon();return}
   const w=e.target.closest('[data-w]');if(w){const k=w.dataset.w;const same=C.w===k&&WPOP===k;C.w=k;TUT.ev.w=C.w;if(!same)C.n=defN(C.w);setArm(false);renderCon();const row=$('#cA [data-w="'+k+'"]');weaponPop(same?null:k,row);return}
   const tk=e.target.closest('[data-trk]');if(tk){G.selTrk=+tk.dataset.trk;renderCon();renderSel();return}
-  const q=e.target.closest('[data-q]');if(q){const mx=isAir(C.w)?1:MUN[C.w].from==='TEL'?8:12;C.n=clamp(C.n+(+q.dataset.q),1,mx);renderCon();return}
+  const q=e.target.closest('[data-q]');if(q){const mx=isAir(C.w)?1:MUN[C.w].swarm?3:MUN[C.w].from==='TEL'?8:12;C.n=clamp(C.n+(+q.dataset.q),1,mx);renderCon();return}
   const at=e.target.closest('[data-at]');if(at){const p=C.pkg[+at.dataset.at];if(p)p.at=clamp(p.at+(+at.dataset.d),0,60);renderCon();return}
   const rm=e.target.closest('[data-rm]');if(rm){C.pkg.splice(+rm.dataset.rm,1);renderCon();return}
   const p=e.target.closest('[data-p]');if(p){const k=p.dataset.p;if(k==='target'){mode=mode?.k==='target'?null:{k:'target'};closeInfo();qaClose();hint(mode?'Haritada hedefi işaretle. Shift ile ara nokta eklersin, Esc ile bitirirsin.':'');renderCon();return}if(k==='clrt'){C.tgt=null;C.wp=[];setArm(false)}else if(k==='clr')C.pkg=[];else if(k==='blind'){blindPlan();return}else if(k==='add'){if(!C.tgt){hint('Önce haritada hedef seç.',1);return}const last=C.pkg.length?Math.max(...C.pkg.map(x=>x.at)):0;C.pkg.push({w:C.w,n:C.n,x:C.tgt.x,y:C.tgt.y,wp:C.wp.slice(),lbl:C.tgt.lbl,at:C.pkg.length?last+5:0});C.wp=[];sfx('beep');hint('Plana eklendi. Başka silah ya da hedef seçip ekle; numaralar hedefe varış sırası. Hepsi tek ATEŞ ile gider.')}renderCon();return}});
@@ -2890,7 +3028,7 @@ function doFire(quiet){const C=G.con;let msg='';
 
 // ================================================================ advisor (harekât subayı)
 // ---------------- automatic analysis: which of our facilities lack which layer, and which strike pays best right now
-const LAYERS=[['bm','Balistik',['LRAD','UPPER'],'LRAD'],['cm','Seyir',['MRAD','LRAD','SHORAD'],'MRAD'],['dr','İHA',['CIWS','LASER','IDR','SHORAD','MRAD'],'CIWS'],['rad','Erken uyarı',['RAD'],'RAD']];
+const LAYERS=[['bm','Balistik',['LRAD','UPPER','GPI'],'LRAD'],['cm','Seyir',['MRAD','LRAD','SHORAD'],'MRAD'],['dr','İHA',['CIWS','LASER','IDR','HPM','SHORAD','MRAD'],'CIWS'],['rad','Erken uyarı',['RAD'],'RAD']];
 function defGaps(){const out=[];const ss=sites(ME).filter(e=>e.bt<=0);
   for(const a of assets(ME)){const miss=[];for(const [k,n,ts] of LAYERS){const ok=k==='rad'?ss.some(e=>e.t==='RAD'&&hyp(e.x-a.x,e.y-a.y)<radarReach(e,.05)):ss.some(e=>ts.includes(e.t)&&e.mode!=='off'&&hyp(e.x-a.x,e.y-a.y)<rngOf(ME,e.t));if(!ok)miss.push(k)}
     const D=ASSET_DEF[a.t],w=D.v*(a.hp/a.max)+D.inc*90;if(miss.length)out.push({a,miss,w:w*(miss.includes('bm')?1.4:1)*(.6+.25*miss.length)})}
@@ -2899,7 +3037,7 @@ function survP(w,o,t){const M=MUN[w];if(!M)return 1;const known=[...G.ghost[ME].
   for(const g of known){const pk=(PK[g.t]||{})[kind];if(!pk)continue;const R=rngOf(gS(g),g.t);let near;if(kind==='bm'||kind==='hgv')near=hyp(g.x-t.x,g.y-t.y)<R;else{const L=hyp(t.x-o.x,t.y-o.y)||1,u=clamp(((g.x-o.x)*(t.x-o.x)+(g.y-o.y)*(t.y-o.y))/(L*L),0,1);near=hyp(o.x+(t.x-o.x)*u-g.x,o.y+(t.y-o.y)*u-g.y)<R}
     if(near)p*=1-Math.min(.95,pk*(kind==='bm'&&(M.dec||0)>0?.65:.85)*(M.man?.75:1))}
   return p}
-function strikeOps(){const out=[];const W=ME;const cand=['BM','BM_H','BM_M','CM','CM_S','CM_X','HGV','DRN','DRN_J'].filter(k=>MUN[k]&&launchersFor(W,k).length);if(!cand.length)return out;
+function strikeOps(){const out=[];const W=ME;const cand=['BM','BM_H','BM_M','CM','CM_S','CM_X','CM_HX','HGV','DRN','DRN_J'].filter(k=>MUN[k]&&launchersFor(W,k).length);if(!cand.length)return out;
   const targets=foeAssets().filter(a=>a.alive);
   for(const a of targets){const D=ASSET_DEF[a.t];let best=null;
     for(const k of cand){const M=MUN[k],L=launchersFor(W,k),o=L.slice().sort((p,q)=>hyp(p.x-a.x,p.y-a.y)-hyp(q.x-a.x,q.y-a.y))[0];const p=survP(k,o,a);const per=(M.cl?M.dmg*M.cl*.55:M.dmg)*p;
@@ -3153,12 +3291,12 @@ function startGame(m,opts,rec,online){if(!online)ME='W';if(rec){opts=rec.opts;m=
     if(online){TUT.on=false;coach.hidden=true;toast(`<b>Çevrimiçi harekât</b>${natOf(ME).n} olarak ${natOf(G.sides.find(x=>x!==ME)).n}'ya karşı. 2 dakika hazırlık; ikiniz de "Hazırım" deyince başlar. Duraklatma yok.`,'W',true)}else if(rec){conEl.hidden=true;stage.style.setProperty('--conH','0px');$('#adv').hidden=true;TUT.on=false;coach.hidden=true;toast(`<b>Tekrar</b>${natOf(ME).n} – ${G.sides.slice(1).map(x=>natOf(x).n).join(', ')} maçı baştan oynatılıyor. Emir veremezsin; hızı üstteki 2× düğmesiyle 4×'e kadar çıkarabilirsin.`,'W',true)}else if(m==='tutorial')tutStart();else{TUT.on=false;coach.hidden=true;toast(G.quad?`<b>Hazırlık</b>${natOf(ME).n} sol alt köşede. Karşında ${G.sides.slice(1).map(x=>natOf(x).n).join(', ')}. 2 dakikan var; sonra herkes herkese saldırabilir.`:`<b>Hazırlık</b>${natOf(ME).n} olarak ${natOf(G.sides.find(x=>x!==ME)).n}'ya karşı. 2 dakikan var: radar, hava savunma, rampalar.`,'W',true)}sfx('radio')};setTimeout(go,40)}
 const HOWTO=[
  ['Oyunun mantığı','<p>İki ülke karşı karşıya. İkisinin de şehirleri, rafinerisi, santrali, fabrikası, hava üssü ve komuta merkezi var. <b>Para bu tesislerden gelir</b>; hasar alan tesis daha az kazandırır.</p><p>Üç işin var: <b>kurmak</b>, <b>savunmak</b> ve <b>vurmak</b>.</p><p><b>Kazanmak</b>: 15 dakikanın sonunda rakibe daha çok hasar verdiren kazanır. Komuta merkezi yıkılan o an kaybeder; ama merkez bir sığınaktır, normal başlıklar ona ancak çeyrek hasar verir. Onu tek başına yerle bir etmeye çalışmak uzun ve pahalı bir kumardır.</p><p>Başta 2 dakika hazırlık var: $900M ile kurarsın, kimse ateş etmez. İkiniz de hazır olunca harekât başlar.</p>'],
- ['Ekran: ne nerede','<ul><li><b>Sağ panelde dört sekme var.</b> <i>Kur</i>: radar, bataryalar ve rampalar; karta tıkla, sonra haritada kendi tarafına tıkla, en yakın boş kurulum yerine kurulur. <i>Savunma</i>: ateş kuralı, korumasız tesisler ve bataryalarının durumu. <i>Saldırı</i>: rampaların, füze üretimin ve en çok kazandıran saldırı önerileri. <i>Kayıt</i>: verdiğin her emir ve sonucu.</li><li><b>Alttaki ateş konsolu</b>: soldan silahı seç, ortada adedi ayarla ve hedefi işaretle, sağda emniyeti kaldırıp ATEŞ\'e basılı tut.</li><li><b>Sağ üstteki kutu</b>: sana gelen tehditler ve kaç saniyede varacakları.</li><li><b>Üstteki danışman</b>: o an en önemli işi söyler; düğmesine basarsan kendisi yapar.</li></ul>'],
- ['Para, üretim ve zaman','<ul><li>Füzenin parasını ateşlediğin anda ödersin; ayrıca stok almana gerek yok.</li><li>Ama rampadan atılan füzeler <b>fabrikadan</b> gelir: her an hazır olan sayı sınırlıdır (en çok 24) ve dakikada temel 4 füzeye, her sağlam fabrika için 4 füze daha eklenir. Rakibin fabrikasını vurmak, onun füze yağmurunu yavaşlatır.</li><li>Kurulum zaman alır: top 6 saniyede, uzun menzil batarya 22, üst katman 30 saniyede hazır olur. Rampa 16 saniye.</li><li>Her <b>füze rampası</b> bir füze atar, sonra 22 saniye dolum yapar. <b>İHA rampası</b> bir seferde 6 İHA uçurur. <b>Hava üssü</b> 4 uçakla radar avı ve süzülen bomba görevi yapar.</li><li>Balistik füze ateşlenince yanmalı motoru uzaydan görülür: <b>rampanın yeri rakibe belli olur</b>. Aynı yerden ısrarla atarsan karşı ateş yersin.</li></ul>'],
- ['Silah seçimi ve tasarım','<ul><li>Konsolun solunda aileler var: Balistik, Seyir, Hipersonik, İHA, Destek, Uçak, Deneysel ve Özel. Her ailede farklı modeller: kısa menzil, ağır başlık, manevralı, misketli, aldatıcılı, gizli, süpersonik…</li><li>Bir silaha tıklayınca yanında ayrıntısı açılır: hasar, etki alanı, isabet, hız, savunmayı aşma ve rakipte onu kimin durdurabileceği. Aynı silaha bir daha tıklayınca kapanır.</li><li><b>Özel</b> ailesinde <b>Yeni tasarım</b> ile gövde, harp başlığı, motor, güdüm ve beka seçip kendi silahını yaparsın. Fiyatı parçalara göre hesaplanır.</li></ul>'],
+ ['Ekran: ne nerede','<ul><li><b>Paranın altındaki üç sütun</b> gelir, füze üretimi ve nüfustur. Biri düşerse altında nedeni yazar; tıklarsan Durum sekmesi açılır.</li><li><b>Sağ panelde beş sekme var.</b> <i>Kur</i>: radar, bataryalar ve rampalar; karta tıkla, sonra haritada kendi tarafına tıkla, en yakın boş kurulum yerine kurulur. <i>Savunma</i>: ateş kuralı, korumasız tesisler ve bataryalarının durumu. <i>Saldırı</i>: rampaların (yıktıkları rozet olarak), füze üretimin ve en çok kazandıran saldırı önerileri. <i>Durum</i>: gelir, üretim, depo, nüfus, elektrik, yakıt, uçaklar ve her tesisin hali; yıkılanı buradan yeniden kurarsın. <i>Kayıt</i>: verdiğin her emir ve sonucu.</li><li><b>Alttaki ateş konsolu</b>: soldan silahı seç, ortada adedi ayarla ve hedefi işaretle, sağda emniyeti kaldırıp ATEŞ\'e basılı tut.</li><li><b>Sağ üstteki kutu</b>: sana gelen tehditler ve kaç saniyede varacakları.</li><li><b>Üstteki danışman</b>: o an en önemli işi söyler; düğmesine basarsan kendisi yapar.</li></ul>'],
+ ['Para, üretim ve zaman','<ul><li>Füzenin parasını ateşlediğin anda ödersin; ayrıca stok almana gerek yok.</li><li>Ama rampadan atılan füzeler <b>fabrikadan</b> gelir: her an hazır olan sayı sınırlıdır (en çok 24) ve dakikada temel 4 füzeye, her sağlam fabrika için 4 füze daha eklenir. Rakibin fabrikasını vurmak, onun füze yağmurunu yavaşlatır.</li><li>Destek tesisleri de iş görür: <b>santraller</b> fabrikaları besler (elektrik düşerse üretim yarıya kadar iner), <b>cephanelikler</b> hazır füze sınırını taşır (yıkılırsa 24\'ten 12\'ye iner), <b>rafineri ve yakıt depoları</b> uçakların bakım süresini belirler.</li><li>Yıkılan tesis <b>yeniden kurulabilir</b>: değerinin beşte dördü kadar para ve 1–2 dakika ister. Komuta merkezi kurulamaz.</li><li>Kurulum zaman alır: top 6 saniyede, uzun menzil batarya 22, üst katman 30 saniyede hazır olur. Rampa 16 saniye.</li><li>Her <b>füze rampası</b> bir füze atar, sonra 22 saniye dolum yapar. <b>İHA rampası</b> bir seferde 6 İHA uçurur. <b>Hava üssü</b> 4 uçakla radar avı ve süzülen bomba görevi yapar.</li><li>Balistik füze ateşlenince yanmalı motoru uzaydan görülür: <b>rampanın yeri rakibe belli olur</b>. Aynı yerden ısrarla atarsan karşı ateş yersin.</li></ul>'],
+ ['Silah seçimi ve tasarım','<ul><li>Konsolun solunda aileler var: Balistik, Seyir, Hipersonik, İHA, Destek, Uçak, Deneysel ve Özel. Her ailede farklı modeller: kısa menzil, ağır başlık, manevralı, misketli, aldatıcılı, gizli, süpersonik…</li><li>Yakın geleceğin silahları da var: <b>hipersonik seyir füzesi</b> 25 km irtifada geçer, alçak katmanlar yetişemez; <b>sürü İHA</b> tek atışta 12 küçük İHA salar; uçak ailesindeki <b>sadık kanat</b> görevinde uçak geride kalır, iki insansız savaş uçağı hedefe gider.</li><li>Bir silaha tıklayınca yanında ayrıntısı açılır: hasar, etki alanı, isabet, hız, savunmayı aşma ve rakipte onu kimin durdurabileceği. Aynı silaha bir daha tıklayınca kapanır.</li><li><b>Özel</b> ailesinde <b>Yeni tasarım</b> ile gövde, harp başlığı, motor, güdüm ve beka seçip kendi silahını yaparsın. Fiyatı parçalara göre hesaplanır.</li></ul>'],
  ['Ortak harekât: kör et, sonra vur','<ul><li>Hedefi işaretledikten sonra <b>Kör et, sonra vur</b>: önce hedefin üstüne <b>karıştırıcı İHA</b> (26 km içindeki radarları körleştirir), bildiğin radarlara <b>anti-radar İHA</b>, 6 saniye sonra <b>aldatıcılar</b>, 12 saniye sonra ana silahın gider.</li><li>Elle de kurabilirsin: silah ve hedef seç, <b>Plana ekle</b>, başka silah ya da hedef seç, yine ekle. Her kalemin varış saniyesini −/+ ile ayarla. Tek atış hepsini, hedefe o sırayla varacak şekilde gönderir.</li></ul>'],
  ['Hedef ve hasar','<ul><li>Konsolda silah seçiliyken haritada rakip tarafına tıkla: <b>tıkladığın nokta hedeftir</b>. Bir tesisin üstüne tıklarsan yanında saldırı kartı açılır; adedi oradan da ayarlayıp gönderebilirsin.</li><li>Sarı çember patlama alanıdır. İçindeki her tesis ve batarya hasar alır; merkeze yakın olan daha çok.</li><li>Rakibin hava savunmasını ancak radarını açınca (yaklaşık yeri), ateş edince, keşif İHA\'sıyla ya da uydu çekiminde görürsün.</li></ul>'],
- ['Hava savunma katmanları','<ul><li><b>Radar</b>: iz verir. Alçak uçanı ancak yaklaşınca görür.</li><li><b>Yakın savunma</b> (top, lazer, önleyici İHA): dron ve seyir füzesi, son birkaç kilometre. Ucuzdur.</li><li><b>Orta menzil</b>: seyir füzesi, uçak, dron.</li><li><b>Uzun menzil</b>: balistik füzeyi son evrede vurur. Sahte başlıklar atmosfere girerken yanar, onları bu katman görmez.</li><li><b>Üst katman</b>: balistik füzeyi uzayın eşiğinde vurur; orada sahte başlığı gerçeğinden ayıramaz.</li><li>Ateş kuralı: <i>Otomatik</i> her şeye ateş eder; <i>Seçici</i> boşa düşecek olana ve ucuz dronlara pahalı önleyici harcamaz; <i>Sessiz</i> radarı kapatıp saklanır.</li></ul>'],
+ ['Hava savunma katmanları','<ul><li><b>Radar</b>: iz verir. Alçak uçanı ancak yaklaşınca görür.</li><li><b>Yakın savunma</b> (top, lazer, önleyici İHA): dron ve seyir füzesi, son birkaç kilometre. Ucuzdur.</li><li><b>Orta menzil</b>: seyir füzesi, uçak, dron.</li><li><b>Uzun menzil</b>: balistik füzeyi son evrede vurur. Sahte başlıklar atmosfere girerken yanar, onları bu katman görmez.</li><li><b>Üst katman</b>: balistik füzeyi uzayın eşiğinde vurur; orada sahte başlığı gerçeğinden ayıramaz.</li><li><b>Süzülme evresi önleyici</b>: hipersonik füzeyi 20–70 km\'de süzülürken vurur. Çok pahalı, ama hipersoniğe karşı tek ciddi cevap.</li><li><b>Mikrodalga</b>: 6 km içindeki bütün İHA\'ları tek darbede yakar. Sürüye karşı en iyisi, füzeye karşı işe yaramaz.</li><li>Ateş kuralı: <i>Otomatik</i> her şeye ateş eder; <i>Seçici</i> boşa düşecek olana ve ucuz dronlara pahalı önleyici harcamaz; <i>Sessiz</i> radarı kapatıp saklanır.</li></ul>'],
  ['Kontroller','<ul><li>Haritayı kaydır: sol tuşla sürükle, ok tuşları ya da mini harita. Yakınlaş: fare tekerleği.</li><li><kbd>Space</kbd>: duraklat. Emniyet açıkken basılı tut: ateş.</li><li><kbd>T</kbd> hedef seç, <kbd>A</kbd> emniyet kapağı, <kbd>C</kbd> menzil çemberleri, <kbd>H</kbd> üsse dön, <kbd>Esc</kbd> vazgeç.</li><li>Kurulum kartlarının üstüne gelince teknik çizim ve özellikler açılır.</li></ul><p><button class="btn pri" data-o="tut">Uygulamalı eğitimi başlat</button></p>'],
 ];
 function openHowto(i=0){const nav=HOWTO.map((h,j)=>`<button class="btn ${j===i?'on':'ghost'}" data-h="${j}">${j+1}. ${h[0]}</button>`).join('');overlayHTML(`<div class="card wide" style="max-width:960px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="margin:0">Nasıl oynanır</h2><button class="btn" data-o="back">Kapat</button></div><div class="howto"><nav>${nav}</nav><div class="pg"><h2 style="font-size:26px">${HOWTO[i][0]}</h2>${HOWTO[i][1]}</div></div></div>`)}
@@ -3205,7 +3343,7 @@ const rawDt=now-lastT;const dt=Math.min(.05,rawDt/1000);lastT=now;
     if(pan||panY||ex||ey){cam.x+=(pan+ex)*dt*800/cam.z;cam.y+=(panY+ey)*dt*800/cam.z;camClamp()}
     if(G.follow){const o=airById(G.follow);if(o&&o.alive){cam.x+=(o.x-cam.x)*Math.min(1,dt*6);cam.y+=(o.y-LIFT(o.z)-cam.y)*Math.min(1,dt*6);camClamp()}else G.follow=null}
     camTick(dt);tickFire(dt);tutTick(dt);placeTrkPop();
-    uiT+=dt;if(uiT>.25){uiT=0;try{ambTick()}catch(e){}updPad();updDensTip();if(!conEl.hidden)updGcs();if(camPrev&&!camTw&&Math.abs(cam.z/cam.minZ-1)>.01)camGo(MW/2,MH/2,cam.minZ);camClamp();if(QA){if(QA.kind==='trk'){const o=airById(QA.ref);if(o&&o.alive){QA.sx=sX(o.x);QA.sy=sY(o.y-LIFT(o.z))}}else{const e=ent(QA.ref);if(e){QA.sx=sX(e.x);QA.sy=sY(e.y)}}qaRender()}$('#cash').textContent=money(G.cash[ME]);$('#inc').textContent=`+${money(income(ME))}/sn`;renderSide();updTop();advisor();updHUD();if(G.sel||G.selTrk||infoKey)renderSel();trkInfo();if(!conEl.hidden){if(G.con.mode==='def'||Math.random()<.3)renderCon();else updFire()}if(hintT>0){hintT-=.25;if(hintT<=0)hintEl.innerHTML=''}}
+    uiT+=dt;if(uiT>.25){uiT=0;try{ambTick()}catch(e){}updPad();updDensTip();if(!conEl.hidden)updGcs();if(camPrev&&!camTw&&Math.abs(cam.z/cam.minZ-1)>.01)camGo(MW/2,MH/2,cam.minZ);camClamp();if(QA){if(QA.kind==='trk'){const o=airById(QA.ref);if(o&&o.alive){QA.sx=sX(o.x);QA.sy=sY(o.y-LIFT(o.z))}}else{const e=ent(QA.ref);if(e){QA.sx=sX(e.x);QA.sy=sY(e.y)}}qaRender()}$('#cash').textContent=money(G.cash[ME]);$('#inc').textContent=`+${money(income(ME))}/sn`;updProd();renderSide();updTop();advisor();updHUD();if(G.sel||G.selTrk||infoKey)renderSel();trkInfo();if(!conEl.hidden){if(G.con.mode==='def'||Math.random()<.3)renderCon();else updFire()}if(hintT>0){hintT-=.25;if(hintT<=0)hintEl.innerHTML=''}}
     mmT+=dt;if(mmT>.3){mmT=0;drawMinimap()}}
     }catch(e){diagErr('döngü',e)}
   TM.ui=performance.now()-t0;t0=performance.now();
@@ -3216,7 +3354,7 @@ document.getElementById('gl').addEventListener('webglcontextlost',e=>{e.preventD
 addEventListener('resize',resize);try{new ResizeObserver(()=>resize()).observe(stage)}catch(e){}
 EVA.on=false;loadCustom();resize();intro();{let q=null;try{q=new URLSearchParams(location.search).get('oda')}catch(e){}if(q){NET=null;netOpen(q)}}requestAnimationFrame(frame);
 {let step=0;const warm=setInterval(()=>{if(G&&ov.hidden)return;try{if(GL&&GL.preHD)GL.preHD();if(GL&&GL.pre&&!GL.pre())return;const want=['duo','quad'].find(k=>!WCACHE[k]&&ready(MAPS[k].mat));if(want){const keep=MAP;MAP=MAPS[want];const mw=MW,mh=MH;MW=MAP.w;MH=MAP.h;WMASK=null;buildMask();MAP=keep;MW=mw;MH=mh;const C=WCACHE[MAP.k];if(C){WMASK=C.m;OCEAN=C.o;WMW=C.w;WMH=C.h}else WMASK=null;return}if(++step>40)clearInterval(warm)}catch(e){clearInterval(warm)}},300)}
-window.__gok={get NET(){return NET},get ME(){return ME},issue,matchRecord,replayMatch,stateHash,newGame,STEP,boom,voice,VOICE,SNDX:()=>SND,sfx,audioInit,gcsLaunch,gcsPress,camClamp,fitAll,densAt,get G(){return G},get TUT(){return TUT},update,render,startGame,cam,build,buy,launch,sortie,openCon,setArm,holdStart,doFire,aiSpot,advSpot,sites,assets,manualEngage,bestBattery};
+window.__gok={get NET(){return NET},get ME(){return ME},issue,hurt,statusOf,rebuild,matchRecord,replayMatch,stateHash,newGame,STEP,boom,voice,VOICE,SNDX:()=>SND,sfx,audioInit,gcsLaunch,gcsPress,camClamp,fitAll,densAt,get G(){return G},get TUT(){return TUT},update,render,startGame,cam,build,buy,launch,sortie,openCon,setArm,holdStart,doFire,aiSpot,advSpot,sites,assets,manualEngage,bestBattery};
 
 })();</script>
 </body></html>

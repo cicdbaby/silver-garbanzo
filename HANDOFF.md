@@ -247,3 +247,14 @@ Her değişiklik için:
 - Ölçüm (scratch `rush.py`, `plan.py`): komuta merkezine rampa yağdırma zorda 4/4 kaybediyor (9–11 dk); savunma + karşı batarya + fabrika vuran plan zorda 3/4 kazanıyor, farklar dar; orta ve kolayda rahat.
 - Arayüz: sağ panel Kur / Savunma / Saldırı / Kayıt; füze üretimi göstergesi; konsol üç kolon (silah listesi, adet + hedef, ateş), silah ayrıntısı tıklayınca konsolun üstünde açılır. Telsiz aç/kapa üst şeritte. Takılma kutusu yalnız `?debug` ya da `gok.debug=1` ile.
 - Metin: ortanokta, ok, büyük harf etiketler kaldırıldı; roller ve ipuçları cümle olarak.
+
+## GÖREV 11 — durum, yeniden kurma, saldırı izi, rozetler, yeni silahlar (Claude)
+- Destek tesisleri artık iş görür (`share(s,t)` = o türün sağlam oranı, karanlık %20): elektrik `energyF` üretimi çarpar (0,5–1), cephanelik `capOf` hazır füze tavanı (12–24), rafineri + yakıt deposu `fuelF` uçak bakımını uzatır (`REARM_T/fuelF`).
+- Yeniden kurma: CMD `rebuild` (SIDED; sunucu `CMD_KINDS`'e eklendi). Maliyet `v×0,8`, süre `40+v×0,18` sn, %70 canla döner, harabe (`e.ruinId`, harabede `orig`) silinir. HQ kurulmaz. AI `aiRebuild` ile değerli olanı parası artınca kurar.
+- Arayüz: paranın altında üç sütun (gelir, üretim, nüfus) + ilk eksiklik nedeni; tıklayınca **Durum** sekmesi (`statusOf`): yedi gösterge ve nedenleri, tesis listesi, Yeniden kur. Harabe seçilince de kurulur; haritada ilerleme halkası.
+- Savunma sekmesinde "Kapat" → "Koru".
+- Hedefte saldırı izi (`strikeMap/strikeTxt`): yoldaki füze sayısı, son saldırının sonucu ("Daha önce attın, engellendi (3/3)"); haritada, hızlı eylem kartında ve önerilerde.
+- Kill rozetleri: mühimmata rampa id'si (`o.lid`) taşınır, `HITLID` ile yıkım rampaya yazılır (`l.km`, `l.hits`, `l.shots`). Haritada küçük semboller, 3+ yıkımda yıldız; Saldırı sekmesinde rampa listesi.
+- Şehirler: `CITIES` ülkeye göre gerçek şehir + nüfus (bin). Aynı ülke iki tarafta ise ikinci taraf sonraki isimleri alır.
+- Yeni silahlar (5–10 yıl): uçaklar KAAN / F-47 / Su-57M / J-35A / F-35I (gizlilik çarpanı); **Sadık kanat** görevi (`WING`, $6M, iki `ucav` hedefe 26 km yaklaşıp ikişer süzülen bomba); **Mikrodalga HS** (`HPM`, alan darbesi, İHA'ya); **Süzülme Evresi Önleyici** (`GPI`, hipersonik, 20–70 km); **Sürü İHA** (`DRN_S`, tek atışta 12); **Hipersonik seyir** (`CM_HX`, 25 km irtifa, GPI dışı önleme ×0,35). Gelecek varyantlar `fut:1`; AI bunları stok etiketi değiştirerek değil satın alarak kullanır.
+- Görseller: `tools/GOREV11_GORSEL.md` (8 prompt). Gelene kadar `P7FB` ve `airSpr` yedek görsel kullanır; dosyalar `public/img/v7/` altına aynı adla gelince kendiliğinden geçer.
