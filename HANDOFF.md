@@ -268,4 +268,4 @@ Her değişiklik için:
 - Taktik sembol ağırlığı `threatCls`: balistik/hipersonik büyük dolu, seyir/uçak orta, küçük İHA soluk ve küçük.
 - **Gelenler (G)**: `threatScan` her gelen silahın hedefini, kalan süresini ve mevcut bataryalarla ilk önleme noktasını (`meetOf`, `futPos`) hesaplar; önlenemeyecekleri "Engelleyecek hiçbir şey yok" diye yazar; altta özet.
 - Taktik haritada filtre (`TACF`): Hepsi / Hava savunma / Tesisler / Rampalar.
-- Patlama görsel paketi istemleri: `tools/GOREV12_PATLAMA.md` (72 görsel). Gelince: siyah fonlular parlaklıktan alfa, ateş topları a→b→c aşamalı, harabeler `ruinOf` yerine.
+- Patlama görselleri: `tools/GOREV12_PATLAMA.md` (10 görsel, her yerde aynı set). Yangın tek modelde: `fireK` = vuruş gücü × (yakıt tesisi 1,4), boy tesisin görsel yarıçapıyla. Gelince: siyah fonlular parlaklıktan alfa, ateş topu a→b→c sırayla.

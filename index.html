@@ -1407,7 +1407,8 @@ function hurt(e,dm,by,civ){
   if(!e.alive)return;const v=e.cat==='asset'?ASSET_DEF[e.t].v:costOf(e.side,e.t);const before=e.hp;e.hp-=dm;e.hit=.4;const lost=(Math.min(before,dm)/e.max)*v;
   if(by&&by!==e.side){G.score[by].dmg+=lost;if(civ)G.score[by].civ+=lost;G.suf[e.side]+=lost;const gr=G.grudge[e.side];gr[by]=(gr[by]||0)+lost}else if(civ)G.score[e.side].civ+=lost;
   if(e.cat==='asset'&&e.hp<e.max*.6)e.burn=1;
-  if(e.cat==='asset'&&dm>=30&&e.hp>0){const oil=OILF[e.t];e.fireK=oil?1.25:clamp(dm/300,.3,.9);e.fireT=G.time;if(oil&&!G.silent)G.fx.push({k:'fball',x:e.x,y:e.y,r:e.r*(V7?SC7:1)*1.5,t:0,life:2.6,rot:Math.random()*6.283})}
+  // one fire model for every facility: size follows the facility and the warhead; fuel makes it worse
+  if(e.cat==='asset'&&dm>=30&&e.hp>0){const oil=OILF[e.t],K=clamp(dm/220,.3,1.4)*(oil?1.4:1);e.fireK=Math.max(K,e.fireT!=null&&G.time-e.fireT<20?e.fireK||0:0);e.fireT=G.time;if((oil||dm>=150)&&!G.silent)G.fx.push({k:'fball',x:e.x,y:e.y,r:e.r*(V7?SC7:1)*(.8+K*.7),t:0,life:1.6+K,rot:Math.random()*6.283})}
   aiHurt(e,dm);
   if(e.side===ME){G.alertT=8;if(e.cat==='asset'&&e.hp>0)voice('own_hit',e.t)}
   if(e.hp<=0){if(HITLID&&by&&by!==e.side){const L=ent(HITLID);if(L&&L.side===by)(L.km=L.km||[]).push(e.cat==='asset'?e.t:'~'+e.t)}e.alive=false;e.hp=0;if(e.side===ME)voice(e.cat==='asset'?'own_destroyed':'battery_lost',e.cat==='asset'?e.t:null);boom(e.x,e.y,e.r*1.3,true);if(e.cat==='asset'){e.dead=true;const ru={...e,id:uid++,ruin:true,alive:false,orig:e.id,deadAt:G.time};G.ents.push(ru);e.ruinId=ru.id;e.deadT=G.time;if(!G.silent)facilityBlast(e);toast(e.side===ME?`${e.nm} yıkıldı.`:`${G.quad?natOf(e.side).n+': ':'Düşman '}${e.nm} yıkıldı.`,e.side===ME?'E':'W');if(e.t==='HQ'){if(G.quad)eliminate(e.side,by);else{G.over=true;G.winner=other(e.side)}}}
